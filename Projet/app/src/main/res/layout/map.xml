@@ -23,6 +23,13 @@
             android:background="#00000000"
             android:src="@drawable/ic_gps_fixed_black_24dp"/>
 
+        <TextView
+            android:id="@+id/currentLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="LATITUDE LONGITUDE"
+            android:textAlignment="center"/>
+
         <FrameLayout
             android:id="@+id/infoBox"
             android:layout_width="match_parent"

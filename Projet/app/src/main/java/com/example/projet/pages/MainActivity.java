@@ -16,4 +16,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), MapActivity.class);
         startActivity(intent);
     }
+
+    // TODO: 06/04/2020 Prevent user from going back to this activity
 }
