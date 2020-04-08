@@ -5,15 +5,20 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,12 +30,40 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresPermission;
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.osmdroid.api.IMapController;
+import org.osmdroid.config.Configuration;
+import org.osmdroid.tileprovider.MapTileProviderBase;
+import org.osmdroid.tileprovider.MapTileProviderBasic;
+import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.ItemizedIconOverlay;
+import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
+import org.osmdroid.views.overlay.OverlayItem;
+import org.osmdroid.views.overlay.TilesOverlay;
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
+
+import java.util.ArrayList;
+
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class MapActivity extends AppCompatActivity implements LocationListener {
-
+    ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
     private TextView currentLocation;
+    private MyLocationNewOverlay myPosition;
+    private OverlayItem currentPositionOverlay;
+    private MapView map;
+    private final OnlineTileSourceBase seamarks = TileSourceFactory.OPEN_SEAMAP;
+    private FrameLayout infoBox;
+    ItemizedOverlayWithFocus<OverlayItem> mOverlay;
+    IMapController mapController;
+    /**
+     * User Settings (default value for the time being)
+     */
+    private double zoom = 15.5;
+
 
     /**
      * GPS variables
@@ -46,9 +79,12 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
     private static final int MINIMUM_TIME = 5*1000;  // 5s
     private static final int MINIMUM_DISTANCE = 1; // 1m
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Configuration.getInstance().load(getApplicationContext(),
+                PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
         setContentView(R.layout.map);
         displayInfo(null);
         findViewById(R.id.bouton_report).setOnClickListener(new View.OnClickListener() {
@@ -58,12 +94,89 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
                 startActivity(intent);
             }
         });
-
         currentLocation = findViewById(R.id.currentLocation);
+        infoBox = findViewById(R.id.infoBox);
         currentLocation.setText("Loading ...");
-
         setupGPS();
+        setupMap();
+        arrayButton();
     }
+
+    private void displayOverlays() {
+        map.getOverlays().remove(mOverlay);
+        mOverlay = new ItemizedOverlayWithFocus<>(this, items,
+                new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+                    @Override
+                    public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
+                        //do something
+                        if (item.equals(currentPositionOverlay))
+                            swipeCoordinatesVisibility();
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onItemLongPress(final int index, final OverlayItem item) {
+                        return false;
+                    }
+                });
+        mOverlay.setFocusItemsOnTap(true);
+        map.getOverlays().add(mOverlay);
+
+    }
+
+    private void arrayButton() {
+        ImageButton buttonRecenter = findViewById(R.id.bouton_recenter);
+        buttonRecenter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recenter();
+            }
+        });
+    }
+
+    void recenter() {
+        if (lastLocation != null)
+            mapController.animateTo(new GeoPoint(lastLocation.getLatitude(), lastLocation.getLongitude()));
+        mapController.setZoom(zoom);
+    }
+
+    void swipeCoordinatesVisibility() {
+        if (currentLocation.isShown())
+            currentLocation.setVisibility(View.INVISIBLE);
+        else
+            currentLocation.setVisibility(View.VISIBLE);
+    }
+
+    private void setupMap() {
+        map = findViewById(R.id.mapview);
+        mapController = map.getController();
+        map.setBuiltInZoomControls(true);
+        map.setMultiTouchControls(true);
+        map.setUseDataConnection(true);
+        map.setTileSource(TileSourceFactory.MAPNIK);
+        map.setBackgroundColor(Color.TRANSPARENT);
+        final MapTileProviderBase tileProvider = new MapTileProviderBasic(this, seamarks);
+        final TilesOverlay seamarksOverlay = new TilesOverlay(tileProvider, this);
+        seamarksOverlay.setLoadingBackgroundColor(Color.TRANSPARENT);
+        map.getOverlays().add(seamarksOverlay);
+        myPosition = new MyLocationNewOverlay(map);
+        myPosition.enableFollowLocation();
+        map.getOverlays().add(myPosition); //User's position on the map
+    }
+
+    private void updateMap() {
+        if (lastLocation != null) {
+            mapController.setZoom(zoom);
+            GeoPoint mapCenter = new GeoPoint(lastLocation.getLatitude(), lastLocation.getLongitude());
+            mapController.setCenter(mapCenter);
+            items.remove(currentPositionOverlay);
+            currentPositionOverlay = new OverlayItem("", "", mapCenter);
+            items.add(currentPositionOverlay);
+            displayOverlays();
+        }
+    }
+
+
 
     void displayInfo(ISignalement signalement) {
         InfoBox infoBox = new InfoBox();
@@ -97,7 +210,9 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
         if (location != null) {
             lastLocation = location;
             currentLocation.setText(location.getLatitude() + " " + location.getLongitude());
+            recenter();
             Log.d(GPS_LOG_TOKEN,"Position updated");
+            updateMap();
         }
     }
 
@@ -226,5 +341,17 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
         alertDialog.show();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        map.onResume(); //needed for compass, my location overlays, v6.0.0 and up
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
+    }
 
 }
