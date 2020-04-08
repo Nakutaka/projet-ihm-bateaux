@@ -11,7 +11,7 @@
 -  ** Visualiser une notification avec des images ou vidéo en entête.
 
 ### Angèle Badia
--  \* Créer une notification utile avec temps d'affichage
+-  DONE (mock notif)\* Créer une notification utile avec temps d'affichage
 
 -  ** Notifier et organiser les notifications d’une période donnée de façon utile
 
