@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Room Local Report</string>
+    <string name="add_word">Add word</string>
+    <string name="hint_word">Add a comment...</string>
+    <string name="button_save">Add</string>
+    <string name="saved">Comment added!</string>
+    <string name="empty_not_saved">Empty comment not added</string>
+</resources>
