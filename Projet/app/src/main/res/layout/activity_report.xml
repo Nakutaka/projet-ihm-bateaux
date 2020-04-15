@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- report fragment -->
+    <FrameLayout
+        android:id="@+id/frame_layout_report"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/big_padding">
+    </FrameLayout>
+
+    <!--<EditText
+        android:id="@+id/edit_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/min_height"
+        android:fontFamily="sans-serif-light"
+        android:hint="@string/hint_general_comment"
+        android:inputType="textAutoComplete"
+        android:layout_margin="@dimen/big_padding"
+        android:backgroundTint="@color/cherry"
+        android:textSize="18sp" />-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom|center_horizontal"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="60sp"
+            android:layout_marginBottom="@dimen/small_padding"
+            android:backgroundTint="@android:color/tertiary_text_dark"
+            android:drawableStart="@drawable/ic_comment"
+            android:drawablePadding="5sp"
+            android:drawableTint="@color/white"
+            android:text="@string/button_comment"
+            android:textColor="@color/buttonLabel" />
+
+        <Button
+            android:id="@+id/button_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60sp"
+            android:layout_marginBottom="@dimen/small_padding"
+            android:backgroundTint="@color/cherry"
+            android:drawableEnd="@drawable/ic_next"
+            android:drawablePadding="10sp"
+            android:drawableTint="@color/white"
+            android:text="@string/button_send"
+            android:textColor="@color/buttonLabel" />
+    </LinearLayout>
+
+</LinearLayout>

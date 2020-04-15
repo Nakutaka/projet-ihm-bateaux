@@ -15,16 +15,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".pages.MainActivity">
+        <activity android:name=".activities.MapActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".pages.SignalementActivity"></activity>
-        <activity android:name=".pages.ReportActivity"></activity>
-        <activity android:name=".pages.MapActivity"></activity>
+        <activity android:name=".activities.ReportActivity"></activity>
+        <activity android:name=".activities.IncidentActivity"></activity>
+        <activity android:name=".activities.MainActivity"></activity>
     </application>
 
 </manifest>
