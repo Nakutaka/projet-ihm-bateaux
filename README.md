@@ -1,13 +1,18 @@
 # projet-ihm-bateaux
 
-#TESTER Avec incident Cloud! (le seul mis)
---> insert Report ok
---> insert Incident not ok (inheritance pb? Parcelor pb? x pb??)
 
 ##TODO
-- \Bug --> quand insert Incident (Cloud) essayer de debugger, pour ajouter proprement un Report + Incidents liés
+- ReportDetailFragments + lien on tap Overlay items/trigger fragment
 - interfaces (dans fragments .xml) à compléter pour chaque incident
+- intégrer les champs des fragments aux Entities/modifier constructeurs
+
+
 - le reste des axes
+- \orientation --> layout-land/ (already created), besoin de le remplir + autorisation de l'app sûrement
+- notifs à intégrer (création + visualisation image) en local pour le moment
+- flux réseaux sociaux
+- affichage tablette
+- back-end server/remote bd
 
 ## Equipe et Axes Techniques
 ###Dans l'idéal:
@@ -16,7 +21,7 @@
 	justification: permet la continuité avec les autres applications avec carte/GPS --> google maps, Waze... pour conserver les habitudes des utilisateurs
 * Intégrer un flux réseaux sociaux (ex. Twitter)
 	justification: partage des incidents sur Facebook/Twitter, permet de toucher/attirer un plus grand nb d'utilisateurs
-AlmostOK * Créer une notification utile avec temps d'affichage
+AlmostOK (à intégrer) * Créer une notification utile avec temps d'affichage
 	justification: pour que l'application donne du feedback
 OK * Exchanger des objets complexes (non natifs) dans une communication entre les activités
 	justification: pour remplir un Incident, le créer/faire passer de l'activité ReportActivity à l'activité IncidentActivity OU l'inverse
