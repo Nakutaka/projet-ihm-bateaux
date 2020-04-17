@@ -3,6 +3,11 @@
 ## Introduction
 // TODO ;)
 
+##TODO
+- \Bug --> quand insert {Report, Incident...}, essayer de debugger, pour ajouter proprement un Report + Incidents liés
+- interfaces (dans fragments .xml) à compléter pour chaque incident
+- le reste des axes
+
 ## Equipe et Axes Techniques
 ###Dans l'idéal:
 
@@ -12,7 +17,7 @@
 	justification: partage des incidents sur Facebook/Twitter, permet de toucher/attirer un plus grand nb d'utilisateurs
 AlmostOK * Créer une notification utile avec temps d'affichage
 	justification: pour que l'application donne du feedback
-AlmostOK * Exchanger des objets complexes (non natifs) dans une communication entre les activités
+OK * Exchanger des objets complexes (non natifs) dans une communication entre les activités
 	justification: pour remplir un Incident, le créer/faire passer de l'activité ReportActivity à l'activité IncidentActivity OU l'inverse
 
 ** Faire une application compatible avec une affichage différent pour tablette et smartphone
