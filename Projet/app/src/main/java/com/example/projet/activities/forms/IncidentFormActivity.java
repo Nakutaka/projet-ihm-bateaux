@@ -1,4 +1,4 @@
-package com.example.projet.activities;
+package com.example.projet.activities.forms;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -35,16 +35,20 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-public class IncidentActivity extends AppCompatActivity implements ITypeIncident {
+public class IncidentFormActivity extends AppCompatActivity implements ITypeIncident {
+
+    private long reportId;
+    private int type;
+    private String comment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_incident);
+        setContentView(R.layout.activity_incident_form);
 
         Intent intent = getIntent();
-        long reportId = intent.getLongExtra(ITypeParam.REPORT_ACTIVITY_START, -1);
-        int type = getIntent().getIntExtra(ITypeParam.REPORT_ACTIVITY_INCIDENT_TYPE, 0);
+        reportId = intent.getLongExtra(ITypeParam.REPORT_ACTIVITY_START, -1);
+        type = getIntent().getIntExtra(ITypeParam.REPORT_ACTIVITY_INCIDENT_TYPE, 0);
         displayFragment(type);
 
         findViewById(R.id.button_back).setOnClickListener(view -> {
@@ -54,32 +58,68 @@ public class IncidentActivity extends AppCompatActivity implements ITypeIncident
         findViewById(R.id.button_save).setOnClickListener(view -> {
             Intent result = new Intent();
             EditText editComment = findViewById(R.id.edit_comment);
-            if(TextUtils.isEmpty(editComment.getText())) {
+            if(TextUtils.isEmpty(editComment.getText())) {// || type!=INCIDENT_CLOUD) {
                 setResult(RESULT_CANCELED, result);
             }
             else{
-                Incident incident;
-                String comment = editComment.getText().toString();
-                switch(type) {
-                    case INCIDENT_TEMPERATURE: incident = new Temperature(reportId, type, comment); break;
-                    case INCIDENT_RAIN: incident = new Rain(reportId, type, comment); break;
-                    case INCIDENT_HAIL: incident = new Hail(reportId, type, comment); break;
-                    case INCIDENT_FOG: incident = new Fog(reportId, type, comment); break;
-                    case INCIDENT_CLOUD: incident = new Cloud(reportId, type, comment); break;
-                    case INCIDENT_STORM: incident = new Storm(reportId, type, comment); break;
-                    case INCIDENT_WIND: incident = new Wind(reportId, type, comment); break;
-                    case INCIDENT_CURRENT: incident = new Current(reportId, type, comment); break;
-                    case INCIDENT_TRANSPARENCY: incident = new Transparency(reportId, type, comment); break;
-                    default: incident = new Other(reportId, type, comment);//INCIDENT_OTHER
-                }
-                Toast.makeText(this, "rep: " + incident.reportId + " inc: " +
-                        incident.incidentId + " com: "+ incident.comment, Toast.LENGTH_SHORT).show();
-                //put extra*/
-                result.putExtra(ReportActivity.EXTRA_INCIDENT, incident);
+                comment = editComment.getText().toString();
+                Incident incident = newIncident();
+                result.putExtra(ReportFormActivity.EXTRA_INCIDENT, incident);
                 setResult(RESULT_OK, result);
             }
             finish();
         });
+    }
+
+    private void toastyIncident(String type, int id, String com) {
+        Toast.makeText(
+                getApplicationContext(), type + " - " + id + " - " + com,
+                Toast.LENGTH_SHORT).show();
+    }
+
+    Incident newIncident() {
+        switch(type) {
+            case INCIDENT_TEMPERATURE: {
+                toastyIncident("Temperature", INCIDENT_TEMPERATURE, comment);
+                return new Temperature(reportId, type, comment);
+            }
+            case INCIDENT_RAIN: {
+                toastyIncident("Rain", INCIDENT_RAIN, comment);
+                return new Rain(reportId, type, comment);
+            }
+            case INCIDENT_HAIL: {
+                toastyIncident("Hail", INCIDENT_HAIL, comment);
+                return new Hail(reportId, type, comment);
+            }
+            case INCIDENT_FOG: {
+                toastyIncident("Fog", INCIDENT_FOG, comment);
+                return new Fog(reportId, type, comment);
+            }
+            case INCIDENT_CLOUD: {
+                toastyIncident("Cloud", INCIDENT_CLOUD, comment);
+                return new Cloud(reportId, type, comment);
+            }
+            case INCIDENT_STORM: {
+                toastyIncident("Storm", INCIDENT_STORM, comment);
+                return new Storm(reportId, type, comment);
+            }
+            case INCIDENT_WIND: {
+                toastyIncident("Wind", INCIDENT_WIND, comment);
+                return new Wind(reportId, type, comment);
+            }
+            case INCIDENT_CURRENT: {
+                toastyIncident("Current", INCIDENT_CURRENT, comment);
+                return new Current(reportId, type, comment);
+            }
+            case INCIDENT_TRANSPARENCY: {
+                toastyIncident("Transparency", INCIDENT_TRANSPARENCY, comment);
+                return new Transparency(reportId, type, comment);
+            }
+            default: {
+                toastyIncident("Other", INCIDENT_OTHER, comment);
+                return new Other(reportId, type, comment);
+            }
+        }
     }
 
     void displayFragment(int type) {

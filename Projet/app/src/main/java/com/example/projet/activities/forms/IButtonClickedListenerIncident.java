@@ -1,4 +1,4 @@
-package com.example.projet.activities;
+package com.example.projet.activities.forms;
 
 import android.view.View;
 

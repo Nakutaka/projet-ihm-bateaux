@@ -1,10 +1,11 @@
 # projet-ihm-bateaux
 
-## Introduction
-// TODO ;)
+#TESTER Avec incident Cloud! (le seul mis)
+--> insert Report ok
+--> insert Incident not ok (inheritance pb? Parcelor pb? x pb??)
 
 ##TODO
-- \Bug --> quand insert {Report, Incident...}, essayer de debugger, pour ajouter proprement un Report + Incidents liés
+- \Bug --> quand insert Incident (Cloud) essayer de debugger, pour ajouter proprement un Report + Incidents liés
 - interfaces (dans fragments .xml) à compléter pour chaque incident
 - le reste des axes
 

@@ -1,4 +1,4 @@
-package com.example.projet.database;
+package com.example.projet.database.core;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -24,10 +24,6 @@ import java.util.List;
 
 @Dao
 public interface WeatherReportDao {
-
-   // allowing the insert of the same word multiple times by passing a 
-   // conflict resolution strategy
-
    //report
    @Insert(onConflict = OnConflictStrategy.IGNORE)
    void insert(Report report);

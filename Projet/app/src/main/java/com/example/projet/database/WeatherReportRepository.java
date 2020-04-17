@@ -4,6 +4,8 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
+import com.example.projet.database.core.WeatherReportDao;
+import com.example.projet.database.core.WeatherReportRoomDatabase;
 import com.example.projet.database.models.Cloud;
 import com.example.projet.database.models.Current;
 import com.example.projet.database.models.Fog;
@@ -21,7 +23,7 @@ import com.example.projet.types.ITypeIncident;
 
 import java.util.List;
 
-class WeatherReportRepository {
+public class WeatherReportRepository {
 
     private WeatherReportDao mWeatherReportDao;
 
@@ -46,27 +48,100 @@ class WeatherReportRepository {
     LiveData<List<ReportWithIncidents>> getAllWeatherReports() {
         return mAllReportsWithIncidents;
     }
+
     LiveData<List<ReportWithIncidents>> getLastWeatherReports() {
         return mLastReportsWithIncidents;
     }
 
+    void insert(Report report) {
+        WeatherReportRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mWeatherReportDao.insert(report);
+        });
+    }
 
+    void insert(Cloud cloud) {
+        WeatherReportRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mWeatherReportDao.insert(cloud);
+        });
+    }
+
+    void insert(Current in) {
+        WeatherReportRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mWeatherReportDao.insert(in);
+        });
+    }
+    void insert(Fog in) {
+        WeatherReportRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mWeatherReportDao.insert(in);
+        });
+    }
+
+    void insert(Hail in) {
+        WeatherReportRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mWeatherReportDao.insert(in);
+        });
+    }
+
+    void insert(Other in) {
+        WeatherReportRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mWeatherReportDao.insert(in);
+        });
+    }
+
+    void insert(Rain in) {
+        WeatherReportRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mWeatherReportDao.insert(in);
+        });
+    }
+
+    void insert(Storm in) {
+        WeatherReportRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mWeatherReportDao.insert(in);
+        });
+    }
+
+    void insert(Temperature in) {
+        WeatherReportRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mWeatherReportDao.insert(in);
+        });
+    }
+
+    void insert(Transparency in) {
+        WeatherReportRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mWeatherReportDao.insert(in);
+        });
+    }
+
+    void insert(Wind in) {
+        WeatherReportRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mWeatherReportDao.insert(in);
+        });
+    }
+
+    void deleteAllWeatherReports() {
+        WeatherReportRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mWeatherReportDao.deleteAllIncidentsCloud();
+            mWeatherReportDao.deleteAllIncidentsCurrent();
+            mWeatherReportDao.deleteAllIncidentsFog();
+            mWeatherReportDao.deleteAllIncidentsHail();
+            mWeatherReportDao.deleteAllIncidentsOther();
+            mWeatherReportDao.deleteAllIncidentsRain();
+            mWeatherReportDao.deleteAllIncidentsStorm();
+            mWeatherReportDao.deleteAllIncidentsTemperature();
+            mWeatherReportDao.deleteAllIncidentsTransparency();
+            mWeatherReportDao.deleteAllIncidentsWind();
+            mWeatherReportDao.deleteAllReports();
+        });
+        WeatherReportRoomDatabase.populate();//repopulate
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
     // that you're not doing any long running operations on the main thread, blocking the UI.
     void insert(Report report, List<Incident> incidents) {
         WeatherReportRoomDatabase.databaseWriteExecutor.execute(() -> {
             mWeatherReportDao.insert(report);
             //incidents.forEach(this::insert);//lambda
-        });
-    }
-
-    void insert(Report report) {
-        mWeatherReportDao.insert(report);
-    }
-
-    void insert(Cloud cloud) {
-        WeatherReportRoomDatabase.databaseWriteExecutor.execute(() -> {
-            mWeatherReportDao.insert(cloud);
         });
     }
 
@@ -87,22 +162,5 @@ class WeatherReportRepository {
             case (ITypeIncident.INCIDENT_WIND): mWeatherReportDao.insert((Wind)incident); break;
             default: mWeatherReportDao.insert((Other)incident);
         }
-    }
-
-    void deleteAllWeatherReports() {
-        WeatherReportRoomDatabase.databaseWriteExecutor.execute(() -> {
-            mWeatherReportDao.deleteAllIncidentsCloud();
-            mWeatherReportDao.deleteAllIncidentsCurrent();
-            mWeatherReportDao.deleteAllIncidentsFog();
-            mWeatherReportDao.deleteAllIncidentsHail();
-            mWeatherReportDao.deleteAllIncidentsOther();
-            mWeatherReportDao.deleteAllIncidentsRain();
-            mWeatherReportDao.deleteAllIncidentsStorm();
-            mWeatherReportDao.deleteAllIncidentsTemperature();
-            mWeatherReportDao.deleteAllIncidentsTransparency();
-            mWeatherReportDao.deleteAllIncidentsWind();
-            mWeatherReportDao.deleteAllReports();
-        });
-        WeatherReportRoomDatabase.populate();//repopulate
     }
 }

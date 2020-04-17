@@ -1,6 +1,5 @@
 package com.example.projet.fragments;
 
-import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,13 +8,13 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
-import com.example.projet.activities.IButtonClickedListenerIncident;
+import com.example.projet.activities.forms.IButtonClickedListenerIncident;
 import com.example.projet.R;
 
-public class ReportFragment extends Fragment implements View.OnClickListener {
+public class ReportFormFragment extends Fragment implements View.OnClickListener {
     private IButtonClickedListenerIncident mCallBack;
 
-    public ReportFragment() {}
+    public ReportFormFragment() {}
 
     @Override
     public void onAttach(Context context){
@@ -30,7 +29,7 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_report, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_report_form, container, false);
         rootView.findViewById(R.id.fab_temp).setOnClickListener(this);
         rootView.findViewById(R.id.fab_rain).setOnClickListener(this);
         rootView.findViewById(R.id.fab_hail).setOnClickListener(this);

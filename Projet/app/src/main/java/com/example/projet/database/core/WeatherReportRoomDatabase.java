@@ -1,4 +1,4 @@
-package com.example.projet.database;
+package com.example.projet.database.core;
 
 import android.content.Context;
 
@@ -35,10 +35,10 @@ public abstract class WeatherReportRoomDatabase extends RoomDatabase {
 
     private static volatile WeatherReportRoomDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
-    static final ExecutorService databaseWriteExecutor =
+    public static final ExecutorService databaseWriteExecutor =
            Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
-    static WeatherReportRoomDatabase getDatabase(final Context context) {
+    public static WeatherReportRoomDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             synchronized (WeatherReportRoomDatabase.class) {
                 if (INSTANCE == null) {
@@ -54,16 +54,13 @@ public abstract class WeatherReportRoomDatabase extends RoomDatabase {
 
     private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
         @Override
-        public void onOpen(@NonNull SupportSQLiteDatabase db) {//onCreate//onOpen... re-init at each start
-            super.onOpen(db);
-
-            // If you want to keep data through app restarts,
-            // comment out the following block
+        public void onCreate(@NonNull SupportSQLiteDatabase db) {//onCreate//onOpen... re-init at each start
+            super.onCreate(db);
             populate();
         };
     };
 
-    static void populate() {
+    public static void populate() {
         databaseWriteExecutor.execute(() -> {
             // Populate the database in the background.
             WeatherReportDao dao = INSTANCE.weatherReportDao();

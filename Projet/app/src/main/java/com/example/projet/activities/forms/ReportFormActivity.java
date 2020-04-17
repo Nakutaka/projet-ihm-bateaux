@@ -1,4 +1,4 @@
-package com.example.projet.activities;
+package com.example.projet.activities.forms;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,23 +7,21 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.projet.R;
-import com.example.projet.database.models.Cloud;
+import com.example.projet.activities.MainActivity;
 import com.example.projet.database.models.Incident;
 import com.example.projet.types.ITypeIncident;
 import com.example.projet.types.ITypeParam;
-import com.example.projet.fragments.ReportFragment;
+import com.example.projet.fragments.ReportFormFragment;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
-public class ReportActivity extends AppCompatActivity implements IButtonClickedListenerIncident, ITypeIncident {
+public class ReportFormActivity extends AppCompatActivity implements IButtonClickedListenerIncident, ITypeIncident {
 
-    //void addSignalement(IReport signalement){}*/
     public static final int NEW_INCIDENT_ACTIVITY_REQUEST_CODE = 2;
-    public static final String EXTRA_INCIDENT = "com.example.projet.activities.INCIDENT";
+    public static final String EXTRA_INCIDENT = "com.example.projet.activities.report.INCIDENT";
     private EditText mEditCommentView;
 
     private long start;
@@ -32,13 +30,13 @@ public class ReportActivity extends AppCompatActivity implements IButtonClickedL
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_report);
-        start = Calendar.getInstance().getTimeInMillis();
+        setContentView(R.layout.activity_report_form);
+        start = getIntent().getIntExtra(ITypeParam.MAP_ACTIVITY_START, -1);
         incidents = new ArrayList<Incident>();
 
-        ReportFragment reportFragment = new ReportFragment();
+        ReportFormFragment reportFormFragment = new ReportFormFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout_report,
-                reportFragment).commit();
+                reportFormFragment).commit();
 
         findViewById(R.id.button_send).setOnClickListener(view -> {
             //mEditCommentView = findViewById(R.id.edit_word);
@@ -48,21 +46,19 @@ public class ReportActivity extends AppCompatActivity implements IButtonClickedL
                 setResult(RESULT_CANCELED, result);
             }
             else{
-                //result.putParcelableArrayListExtra(MapActivity.EXTRA_INCIDENT_LIST, (ArrayList<Incident>) incidents);
+                //result.putParcelableArrayListExtra(MapActivity.EXTRA_INCIDENT_LIST, (ArrayList<Incident>) incidents);;
                 incidents.forEach(i -> {
-                    Toast.makeText(this, "rep: " + i.reportId + " inc: " +
-                            i.incidentId + " com: "+ i.comment, Toast.LENGTH_SHORT).show();
                     switch(i.incidentId) {
-                        case INCIDENT_CLOUD: result.putExtra(MapActivity.EXTRA_INCIDENT_CLOUD, i); break;
-                        case INCIDENT_CURRENT: result.putExtra(MapActivity.EXTRA_INCIDENT_CURRENT, i); break;
-                        case INCIDENT_FOG: result.putExtra(MapActivity.EXTRA_INCIDENT_FOG, i); break;
-                        case INCIDENT_HAIL: result.putExtra(MapActivity.EXTRA_INCIDENT_HAIL, i); break;
-                        case INCIDENT_RAIN: result.putExtra(MapActivity.EXTRA_INCIDENT_RAIN, i); break;
-                        case INCIDENT_STORM: result.putExtra(MapActivity.EXTRA_INCIDENT_STORM, i); break;
-                        case INCIDENT_TEMPERATURE: result.putExtra(MapActivity.EXTRA_INCIDENT_TEMPERATURE, i); break;
-                        case INCIDENT_TRANSPARENCY: result.putExtra(MapActivity.EXTRA_INCIDENT_TRANSPARENCY, i); break;
-                        case INCIDENT_WIND: result.putExtra(MapActivity.EXTRA_INCIDENT_WIND, i); break;
-                        default: result.putExtra(MapActivity.EXTRA_INCIDENT_OTHER, i);
+                        case INCIDENT_CLOUD: result.putExtra(MainActivity.EXTRA_INCIDENT_CLOUD, i); break;
+                        case INCIDENT_CURRENT: result.putExtra(MainActivity.EXTRA_INCIDENT_CURRENT, i); break;
+                        case INCIDENT_FOG: result.putExtra(MainActivity.EXTRA_INCIDENT_FOG, i); break;
+                        case INCIDENT_HAIL: result.putExtra(MainActivity.EXTRA_INCIDENT_HAIL, i); break;
+                        case INCIDENT_RAIN: result.putExtra(MainActivity.EXTRA_INCIDENT_RAIN, i); break;
+                        case INCIDENT_STORM: result.putExtra(MainActivity.EXTRA_INCIDENT_STORM, i); break;
+                        case INCIDENT_TEMPERATURE: result.putExtra(MainActivity.EXTRA_INCIDENT_TEMPERATURE, i); break;
+                        case INCIDENT_TRANSPARENCY: result.putExtra(MainActivity.EXTRA_INCIDENT_TRANSPARENCY, i); break;
+                        case INCIDENT_WIND: result.putExtra(MainActivity.EXTRA_INCIDENT_WIND, i); break;
+                        default: result.putExtra(MainActivity.EXTRA_INCIDENT_OTHER, i);
                     }
                 });
                 setResult(RESULT_OK, result);
@@ -81,7 +77,6 @@ public class ReportActivity extends AppCompatActivity implements IButtonClickedL
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == NEW_INCIDENT_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            //get extra Incident
             Incident incident = data.getParcelableExtra(EXTRA_INCIDENT);
             if(incident == null) {
                 Toast.makeText(
@@ -95,10 +90,6 @@ public class ReportActivity extends AppCompatActivity implements IButtonClickedL
                 incidents.set(i, incident);
             }
             else incidents.add(incident);
-            Toast.makeText(
-                    getApplicationContext(),
-                    "Incident: " + incident.reportId + " - " + incident.incidentId + " - " + incident.comment + " added!",
-                    Toast.LENGTH_SHORT).show();
         }
         else{
             Toast.makeText(
@@ -109,7 +100,7 @@ public class ReportActivity extends AppCompatActivity implements IButtonClickedL
     }
 
     private void startIncidentActivity(int incidentType) {
-        Intent intent = new Intent(getApplicationContext(), IncidentActivity.class);
+        Intent intent = new Intent(getApplicationContext(), IncidentFormActivity.class);
         intent.putExtra(ITypeParam.REPORT_ACTIVITY_INCIDENT_TYPE, incidentType);
         intent.putExtra(ITypeParam.REPORT_ACTIVITY_START, start);
         startActivityForResult(intent, NEW_INCIDENT_ACTIVITY_REQUEST_CODE);
