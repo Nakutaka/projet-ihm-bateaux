@@ -32,7 +32,6 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_report, container, false);
         rootView.findViewById(R.id.fab_temp).setOnClickListener(this);
-        rootView.findViewById(R.id.fab_temp).setOnClickListener(this);
         rootView.findViewById(R.id.fab_rain).setOnClickListener(this);
         rootView.findViewById(R.id.fab_hail).setOnClickListener(this);
         rootView.findViewById(R.id.fab_fog).setOnClickListener(this);

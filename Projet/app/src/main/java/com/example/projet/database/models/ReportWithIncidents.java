@@ -1,51 +1,45 @@
 package com.example.projet.database.models;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Embedded;
 import androidx.room.Ignore;
 import androidx.room.Relation;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class ReportWithIncidents {
    @Embedded
    public Report report;
-   @Relation(
-           parentColumn = "report_id",
-           entityColumn = "i_report_id"
-   )
-   public List<Incident> incidents;
 
-   public ReportWithIncidents(Report report, List<Incident> incidents) {
-      this.report = report;
-      this.incidents = incidents;
-   }
+   @Relation(parentColumn = "report_id", entityColumn = "report_id")
+   public Cloud cloudIncident;
 
-   @Ignore
-   public ReportWithIncidents(long time, double latitude, double longitude) {
-      this.report = new Report(time, latitude, longitude);
-      this.incidents = new ArrayList<Incident>();
-   }
+   @Relation(parentColumn = "report_id", entityColumn = "report_id")
+   public Current currentIncident;
 
-   @Ignore
-   public ReportWithIncidents(Report report) {
-      this.report = report;
-      this.incidents = new ArrayList<Incident>();
-   }
+   @Relation(parentColumn = "report_id", entityColumn = "report_id")
+   public Fog fogIncident;
 
-   public void addIncident(Incident incident){
-      incidents.add(incident);
-   }
+   @Relation(parentColumn = "report_id", entityColumn = "report_id")
+   public Hail hailIncident;
 
-   public void addIncident(long reportId, long incidentId, String comment){
-      incidents.add(new Incident(reportId, incidentId, comment));
-   }
+   @Relation(parentColumn = "report_id", entityColumn = "report_id")
+   public Other otherIncident;
 
-   public void addIncident(long incidentId, String comment){
-      incidents.add(new Incident(incidentId, comment));
-   }
+   @Relation(parentColumn = "report_id", entityColumn = "report_id")
+   public Rain rainIncident;
 
-   public void setReportIdToIncident(long reportId){
-      incidents.forEach(i -> i.setReportId(reportId));
-   }
+   @Relation(parentColumn = "report_id", entityColumn = "report_id")
+   public Storm stormIncident;
+
+   @Relation(parentColumn = "report_id", entityColumn = "report_id")
+   public Temperature temperatureIncident;
+
+   @Relation(parentColumn = "report_id", entityColumn = "report_id")
+   public Transparency transparencyIncident;
+
+   @Relation(parentColumn = "report_id", entityColumn = "report_id")
+   public Wind windIncident;
 }

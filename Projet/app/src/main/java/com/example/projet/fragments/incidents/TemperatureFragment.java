@@ -11,9 +11,9 @@ import androidx.fragment.app.Fragment;
 
 import com.example.projet.R;
 
-public class TempFragment extends Fragment {
+public class TemperatureFragment extends Fragment {
 
-    public TempFragment() {}
+    public TemperatureFragment() {}
 
     @Nullable
     @Override

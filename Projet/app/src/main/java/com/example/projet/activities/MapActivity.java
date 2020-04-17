@@ -22,12 +22,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.projet.R;
-import com.example.projet.not_used_for_now_core.IReport;
-import com.example.projet.fragments.InfoBox;
+import com.example.projet.database.WeatherReportViewModel;
+import com.example.projet.database.models.Cloud;
+import com.example.projet.database.models.Incident;
+import com.example.projet.database.models.Report;
+import com.example.projet.database.models.ReportWithIncidents;
+import com.example.projet.types.ITypeParam;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresPermission;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
@@ -44,12 +49,30 @@ import org.osmdroid.views.overlay.TilesOverlay;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Formatter;
+import java.util.List;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class MapActivity extends AppCompatActivity implements LocationListener {
-    ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
+
+    private WeatherReportViewModel mWeatherReportViewModel;
+    public static final int NEW_REPORT_ACTIVITY_REQUEST_CODE = 1;
+    public static final String EXTRA_INCIDENT_LIST = "com.example.projet.activities.INCIDENT_LIST";
+    public static final String EXTRA_INCIDENT_CLOUD = "com.example.projet.activities.INCIDENT_CLOUD";
+    public static final String EXTRA_INCIDENT_CURRENT = "com.example.projet.activities.INCIDENT_CURRENT";
+    public static final String EXTRA_INCIDENT_FOG = "com.example.projet.activities.INCIDENT_FOG";
+    public static final String EXTRA_INCIDENT_HAIL = "com.example.projet.activities.INCIDENT_HAIL";
+    public static final String EXTRA_INCIDENT_OTHER = "com.example.projet.activities.INCIDENT_OTHER";
+    public static final String EXTRA_INCIDENT_RAIN = "com.example.projet.activities.INCIDENT_RAIN";
+    public static final String EXTRA_INCIDENT_STORM = "com.example.projet.activities.INCIDENT_STORM";
+    public static final String EXTRA_INCIDENT_TEMPERATURE = "com.example.projet.activities.INCIDENT_TEMP";
+    public static final String EXTRA_INCIDENT_TRANSPARENCY = "com.example.projet.activities.INCIDENT_TRANSPARENCY";
+    public static final String EXTRA_INCIDENT_WIND = "com.example.projet.activities.INCIDENT_WIND";
+    public long start;
+    ArrayList<OverlayItem> items;
     private TextView currentLocation;
     private MyLocationNewOverlay myPosition;
     private OverlayItem currentPositionOverlay;
@@ -75,9 +98,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
     /* GPS Constant Permission */
     private static final int MY_PERMISSION_ACCESS_LOCATION = 10;
     /* GPS update config */
-    private static final int MINIMUM_TIME = 5*1000;  // 5s
+    private static final int MINIMUM_TIME = 10*1000;  // 10 //5s
     private static final int MINIMUM_DISTANCE = 1; // 1m
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,20 +107,127 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
         Configuration.getInstance().load(getApplicationContext(),
                 PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
         setContentView(R.layout.activity_main);
-        displayInfo(null);
-        findViewById(R.id.fab_add).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), ReportActivity.class);
-                startActivity(intent);
-            }
-        });
+
+        mWeatherReportViewModel = new ViewModelProvider(this).get(WeatherReportViewModel.class);
+        // Update the cached copy of the reports in the map overlays. (method reference style)
+        mWeatherReportViewModel.getWeatherReports().observe(this, this::setReports);
+
         currentLocation = findViewById(R.id.current_location);
         infoBox = findViewById(R.id.infoBox);
         currentLocation.setText("Loading ...");
+
+        findViewById(R.id.fab_add).setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), ReportActivity.class);
+            start = Calendar.getInstance().getTimeInMillis();
+            intent.putExtra(ITypeParam.MAP_ACTIVITY_START, start);
+            startActivityForResult(intent, NEW_REPORT_ACTIVITY_REQUEST_CODE);
+        });
+
+        findViewById(R.id.fab_erase).setOnClickListener(v -> {
+            mWeatherReportViewModel.clearWeatherReports();
+        });
+
         setupGPS();
         setupMap();
         arrayButton();
+        recenter();
+        //displayInfo(null);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == NEW_REPORT_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK &&
+                lastLocation!=null) {
+            Toast.makeText(
+                    getApplicationContext(),
+                    "Changes made",
+                    Toast.LENGTH_SHORT).show();
+            //get extra Incident
+            //List<Incident> incidents = data.getParcelableArrayListExtra(EXTRA_INCIDENT_LIST);
+            List<Incident> incidents = new ArrayList<>();
+            Incident tmp;
+            Cloud c;
+            Report report = new Report(start, lastLocation.getLatitude(), lastLocation.getLongitude());
+            //mWeatherReportViewModel.insert(report, new ArrayList<Incident>());
+
+/*********************************FAIT PLANTER***********************************************/
+            //mWeatherReportViewModel.insert(report);
+/*******************************************************************************************/
+            /*Toast.makeText(
+                    getApplicationContext(),report.reportId + " added!",
+                    Toast.LENGTH_SHORT).show();*/
+
+            /*if((c = data.getParcelableExtra(EXTRA_INCIDENT_CLOUD))!=null) {
+                //incidents.add(c);
+                /*Toast.makeText(
+                        getApplicationContext(),c.incidentId + " - " + c.comment,
+                        Toast.LENGTH_SHORT).show();*/
+                //mWeatherReportViewModel.insert(c);
+            //}*/
+            /*if((tmp = data.getParcelableExtra(EXTRA_INCIDENT_CURRENT))!=null) {
+                incidents.add(tmp);
+                Toast.makeText(
+                        getApplicationContext(),tmp.incidentId + " - " + tmp.comment,
+                        Toast.LENGTH_SHORT).show();
+            }
+            if((tmp = data.getParcelableExtra(EXTRA_INCIDENT_FOG))!=null) {
+                incidents.add(tmp);
+                Toast.makeText(
+                        getApplicationContext(),tmp.incidentId + " - " + tmp.comment,
+                        Toast.LENGTH_SHORT).show();
+            }
+            if((tmp = data.getParcelableExtra(EXTRA_INCIDENT_HAIL))!=null) {
+                incidents.add(tmp);
+                Toast.makeText(
+                        getApplicationContext(),tmp.incidentId + " - " + tmp.comment,
+                        Toast.LENGTH_SHORT).show();
+            }
+            if((tmp = data.getParcelableExtra(EXTRA_INCIDENT_OTHER))!=null) {
+                incidents.add(tmp);
+                Toast.makeText(
+                        getApplicationContext(),tmp.incidentId + " - " + tmp.comment,
+                        Toast.LENGTH_SHORT).show();
+            }
+            if((tmp = data.getParcelableExtra(EXTRA_INCIDENT_RAIN))!=null) {
+                incidents.add(tmp);
+                Toast.makeText(
+                        getApplicationContext(),tmp.incidentId + " - " + tmp.comment,
+                        Toast.LENGTH_SHORT).show();
+            }
+            if((tmp = data.getParcelableExtra(EXTRA_INCIDENT_STORM))!=null) {
+                incidents.add(tmp);
+                Toast.makeText(
+                        getApplicationContext(),tmp.incidentId + " - " + tmp.comment,
+                        Toast.LENGTH_SHORT).show();
+            }
+            if((tmp = data.getParcelableExtra(EXTRA_INCIDENT_TEMPERATURE))!=null) {
+                incidents.add(tmp);
+                Toast.makeText(
+                        getApplicationContext(),tmp.incidentId + " - " + tmp.comment,
+                        Toast.LENGTH_SHORT).show();
+            }
+            if((tmp = data.getParcelableExtra(EXTRA_INCIDENT_TRANSPARENCY))!=null) {
+                incidents.add(tmp);
+                Toast.makeText(
+                        getApplicationContext(),tmp.incidentId + " - " + tmp.comment,
+                        Toast.LENGTH_SHORT).show();
+            }
+            if((tmp = data.getParcelableExtra(EXTRA_INCIDENT_WIND))!=null) {
+                incidents.add(tmp);
+                Toast.makeText(
+                        getApplicationContext(),tmp.incidentId + " - " + tmp.comment,
+                        Toast.LENGTH_SHORT).show();
+            }*/
+            /*Toast.makeText(
+                    getApplicationContext(),incidents.size() + " incidents added!",
+                    Toast.LENGTH_SHORT).show();*/
+        }
+        else{
+            Toast.makeText(
+                    getApplicationContext(),
+                    "No changes",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void displayOverlays() {
@@ -108,8 +237,12 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
                     @Override
                     public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
                         //do something
+                        currentLocation.setText(item.getPoint().getLatitude() + " " + item.getPoint().getLongitude());
                         if (item.equals(currentPositionOverlay))
-                            swipeCoordinatesVisibility();
+                            switchCoordinatesVisibility();
+                        else {
+                            currentLocation.setVisibility(View.VISIBLE);
+                        }
                         return true;
                     }
 
@@ -120,7 +253,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
                 });
         mOverlay.setFocusItemsOnTap(true);
         map.getOverlays().add(mOverlay);
-
     }
 
     private void arrayButton() {
@@ -139,7 +271,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
         mapController.setZoom(zoom);
     }
 
-    void swipeCoordinatesVisibility() {
+    void switchCoordinatesVisibility() {
         if (currentLocation.isShown())
             currentLocation.setVisibility(View.INVISIBLE);
         else
@@ -163,11 +295,42 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
         map.getOverlays().add(myPosition); //User's position on the map
     }
 
+    private void setReports(List<ReportWithIncidents> reports) {
+        List<OverlayItem> reportItems = new ArrayList<>();
+        reports.forEach(r -> {
+            Report report = r.report;
+            List<Incident> incidents = new ArrayList<>();
+            if(r.cloudIncident!=null) incidents.add(r.cloudIncident);
+            if(r.currentIncident!=null) incidents.add(r.currentIncident);
+            if(r.fogIncident!=null) incidents.add(r.fogIncident);
+            if(r.hailIncident!=null) incidents.add(r.hailIncident);
+            if(r.otherIncident!=null) incidents.add(r.otherIncident);
+            if(r.rainIncident!=null) incidents.add(r.rainIncident);
+            if(r.stormIncident!=null) incidents.add(r.stormIncident);
+            if(r.temperatureIncident!=null) incidents.add(r.temperatureIncident);
+            if(r.transparencyIncident!=null) incidents.add(r.transparencyIncident);
+            if(r.windIncident!=null) incidents.add(r.windIncident);
+            int hour = (int)((report.reportId/(1000*60*60))%24);
+            int min = (int)((report.reportId/(1000*60))%60);
+            int sec = (int)(report.reportId/1000)%60;
+            StringBuilder sbuf = new StringBuilder();
+            Formatter fmt = new Formatter(sbuf);
+            String time = fmt.format("%2d:%2d:%2d", hour, min, sec).toString();
+            //String time = String.format("%2d:%2d:%2d", hour, min, sec);
+            reportItems.add(new OverlayItem("Report: " + time,
+                    "nb: " + incidents.size() + (incidents.size()>1? " incidents" : " incident"),
+                    new GeoPoint(report.latitude, report.longitude)));
+        });
+        items = new ArrayList<OverlayItem>(reportItems);
+        updateMap();
+    }
+
     private void updateMap() {
+        //items = new ArrayList<OverlayItem>();
         if (lastLocation != null) {
-            mapController.setZoom(zoom);
+            //mapController.setZoom(zoom);
             GeoPoint mapCenter = new GeoPoint(lastLocation.getLatitude(), lastLocation.getLongitude());
-            mapController.setCenter(mapCenter);
+            //mapController.setCenter(mapCenter);
             items.remove(currentPositionOverlay);
             currentPositionOverlay = new OverlayItem("", "", mapCenter);
             items.add(currentPositionOverlay);
@@ -177,10 +340,10 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
 
 
 
-    void displayInfo(IReport signalement) {
+    /*void displayInfo(IReport signalement) {
         InfoBox infoBox = new InfoBox();
         getSupportFragmentManager().beginTransaction().replace(R.id.infoBox, infoBox).commit();
-    }
+    }*/
 
     @Override
     protected void onDestroy() {
@@ -209,7 +372,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
         if (location != null) {
             lastLocation = location;
             currentLocation.setText(location.getLatitude() + " " + location.getLongitude());
-            recenter();
+            //recenter(); --> otherwise not possible to navigate on the map
             Log.d(GPS_LOG_TOKEN,"Position updated");
             updateMap();
         }

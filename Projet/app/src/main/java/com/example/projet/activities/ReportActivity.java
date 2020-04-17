@@ -2,99 +2,121 @@ package com.example.projet.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.projet.R;
+import com.example.projet.database.models.Cloud;
 import com.example.projet.database.models.Incident;
-import com.example.projet.fragments.ITypeFragment;
+import com.example.projet.types.ITypeIncident;
+import com.example.projet.types.ITypeParam;
 import com.example.projet.fragments.ReportFragment;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.osmdroid.tileprovider.tilesource.ITileSource;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
-public class ReportActivity extends AppCompatActivity implements IButtonClickedListenerIncident, ITypeFragment {
+public class ReportActivity extends AppCompatActivity implements IButtonClickedListenerIncident, ITypeIncident {
 
-    /*@Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_report);
-        ((ImageButton)findViewById(R.id.bouton)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               Intent intent = new Intent(getApplicationContext(), IncidentActivity.class);
-               //intent.putExtra("key", WindReportFragment.class);
-               startActivity(intent);
-            }
-        });
-    }
-
-    void addSignalement(IReport signalement){}*/
-    public static final String EXTRA_REPLY = "com.example.android.wordlistsql.REPLY";
-
+    //void addSignalement(IReport signalement){}*/
+    public static final int NEW_INCIDENT_ACTIVITY_REQUEST_CODE = 2;
+    public static final String EXTRA_INCIDENT = "com.example.projet.activities.INCIDENT";
     private EditText mEditCommentView;
+
+    private long start;
+    private List<Incident> incidents;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report);
+        start = Calendar.getInstance().getTimeInMillis();
+        incidents = new ArrayList<Incident>();
 
         ReportFragment reportFragment = new ReportFragment();
-        /*Bundle args = new Bundle();
-        args.putInt(FRAGMENT_PARAMETER, entier);
-        detailFragment.setArguments(args);*/
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout_report,
                 reportFragment).commit();
 
-
-        //mEditCommentView = findViewById(R.id.edit_word);
-        final Button button = findViewById(R.id.button_send);
-        /*button.setOnClickListener(view -> {
-            Intent replyIntent = new Intent();
-            if (TextUtils.isEmpty(mEditCommentView.getText())) {
-                setResult(RESULT_CANCELED, replyIntent);
-            } else {
-                String word = mEditCommentView.getText().toString();
-                replyIntent.putExtra(EXTRA_REPLY, word);
-                setResult(RESULT_OK, replyIntent);
+        findViewById(R.id.button_send).setOnClickListener(view -> {
+            //mEditCommentView = findViewById(R.id.edit_word);
+            //general comment
+            Intent result = new Intent();//getIntent();//new Intent();
+            if(incidents.isEmpty()){
+                setResult(RESULT_CANCELED, result);
+            }
+            else{
+                //result.putParcelableArrayListExtra(MapActivity.EXTRA_INCIDENT_LIST, (ArrayList<Incident>) incidents);
+                incidents.forEach(i -> {
+                    Toast.makeText(this, "rep: " + i.reportId + " inc: " +
+                            i.incidentId + " com: "+ i.comment, Toast.LENGTH_SHORT).show();
+                    switch(i.incidentId) {
+                        case INCIDENT_CLOUD: result.putExtra(MapActivity.EXTRA_INCIDENT_CLOUD, i); break;
+                        case INCIDENT_CURRENT: result.putExtra(MapActivity.EXTRA_INCIDENT_CURRENT, i); break;
+                        case INCIDENT_FOG: result.putExtra(MapActivity.EXTRA_INCIDENT_FOG, i); break;
+                        case INCIDENT_HAIL: result.putExtra(MapActivity.EXTRA_INCIDENT_HAIL, i); break;
+                        case INCIDENT_RAIN: result.putExtra(MapActivity.EXTRA_INCIDENT_RAIN, i); break;
+                        case INCIDENT_STORM: result.putExtra(MapActivity.EXTRA_INCIDENT_STORM, i); break;
+                        case INCIDENT_TEMPERATURE: result.putExtra(MapActivity.EXTRA_INCIDENT_TEMPERATURE, i); break;
+                        case INCIDENT_TRANSPARENCY: result.putExtra(MapActivity.EXTRA_INCIDENT_TRANSPARENCY, i); break;
+                        case INCIDENT_WIND: result.putExtra(MapActivity.EXTRA_INCIDENT_WIND, i); break;
+                        default: result.putExtra(MapActivity.EXTRA_INCIDENT_OTHER, i);
+                    }
+                });
+                setResult(RESULT_OK, result);
             }
             finish();
-        });*/
+        });
     }
 
-    /*
-    @Override
-    public void onButtonClearFragmentClicked(View button) {
-        Toast.makeText(this, "supprimer le fragment dessous", Toast.LENGTH_LONG).show();
-        ((EditText) findViewById(R.id.editText)).setText("");
-        if(detailFragment != null){
-            getSupportFragmentManager().beginTransaction().remove(detailFragment).commit();
+    private int alreadyExistingIncident(int type) {
+        for (int i=0; i<incidents.size(); i++) {
+            if(incidents.get(i).incidentId == type) return i;
         }
-    }*/
+        return -1;
+    }
 
-    /*int valeur = getTableValue();
-        Toast.makeText(this, "dans le fragment dessous " + valeur, Toast.LENGTH_LONG).show();
-    detailFragment = (DetailFragment) getSupportFragmentManager().findFragmentById(R.id.frame_layout_detail);
-        if(detailFragment == null){
-        detailFragment = new DetailFragment();
-        Bundle args = new Bundle();
-        args.putInt(FRAGMENT_PARAMETER, valeur);
-        detailFragment.setArguments(args);
-        getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout_detail, detailFragment).commit();
-    }*/
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == NEW_INCIDENT_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            //get extra Incident
+            Incident incident = data.getParcelableExtra(EXTRA_INCIDENT);
+            if(incident == null) {
+                Toast.makeText(
+                        getApplicationContext(),
+                        "Null incident",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+            int i;
+            if((i = alreadyExistingIncident(incident.incidentId)) != -1) {
+                incidents.set(i, incident);
+            }
+            else incidents.add(incident);
+            Toast.makeText(
+                    getApplicationContext(),
+                    "Incident: " + incident.reportId + " - " + incident.incidentId + " - " + incident.comment + " added!",
+                    Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(
+                    getApplicationContext(),
+                    "No changes",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
 
     private void startIncidentActivity(int incidentType) {
         Intent intent = new Intent(getApplicationContext(), IncidentActivity.class);
-        intent.putExtra(ACTIVITY_INCIDENT_TYPE, incidentType);
-        startActivity(intent);
+        intent.putExtra(ITypeParam.REPORT_ACTIVITY_INCIDENT_TYPE, incidentType);
+        intent.putExtra(ITypeParam.REPORT_ACTIVITY_START, start);
+        startActivityForResult(intent, NEW_INCIDENT_ACTIVITY_REQUEST_CODE);
     }
 
     @Override
-    public void onButtonTempClicked(View button) { startIncidentActivity(INCIDENT_TEMP); }
+    public void onButtonTempClicked(View button) { startIncidentActivity(INCIDENT_TEMPERATURE); }
 
     @Override
     public void onButtonRainClicked(View button) { startIncidentActivity(INCIDENT_RAIN); }
