@@ -48,6 +48,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
+import org.osmdroid.events.MapListener;
+import org.osmdroid.events.ScrollEvent;
+import org.osmdroid.events.ZoomEvent;
 import org.osmdroid.tileprovider.MapTileProviderBase;
 import org.osmdroid.tileprovider.MapTileProviderBasic;
 import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
@@ -85,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     public static final String EXTRA_INCIDENT_TRANSPARENCY = "com.example.projet.activities.INCIDENT_TRANSPARENCY";
     public static final String EXTRA_INCIDENT_WIND = "com.example.projet.activities.INCIDENT_WIND";
     public long start;
-    ArrayList<OverlayItem> items;
+    ArrayList<OverlayItem> items = new ArrayList<>();
     private TextView currentLocation;
     private MyLocationNewOverlay myPosition;
     private OverlayItem currentPositionOverlay;
@@ -94,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private FrameLayout reportDetails;
     ItemizedOverlayWithFocus<OverlayItem> mOverlay;
     IMapController mapController;
+    boolean onScroll = false;
     /**
      * User Settings (default value for the time being)
      */
@@ -293,6 +297,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             @Override
             public void onClick(View view) {
                 recenter();
+                onScroll = false;
             }
         });
     }
@@ -382,11 +387,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         if (location != null) {
             lastLocation = location;
             currentLocation.setText(location.getLatitude() + " " + location.getLongitude());
-            //recenter(); --> otherwise not possible to navigate on the map
+            if(!onScroll) //To know if the user was browsing the map.
+                recenter();// --> otherwise not possible to navigate on the map
             Log.d(GPS_LOG_TOKEN,"Position updated");
             updateMap();
         }
     }
+    
 
     @Override
     public void onStatusChanged(String s, int i, Bundle bundle) {}
@@ -415,6 +422,19 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         myPosition = new MyLocationNewOverlay(map);
         myPosition.enableFollowLocation();
         map.getOverlays().add(myPosition); //User's position on the map
+        map.addMapListener(new MapListener() {
+            @Override
+            public boolean onScroll(ScrollEvent event) {
+                onScroll= true;
+                return false;
+            }
+
+            @Override
+            public boolean onZoom(ZoomEvent event) {
+                onScroll= true;
+                return false;
+            }
+        });
     }
 
     /**
