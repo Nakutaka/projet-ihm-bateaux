@@ -3,6 +3,7 @@
 
 ##TODO
 - ReportDetailFragments + lien on tap Overlay items/trigger fragment
+- Abstract Factory??
 - interfaces (dans fragments .xml) à compléter pour chaque incident
 - intégrer les champs des fragments aux Entities/modifier constructeurs
 
