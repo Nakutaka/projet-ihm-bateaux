@@ -1,25 +1,15 @@
 package com.example.projet.activities;
 
-import android.Manifest;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.projet.R;
 import com.example.projet.activities.forms.ReportFormActivity;
@@ -37,31 +27,16 @@ import com.example.projet.database.models.Storm;
 import com.example.projet.database.models.Temperature;
 import com.example.projet.database.models.Transparency;
 import com.example.projet.database.models.Wind;
+import com.example.projet.fragments.MapFragment;
 import com.example.projet.fragments.ReportDetailsFragment;
 import com.example.projet.types.ITypeIncident;
 import com.example.projet.types.ITypeParam;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresPermission;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
-
-import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
-import org.osmdroid.events.MapListener;
-import org.osmdroid.events.ScrollEvent;
-import org.osmdroid.events.ZoomEvent;
-import org.osmdroid.tileprovider.MapTileProviderBase;
-import org.osmdroid.tileprovider.MapTileProviderBasic;
-import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
 import org.osmdroid.views.overlay.OverlayItem;
-import org.osmdroid.views.overlay.TilesOverlay;
-import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -69,14 +44,10 @@ import java.util.Formatter;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+public class MainActivity extends AppCompatActivity {
 
-public class MainActivity extends AppCompatActivity implements LocationListener {
-
-    private WeatherReportViewModel mWeatherReportViewModel;
     public static final int NEW_REPORT_ACTIVITY_REQUEST_CODE = 1;
-    public static final String EXTRA_INCIDENT_LIST = "com.example.projet.activities.INCIDENT_LIST";
+    //public static final String EXTRA_INCIDENT_LIST = "com.example.projet.activities.INCIDENT_LIST";
     public static final String EXTRA_INCIDENT_CLOUD = "com.example.projet.activities.INCIDENT_CLOUD";
     public static final String EXTRA_INCIDENT_CURRENT = "com.example.projet.activities.INCIDENT_CURRENT";
     public static final String EXTRA_INCIDENT_FOG = "com.example.projet.activities.INCIDENT_FOG";
@@ -88,50 +59,31 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     public static final String EXTRA_INCIDENT_TRANSPARENCY = "com.example.projet.activities.INCIDENT_TRANSPARENCY";
     public static final String EXTRA_INCIDENT_WIND = "com.example.projet.activities.INCIDENT_WIND";
     public long start;
-    ArrayList<OverlayItem> items = new ArrayList<>();
-    private TextView currentLocation;
-    private MyLocationNewOverlay myPosition;
-    private OverlayItem currentPositionOverlay;
-    private MapView map;
-    private final OnlineTileSourceBase seamarks = TileSourceFactory.OPEN_SEAMAP;
+
+    private int itemIndex;
+    private MapFragment mapFragment;
+    private TextView tappedLocation;
     private FrameLayout reportDetails;
-    ItemizedOverlayWithFocus<OverlayItem> mOverlay;
-    IMapController mapController;
-    boolean onScroll = false;
-    /**
-     * User Settings (default value for the time being)
-     */
-    private double zoom = 15.5;
-
-
-    /**
-     * GPS variables
-     */
-    /* GPS stuff */
-    private Location lastLocation; // WARNING can be null
-    private String GPS_LOG_TOKEN = "GPS-LOGS";
-    private String providerName;
-    private LocationManager locationManager;
-    /* GPS Constant Permission */
-    private static final int MY_PERMISSION_ACCESS_LOCATION = 10;
-    /* GPS update config */
-    private static final int MINIMUM_TIME = 5*1000;// 5s
-    private static final int MINIMUM_DISTANCE = 1;// 1m
+    private WeatherReportViewModel mWeatherReportViewModel;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
         Configuration.getInstance().load(getApplicationContext(),
                 PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
-        setContentView(R.layout.activity_main);
+
+
+        itemIndex = -1;
+        mapFragment = new MapFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout_map,
+                mapFragment).commit();
 
         mWeatherReportViewModel = new ViewModelProvider(this).get(WeatherReportViewModel.class);
         // Update the cached copy of the reports in the map overlays (method reference style)
         mWeatherReportViewModel.getWeatherReports().observe(this, this::setReports);
 
-        currentLocation = findViewById(R.id.current_location);
-        reportDetails = findViewById(R.id.frame_layout_report_details);
-        currentLocation.setText("Loading ...");
 
         findViewById(R.id.fab_add).setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), ReportFormActivity.class);
@@ -144,22 +96,24 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             mWeatherReportViewModel.clearWeatherReports();
         });
 
-        setupGPS();
-        setupMap();
-        arrayButton();
-        recenter();
-        //displayInfo(null);
+        findViewById(R.id.fab_recenter).setOnClickListener(v -> {
+            mapFragment.recenterButtonAction();
+        });
+
+        tappedLocation = findViewById(R.id.tapped_location);
+        reportDetails = findViewById(R.id.frame_layout_report_details);
     }
 
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == NEW_REPORT_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK &&
-                lastLocation!=null) {
+        if (requestCode == NEW_REPORT_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
 
 /**********retenter avec list au cas où marcherait sinon un par un marche aussi*****************/
             //List<Incident> incidents = data.getParcelableArrayListExtra(EXTRA_INCIDENT_LIST);
             //List<Incident> incidents = new ArrayList<>();
-            Report report = new Report(start, lastLocation.getLatitude(), lastLocation.getLongitude());
+            Report report = new Report(start, mapFragment.getCurrentLatitude(),
+                    mapFragment.getCurrentLongitude());
             mWeatherReportViewModel.insert(report);
             Toast.makeText(
                     getApplicationContext(),"Report: " + report.reportId + " added!",
@@ -183,8 +137,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                     "No report",
                     Toast.LENGTH_SHORT).show();
         }
+        //setReports triggered automatically (observe)*/
     }
 
+    /**************************To move into ReportRepository + update ReportViewModel
+     * only list<Incident> + Report transferred --> cleaner/shorter ****************************************/
     private void insertIncident(Incident newInc){
         long rId = start;
         int iId = newInc.incidentId;
@@ -265,57 +222,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 .commit();
     }
 
-    //link with setReports --> to trigger Fragment ReportDetailsFragment
-    private void displayOverlays() {
-        map.getOverlays().remove(mOverlay);
-        mOverlay = new ItemizedOverlayWithFocus<>(this, items,
-                new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
-                    @Override
-                    public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
-                        //do something
-                        currentLocation.setText(item.getPoint().getLatitude() + " " + item.getPoint().getLongitude());
-                        if (item.equals(currentPositionOverlay))
-                            switchCoordinatesVisibility();
-                        else {
-                            currentLocation.setVisibility(View.VISIBLE);
-                        }
-                        return true;
-                    }
-
-                    @Override
-                    public boolean onItemLongPress(final int index, final OverlayItem item) {
-                        return false;
-                    }
-                });
-        mOverlay.setFocusItemsOnTap(true);
-        map.getOverlays().add(mOverlay);
-    }
-
-    private void arrayButton() {
-        ImageButton buttonRecenter = findViewById(R.id.fab_recenter);
-        buttonRecenter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                recenter();
-                onScroll = false;
-            }
-        });
-    }
-
-    void recenter() {
-        if (lastLocation != null)
-            mapController.animateTo(new GeoPoint(lastLocation.getLatitude(), lastLocation.getLongitude()));
-        mapController.setZoom(zoom);
-    }
-
-    void switchCoordinatesVisibility() {
-        if (currentLocation.isShown())
-            currentLocation.setVisibility(View.INVISIBLE);
-        else
-            currentLocation.setVisibility(View.VISIBLE);
-    }
-
-    private void setReports(List<ReportWithIncidents> reports) {
+    public void setReports(List<ReportWithIncidents> reports) {
         List<OverlayItem> reportItems = new ArrayList<>();
         reports.forEach(r -> {
             Report report = r.report;
@@ -340,222 +247,34 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             AtomicReference<String> typeCom = new AtomicReference<>("");
             incidents.forEach(i -> typeCom.updateAndGet(v -> v + "\n" + i.incidentId + ": " + i.comment));
             reportItems.add(new OverlayItem("Report: " + time + " - " + incidents.size()
-                            + (incidents.size()>1? " incidents" : " incident"), ""+typeCom,
+                    + (incidents.size()>1? " incidents" : " incident"), ""+typeCom,
                     new GeoPoint(report.latitude, report.longitude)));
         });
-        items = new ArrayList<>(reportItems);
-        updateMap();
-    }
 
-    private void updateMap() {
-        //items = new ArrayList<OverlayItem>();
-        if (lastLocation != null) {
-            //mapController.setZoom(zoom);
-            GeoPoint mapCenter = new GeoPoint(lastLocation.getLatitude(), lastLocation.getLongitude());
-            //mapController.setCenter(mapCenter);
-            items.remove(currentPositionOverlay);
-            currentPositionOverlay = new OverlayItem("", "", mapCenter);
-            items.add(currentPositionOverlay);
-            displayOverlays();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        locationManager.removeUpdates(this);
-        Log.d(GPS_LOG_TOKEN,"Goodbye");
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case MY_PERMISSION_ACCESS_LOCATION:
-                onLocationPermissionResult(grantResults);
-                break;
-
-        }
-    }
-
-    /**
-     *  LocationListener interface
-     */
-
-    @Override
-    public void onLocationChanged(Location location) {
-        if (location != null) {
-            lastLocation = location;
-            currentLocation.setText(location.getLatitude() + " " + location.getLongitude());
-            if(!onScroll) //To know if the user was browsing the map.
-                recenter();// --> otherwise not possible to navigate on the map
-            Log.d(GPS_LOG_TOKEN,"Position updated");
-            updateMap();
-        }
-    }
-    
-
-    @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {}
-
-    @Override
-    public void onProviderEnabled(String s) {}
-
-    @Override
-    public void onProviderDisabled(String s) {
-        // When GPS disabled
-        sendUserToLocationSettings();
-    }
-
-    private void setupMap() {
-        map = findViewById(R.id.map_view);
-        mapController = map.getController();
-        map.setBuiltInZoomControls(true);
-        map.setMultiTouchControls(true);
-        map.setUseDataConnection(true);
-        map.setTileSource(TileSourceFactory.MAPNIK);
-        map.setBackgroundColor(Color.TRANSPARENT);
-        final MapTileProviderBase tileProvider = new MapTileProviderBasic(this, seamarks);
-        final TilesOverlay seamarksOverlay = new TilesOverlay(tileProvider, this);
-        seamarksOverlay.setLoadingBackgroundColor(Color.TRANSPARENT);
-        map.getOverlays().add(seamarksOverlay);
-        myPosition = new MyLocationNewOverlay(map);
-        myPosition.enableFollowLocation();
-        map.getOverlays().add(myPosition); //User's position on the map
-        map.addMapListener(new MapListener() {
-            @Override
-            public boolean onScroll(ScrollEvent event) {
-                onScroll= true;
-                return false;
-            }
-
-            @Override
-            public boolean onZoom(ZoomEvent event) {
-                onScroll= true;
-                return false;
-            }
-        });
-    }
-
-    /**
-     * GPS permissions setup
-     */
-
-    private void setupGPS() {
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            // When GPS disabled
-            sendUserToLocationSettings();
-        }
-
-        // Define minimum criteria for location provider
-        Criteria critere = new Criteria();
-        critere.setAccuracy(Criteria.ACCURACY_COARSE);
-        critere.setAltitudeRequired(false);
-        critere.setBearingRequired(false); // Need direction ?
-        critere.setCostAllowed(false); // Needs payment (ex:google?) ?
-        critere.setSpeedRequired(false); // Need speed ?
-
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            // Need to ask explicitly for permission access
-
-            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    || checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // Permission is not granted yet
-
-                requestPermissions(new String[]{
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.INTERNET
-                }, MY_PERMISSION_ACCESS_LOCATION);
-                Log.d(GPS_LOG_TOKEN,"Requesting permissions");
-                return;
-            } else {
-                // Permission already granted explicitly
-                setUpLocationUpdates();
-            }
-        } else {
-            // Permission access already granted implicitly (just manifest declaration)
-
-            Log.d(GPS_LOG_TOKEN,"No need to ask for permissions");
-            setUpLocationUpdates();
-        }
-
-        providerName = locationManager.getBestProvider(critere, true);
-        Log.d(GPS_LOG_TOKEN,"provider="+providerName);
-    }
-
-    @RequiresPermission(anyOf = {ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION})
-    private void setUpLocationUpdates() {
-        locationManager.requestLocationUpdates("gps", MINIMUM_TIME, MINIMUM_DISTANCE, this);
-    }
-
-    void onLocationPermissionResult(int[] grantResults) {
-        if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.d(GPS_LOG_TOKEN,"Permissions granted");
-
-            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                    && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                // Double check because of Android being picky
-                setUpLocationUpdates();
-            }
-        } else {
-            Log.d(GPS_LOG_TOKEN,"Permissions denied");
-            currentLocation.setText("Unknown\n(Permission denied)");
-            Toast.makeText(getApplicationContext(),"Location access required\n for position",Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    /**
-     * Prompts a dialog to go to location settings
-     */
-    private void sendUserToLocationSettings() {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-
-        // set title
-        alertDialogBuilder.setTitle("Please enable location");
-
-        // set dialog message
-        alertDialogBuilder
-                .setMessage("This application needs location to retrieve your position")
-                .setCancelable(false)
-                .setPositiveButton("SETTINGS", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Toast.makeText(getApplicationContext(), "Sending you to settings ...", Toast.LENGTH_SHORT).show();
-                        dialog.cancel(); // Close dialog
-
-                        // Send user to GPS settings
-                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivity(intent);
+        //link to trigger Fragment ReportDetailsFragment
+        ItemizedOverlayWithFocus<OverlayItem> reportOverlayItems = new ItemizedOverlayWithFocus<>(this,
+                reportItems, new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+                    @Override
+                    public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
+                        //do something
+                        if(index == itemIndex) {
+                            //hide Fragment/destroy it
+                            itemIndex = -1;
+                            tappedLocation.setText("");
+                            return false;//change something or not?
+                        }
+                        //trigger Fragment + fill in fields
+                        itemIndex = index;
+                        tappedLocation.setText(item.getPoint().getLatitude() + " - " + item.getPoint().getLongitude());
+                        return true;
                     }
-                })
-                .setNegativeButton("CANCEL",new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Toast.makeText(getApplicationContext(), "Proposition rejected", Toast.LENGTH_SHORT).show();
 
-                        dialog.cancel();
+                    @Override
+                    public boolean onItemLongPress(final int index, final OverlayItem item) {
+                        return false;//true??
                     }
                 });
-
-        // create alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
-
-        // show it
-        alertDialog.show();
+        mapFragment.updateMap(reportOverlayItems);
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        map.onResume(); //needed for compass, my location overlays, v6.0.0 and up
-
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
-    }
+    /////////////////////////////////////////////////////////////////
 }
