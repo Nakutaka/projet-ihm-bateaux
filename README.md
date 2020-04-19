@@ -8,8 +8,8 @@
 - intégrer les champs des fragments aux Entities/modifier constructeurs
 
 
-- le reste des axes
-- \orientation --> layout-land/ (already created), besoin de le remplir + autorisation de l'app sûrement
+###le reste des axes
+- orientation --> layout-land/ (already created), besoin de le remplir + autorisation de l'app sûrement
 - notifs à intégrer (création + visualisation image) en local pour le moment
 - flux réseaux sociaux
 - affichage tablette
