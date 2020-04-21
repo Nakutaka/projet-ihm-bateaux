@@ -4,4 +4,31 @@
     <dimen name="big_padding">16dp</dimen>
     <dimen name="min_height">8dp</dimen>
     <dimen name="title_size">40sp</dimen>
+
+    <dimen name="inc_basic" />
+    <dimen name="inc_unit" />
+
+    <dimen name="info_temperature" />
+    <dimen name="info_rain" />
+    <dimen name="info_hail" />
+    <dimen name="info_fog" />
+    <dimen name="info_cloud" />
+    <dimen name="info_storm" />
+    <dimen name="info_wind" />
+    <dimen name="info_current" />
+    <dimen name="info_transparency" />
+    <dimen name="info_other" />
 </resources>
+<!--
+    int INCIDENT_BASIC = 0;
+    int INCIDENT_UNIT = 1;
+    int TEMPERATURE = 10;
+    int RAIN = 11;
+    int HAIL = 12;
+    int FOG = 13;
+    int CLOUD = 14;
+    int STORM = 15;
+    int WIND = 16;
+    int CURRENT = 17;
+    int TRANSPARENCY = 18;
+    int OTHER = 19;-->
