@@ -30,4 +30,8 @@
     <string name="txt_other">Other</string>
     <string name="button_comment">Comment</string>
     <string name="txt_back">back</string>
+
+    <string name="si_unit_degrees">K</string>
+    <string name="si_unit_wind">m/s</string>
+    <string name="si_unit_distance">m</string>
 </resources>

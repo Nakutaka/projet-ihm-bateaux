@@ -15,15 +15,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.example.project.activities.MainActivity">
+        <activity android:name=".main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.project.activities.forms.ReportFormActivity" />
-        <activity android:name="com.example.project.activities.forms.IncidentFormActivity" />
+        <activity android:name=".main.forms.ReportFormActivity" />
+        <activity android:name=".main.forms.IncidentFormActivity" />
     </application>
 
 </manifest>

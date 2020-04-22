@@ -13,7 +13,7 @@
         android:layout_marginStart="@dimen/big_padding"
         android:src="@drawable/ic_back"
         android:contentDescription="@string/txt_back" />
-    <!-- specific incident fragment -->
+    <!-- specific incidentDB fragment -->
     <FrameLayout
         android:id="@+id/frame_layout_incident"
         android:layout_width="match_parent"

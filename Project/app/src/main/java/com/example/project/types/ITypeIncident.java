@@ -1,14 +1,17 @@
 package com.example.project.types;
 
 public interface ITypeIncident {
-    int INCIDENT_TEMPERATURE = 1;
-    int INCIDENT_RAIN = 2;
-    int INCIDENT_HAIL = 3;
-    int INCIDENT_FOG = 4;
-    int INCIDENT_CLOUD = 5;
-    int INCIDENT_STORM = 6;
-    int INCIDENT_WIND = 7;
-    int INCIDENT_CURRENT = 8;
-    int INCIDENT_TRANSPARENCY = 9;
-    int INCIDENT_OTHER = 10;
+    int INCIDENT_BASIC = 0;
+    int INCIDENT_UNIT = 1;
+
+    int TEMPERATURE = 10;
+    int RAIN = 11;
+    int HAIL = 12;
+    int FOG = 13;
+    int CLOUD = 14;
+    int STORM = 15;
+    int WIND = 16;
+    int CURRENT = 17;
+    int TRANSPARENCY = 18;
+    int OTHER = 19;
 }
