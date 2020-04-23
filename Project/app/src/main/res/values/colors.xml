@@ -14,6 +14,12 @@
     <color name="alphaGrey">#66555555</color>
     <color name="buttonLabel">#fff</color>
 
+
+    <color name="alphaBlu">#883399ff</color>
+    <color name="alphaYellow">#88dd8800</color>
+    <color name="alphaPurple">#88aa22ff</color>
+    <color name="alphaRed">#88ff2255</color>
+
     <color name="white">#fff</color>
 
     <color name="red">#ff5555</color>
@@ -26,5 +32,8 @@
     <color name="blue">#36f</color>
     <color name="petrolBlue">#1ba</color>
     <color name="green">#8c8</color>
+
+    <color name="server_pin">#008</color>
+    <color name="local_pin">#f70</color>
 
 </resources>

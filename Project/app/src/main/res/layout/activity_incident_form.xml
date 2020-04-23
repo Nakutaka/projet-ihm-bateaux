@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -12,26 +13,35 @@
         android:backgroundTint="@color/transparent"
         android:layout_marginStart="@dimen/big_padding"
         android:src="@drawable/ic_back"
-        android:contentDescription="@string/txt_back" />
-    <!-- specific oldIncidentDB fragment -->
+        android:contentDescription="@string/txt_back"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <FrameLayout
         android:id="@+id/frame_layout_incident"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toBottomOf="@id/button_back"
+        app:layout_constraintBottom_toTopOf="@id/edit_comment"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
     </FrameLayout>
 
     <EditText
         android:id="@+id/edit_comment"
-        android:layout_width="match_parent"
+        android:layout_width="200sp"
         android:layout_height="wrap_content"
         android:minHeight="@dimen/min_height"
         android:fontFamily="sans-serif-light"
         android:hint="@string/hint_comment"
         android:inputType="textAutoComplete"
-        android:layout_margin="@dimen/big_padding"
+        android:layout_marginBottom="150sp"
+        android:layout_marginStart="20sp"
         android:backgroundTint="@color/cherry"
         android:textSize="18sp"
-        android:autofillHints="" />
+        android:autofillHints=""
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <Button
         android:layout_gravity="center"
@@ -40,7 +50,10 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/cherry"
         android:text="@string/button_ok"
-        android:layout_margin="@dimen/big_padding"
-        android:textColor="@color/buttonLabel" />
+        android:layout_margin="150sp"
+        android:textColor="@color/buttonLabel"
+        app:layout_constraintStart_toEndOf="@id/edit_comment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
