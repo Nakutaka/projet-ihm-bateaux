@@ -2,8 +2,8 @@
 
 
 ##TODO
-- ReportDetailFragments + lien on tap Overlay items/trigger fragment
-- interfaces (dans fragments .xml) à compléter pour chaque incident
+- interfaces (dans fragments .xml) pour temperature/wind/transparency
+- ReportDetailFragments + lien on tap Overlay items/trigger fragment + location_markers (almost)
 
 ###le reste des axes
 - orientation --> layout-land/ (already created), besoin de le remplir + autorisation de l'app sûrement
