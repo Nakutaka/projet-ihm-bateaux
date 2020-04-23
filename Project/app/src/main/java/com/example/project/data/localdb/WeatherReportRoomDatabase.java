@@ -8,27 +8,20 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.example.project.data.model.entities.Cloud;
-import com.example.project.data.model.entities.Current;
-import com.example.project.data.model.entities.Fog;
-import com.example.project.data.model.entities.Hail;
-import com.example.project.data.model.entities.Other;
-import com.example.project.data.model.entities.Rain;
-import com.example.project.data.model.entities.Report;
-import com.example.project.data.model.entities.Storm;
-import com.example.project.data.model.entities.Temperature;
-import com.example.project.data.model.entities.Transparency;
-import com.example.project.data.model.entities.Wind;
+import com.example.project.data.model.incident.BasicIncident;
+import com.example.project.data.model.Date;
+import com.example.project.data.model.Info;
+import com.example.project.data.model.incident.MeasuredIncident;
+import com.example.project.data.model.incident.MinIncident;
+import com.example.project.data.model.Report;
 import com.example.project.types.ITypeIncident;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Report.class, Cloud.class, Current.class, Fog.class, Hail.class, Other.class,
-        Rain.class, Storm.class, Temperature.class, Transparency.class, Wind.class},//Incident.class},
-        version = 1, exportSchema = false)
+@Database(entities = { Report.class, MinIncident.class, BasicIncident.class,
+        MeasuredIncident.class}, version = 1, exportSchema = false)
 public abstract class WeatherReportRoomDatabase extends RoomDatabase {
 
     public abstract WeatherReportDao weatherReportDao();
@@ -64,39 +57,36 @@ public abstract class WeatherReportRoomDatabase extends RoomDatabase {
         databaseWriteExecutor.execute(() -> {
             // Populate the database in the background.
             WeatherReportDao dao = INSTANCE.weatherReportDao();
-            //dao.deleteAll();
-            dao.deleteAllIncidentsCloud();
-            dao.deleteAllIncidentsCurrent();
-            dao.deleteAllIncidentsFog();
-            dao.deleteAllIncidentsHail();
-            dao.deleteAllIncidentsOther();
-            dao.deleteAllIncidentsRain();
-            dao.deleteAllIncidentsStorm();
-            dao.deleteAllIncidentsTemperature();
-            dao.deleteAllIncidentsTransparency();
-            dao.deleteAllIncidentsWind();
-
             dao.deleteAllReports();
+            dao.deleteAllMinIncidents();
+            dao.deleteAllBasicIncidents();
+            dao.deleteAllMeasuredIncidents();
 
-            Date currentDate = Calendar.getInstance().getTime();//possible de stocker Calendar too
-            long time = currentDate.getTime();
-            Report report = new Report(time, 43.7, 6.9966);
+            Date date = new Date(Calendar.getInstance());
+            Report report = new Report(43.7, 6.9966, date, "my-device");
             dao.insert(report);
 
-            Rain r = new Rain(time, report.getLatitude(), report.getLongitude(), ITypeIncident.CLOUD, 0,"Raining like a dog!", "value");
-            dao.insert(r);
-            Storm s = new Storm(time, report.getLatitude(), report.getLongitude(), ITypeIncident.STORM, 0, "Thunder... thunder... thunderstruck!", "value");
-            dao.insert(s);
+            BasicIncident basic = new BasicIncident(report.getId(), 0,
+                    new Info("Rain", "ic_rain"), ITypeIncident.LEVEL_TWO,
+                    "Raining cats and dogs!");
+            dao.insert(basic);
+            basic = new BasicIncident(report.getId(), 1,
+                    new Info("Storm", "ic_storm"), ITypeIncident.LEVEL_THREE,
+                    "Thunder... thunder... thunderstruck!");
+            dao.insert(basic);
 
-            currentDate = Calendar.getInstance().getTime();
-            time = currentDate.getTime();
-            report = new Report(time, 43.68, 6.89);
+            date = new Date(Calendar.getInstance());
+            report = new Report(43.68, 6.89, date, "my-device");
             dao.insert(report);
 
-            Hail h  = new Hail(time, report.getLatitude(), report.getLongitude(), ITypeIncident.HAIL, 0, "Let it go! Let it goooo!", "value");
-            dao.insert(h);
-            Transparency t = new Transparency(time, report.getLatitude(), report.getLongitude(), ITypeIncident.TRANSPARENCY, 0, "Under the seeeeeaaaaaa!!", "value", "unit");
-            dao.insert(t);
+            basic = new BasicIncident(report.getId(), 2,
+                    new Info("Hail", "ic_hail"), ITypeIncident.LEVEL_ONE,
+                    "Let it go! Let it goooo!");
+            dao.insert(basic);
+            MeasuredIncident measured = new MeasuredIncident(report.getId(), 3,
+                    new Info("Transparency", "ic_transparency"), "5","m",
+                    "I seA you!");
+            dao.insert(measured);
         });
     }
 }

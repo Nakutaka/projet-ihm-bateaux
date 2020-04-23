@@ -10,58 +10,49 @@ import com.example.project.data.model.Incident;
 import com.example.project.data.model.Info;
 
 @Entity
-public class BasicIncident extends Incident implements Parcelable {
-    public String level;
+public class MinIncident extends Incident implements Parcelable {
     public String comment;
 
     @Ignore
-    public BasicIncident(int num, String level, String comment) {
+    public MinIncident(int num, String comment) {
         this.num = num;
         this.info = null;
-        this.level = level;
         this.comment = comment;
     }
 
-    public BasicIncident(String reportId, int num, Info info, String level, String comment) {
+    public MinIncident(String reportId, int num, Info info, String comment) {
         this.reportId = reportId;
         this.num = num;
         this.info = info;
-        this.level = level;
         this.comment = comment;
     }
 
-    private BasicIncident(Parcel in) {
+    private MinIncident(Parcel in) {
         super(in);
-        level = in.readString();
         comment = in.readString();
     }
-
-    public static final Creator<BasicIncident> CREATOR = new Creator<BasicIncident>() {
-        @Override
-        public BasicIncident createFromParcel(Parcel in) {
-            return new BasicIncident(in);
-        }
-
-        @Override
-        public BasicIncident[] newArray(int size) {
-            return new BasicIncident[size];
-        }
-    };
 
     @Override
     public int describeContents() {
         return 0;
     }
 
+    public static final Creator<MinIncident> CREATOR = new Creator<MinIncident>() {
+        @Override
+        public MinIncident createFromParcel(Parcel in) {
+            return new MinIncident(in);
+        }
+
+        @Override
+        public MinIncident[] newArray(int size) {
+            return new MinIncident[size];
+        }
+    };
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
-        dest.writeString(level);
         dest.writeString(comment);
-    }
-
-    public String getLevel() {
-        return level;
     }
 
     public String getComment() {

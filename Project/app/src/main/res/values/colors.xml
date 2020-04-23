@@ -20,11 +20,11 @@
     <color name="lightBlue">#2cf</color>
     <color name="icyBlue">#6ff</color>
     <color name="lightGrey">#88d</color>
-    <color name="grey">#daa</color>
-    <color name="yellow">#dc3</color>
+    <color name="grey">#dac</color>
+    <color name="yellow">#fc5</color>
     <color name="orange">#f85</color>
     <color name="blue">#36f</color>
     <color name="petrolBlue">#1ba</color>
-    <color name="green">#8b8</color>
+    <color name="green">#8c8</color>
 
 </resources>

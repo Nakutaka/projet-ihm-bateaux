@@ -7,7 +7,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.project.R;
-import com.example.project.data.model.IncidentWithInfo;
+import com.example.project.data.model.incident.BasicIncident;
+import com.example.project.data.model.incident.MeasuredIncident;
+import com.example.project.data.model.incident.MinIncident;
 import com.example.project.main.MainActivity;
 import com.example.project.types.ITypeIncident;
 import com.example.project.types.ITypeParam;
@@ -21,18 +23,23 @@ import java.util.List;
 public class ReportFormActivity extends AppCompatActivity implements IButtonClickedListenerIncident, ITypeIncident {
 
     public static final int NEW_INCIDENT_ACTIVITY_REQUEST_CODE = 2;
-    public static final String EXTRA_INCIDENT = "com.example.project.main.activities.report.INCIDENT";
+    public static final String EXTRA_INCIDENT_MIN = "com.example.project.main.activities.report.INCIDENT_MIN";
+    public static final String EXTRA_INCIDENT_BASIC = "com.example.project.main.activities.report.INCIDENT_BASIC";
+    public static final String EXTRA_INCIDENT_MEASURED = "com.example.project.main.activities.report.INCIDENT_MEASURED";
     private EditText mEditCommentView;
 
-    private long start;
-    private List<IncidentWithInfo> incidents;
+    //private List<Incident> incidents;
+    private List<MinIncident> minList;
+    private List<BasicIncident> basicList;
+    private List<MeasuredIncident> measuredList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report_form);
-        start = getIntent().getIntExtra(ITypeParam.MAP_ACTIVITY_START, -1);
-        incidents = new ArrayList<>();
+        minList = new ArrayList<>();
+        basicList = new ArrayList<>();
+        measuredList = new ArrayList<>();
 
         ReportFormFragment reportFormFragment = new ReportFormFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout_report,
@@ -41,49 +48,76 @@ public class ReportFormActivity extends AppCompatActivity implements IButtonClic
         findViewById(R.id.button_send).setOnClickListener(view -> {
             //mEditCommentView = findViewById(R.id.edit_word);
             //general comment
-            Intent result = new Intent();//getIntent();//new Intent();
-            if(incidents.isEmpty()){
-                setResult(RESULT_CANCELED, result);
-            }
-            else{
-                result.putParcelableArrayListExtra(MainActivity.EXTRA_INCIDENT_LIST,
-                        (ArrayList<IncidentWithInfo>) incidents);
-                setResult(RESULT_OK, result);
-            }
+            //+ GPS chosen coordinates
+            Intent result = new Intent();
+            result.putParcelableArrayListExtra(MainActivity.EXTRA_INCIDENT_MIN_LIST,
+                (ArrayList<MinIncident>) minList);
+            result.putParcelableArrayListExtra(MainActivity.EXTRA_INCIDENT_BASIC_LIST,
+                (ArrayList<BasicIncident>) basicList);
+            result.putParcelableArrayListExtra(MainActivity.EXTRA_INCIDENT_MEASURED_LIST,
+                (ArrayList<MeasuredIncident>) measuredList);
+            setResult(RESULT_OK, result);
             finish();
         });
     }
 
-    private int alreadyExistingIncident(int type) {
-        for (int i = 0; i< incidents.size(); i++) {
-            if(incidents.get(i).getInfo().getType() == type) return i;
+    private void removePossibleExistingIncident(String name) {
+        for (int i = 0; i < minList.size(); i++) {
+            if(minList.get(i).getInfo().getName().equals(name)) {
+                minList.remove(i);
+                return;
+            }
         }
-        return -1;
+        for (int i = 0; i < basicList.size(); i++) {
+            if(basicList.get(i).getInfo().getName().equals(name)) {
+                basicList.remove(i);
+                return;
+            }
+        }
+        for (int i = 0; i < measuredList.size(); i++) {
+            if (measuredList.get(i).getInfo().getName().equals(name)) {
+                measuredList.remove(i);
+                return;
+            }
+        }
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == NEW_INCIDENT_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            IncidentWithInfo incident = data.getParcelableExtra(EXTRA_INCIDENT);
-            if(incident == null) {
-                Toast.makeText(
-                        getApplicationContext(),
-                        "Null incident",
-                        Toast.LENGTH_SHORT).show();
-                return;
+            Bundle extras = data.getExtras();
+            if (extras != null) {
+                MinIncident min = extras.getParcelable(EXTRA_INCIDENT_MIN);
+                if(min!=null) {
+                    removePossibleExistingIncident(min.getInfo().getName());
+                    minList.add(min);
+                    Toast.makeText(getApplicationContext(),
+                            min.getInfo().getName() + " - " + min.getComment(),
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                BasicIncident basic = extras.getParcelable(EXTRA_INCIDENT_BASIC);
+                if(basic!=null) {
+                    removePossibleExistingIncident(basic.getInfo().getName());
+                    basicList.add(basic);
+                    Toast.makeText(getApplicationContext(),
+                            basic.getInfo().getName() + " - " + basic.getLevel() + " - " + basic.getComment(),
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                MeasuredIncident measured = extras.getParcelable(EXTRA_INCIDENT_MEASURED);
+                if(measured!=null) {
+                    removePossibleExistingIncident(measured.getInfo().getName());
+                    measuredList.add(measured);
+                    Toast.makeText(getApplicationContext(),
+                            measured.getInfo().getName() + " - " + measured.getValue()
+                                    + " - " + measured.getUnit() + " - " + measured.getComment(),
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
             }
-            int i;
-            if((i = alreadyExistingIncident(incident.getInfo().getType())) != -1) {
-                incidents.set(i, incident);
-            }
-            else incidents.add(incident);
         }
-        else{
-            Toast.makeText(
-                    getApplicationContext(),
-                    "No changes",
-                    Toast.LENGTH_SHORT).show();
-        }
+        Toast.makeText(getApplicationContext(),"No changes", Toast.LENGTH_SHORT).show();
     }
 
     private void startIncidentActivity(int globalType, int incidentType, int icon) {
@@ -95,7 +129,7 @@ public class ReportFormActivity extends AppCompatActivity implements IButtonClic
     }
 
     @Override
-    public void onButtonTempClicked(View button) { startIncidentActivity(INCIDENT_UNIT,
+    public void onButtonTempClicked(View button) { startIncidentActivity(INCIDENT_MEASURED,
             TEMPERATURE, R.drawable.ic_temperature); }
 
     @Override
@@ -119,7 +153,7 @@ public class ReportFormActivity extends AppCompatActivity implements IButtonClic
             STORM, R.drawable.ic_storm); }
 
     @Override
-    public void onButtonWindClicked(View button) { startIncidentActivity(INCIDENT_UNIT,
+    public void onButtonWindClicked(View button) { startIncidentActivity(INCIDENT_MEASURED,
             WIND, R.drawable.ic_wind); }
 
     @Override
@@ -127,10 +161,10 @@ public class ReportFormActivity extends AppCompatActivity implements IButtonClic
             CURRENT, R.drawable.ic_current); }
 
     @Override
-    public void onButtonTransparencyClicked(View button) { startIncidentActivity(INCIDENT_UNIT,
+    public void onButtonTransparencyClicked(View button) { startIncidentActivity(INCIDENT_MEASURED,
             TRANSPARENCY, R.drawable.ic_transparency); }
 
     @Override
-    public void onButtonOtherClicked(View button) { startIncidentActivity(INCIDENT_BASIC,
+    public void onButtonOtherClicked(View button) { startIncidentActivity(INCIDENT_MIN,
             OTHER, R.drawable.ic_other); }
 }

@@ -7,11 +7,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.project.R;
-import com.example.project.data.model.IncidentWithInfo;
-import com.example.project.data.model.incident.Incident;
-import com.example.project.data.model.information.Information;
+import com.example.project.data.model.Incident;
 import com.example.project.main.factory.IncidentFactory_classic;
-import com.example.project.main.forms.ReportFormActivity;
 import com.example.project.types.ITypeIncident;
 import com.example.project.types.ITypeParam;
 import com.example.project.main.fragments.incidents.CloudFragment;
@@ -42,11 +39,11 @@ public class IncidentFormActivity extends AppCompatActivity implements ITypeInci
         setContentView(R.layout.activity_incident_form);
 
         Intent intent = getIntent();
-        globalType = intent.getIntExtra(ITypeParam.REPORT_ACTIVITY_INCIDENT_TYPE, 0);
-        type = intent.getIntExtra(ITypeParam.REPORT_ACTIVITY_GLOBAL_TYPE, 0);
+        globalType = intent.getIntExtra(ITypeParam.REPORT_ACTIVITY_GLOBAL_TYPE, 0);
+        type = intent.getIntExtra(ITypeParam.REPORT_ACTIVITY_INCIDENT_TYPE, 0);
         icon = intent.getIntExtra(ITypeParam.REPORT_ACTIVITY_ICON, 0);
 
-        displayFragment(type);
+        displayFragment(globalType, type);
 
         findViewById(R.id.button_back).setOnClickListener(view -> {
             finish();
@@ -60,13 +57,27 @@ public class IncidentFormActivity extends AppCompatActivity implements ITypeInci
             }
             else{
                 comment = editComment.getText().toString();
-
-                IncidentWithInfo incident = newIncident();
+                Incident incident = newIncident();
                 if(incident != null) {
-                    result.putExtra(ReportFormActivity.EXTRA_INCIDENT, incident);
+                    String param;
+                    switch(globalType) {
+                        case INCIDENT_MIN:
+                            param = ReportFormActivity.EXTRA_INCIDENT_MIN;
+                            break;
+                        case INCIDENT_BASIC:
+                            param = ReportFormActivity.EXTRA_INCIDENT_BASIC;
+                            break;
+                        case INCIDENT_MEASURED:
+                            param = ReportFormActivity.EXTRA_INCIDENT_MEASURED;
+                            break;
+                        default:
+                            setResult(RESULT_CANCELED, result);
+                            finish();
+                            return;
+                    }
+                    result.putExtra(param, incident);
                     setResult(RESULT_OK, result);
                 }
-               else setResult(RESULT_CANCELED, result);;
             }
             finish();
         });
@@ -79,20 +90,32 @@ public class IncidentFormActivity extends AppCompatActivity implements ITypeInci
     }
 
     //TODO value
-    IncidentWithInfo newIncident() {
+    Incident newIncident() {
         IncidentFactory_classic factory = new IncidentFactory_classic();
-        try {
-            Incident inc = factory.buildIncident(globalType, type, comment);
-            Information info = factory.buildInformation(globalType, type, icon, "value");
-            toastyIncident(globalType + "", type, comment);
-            return new IncidentWithInfo(inc, info);
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-            return null;
-        }
+        return factory.getIncident(globalType, type, "value", "unit", comment);
     }
 
-    void displayFragment(int type) {
+    void displayFragment(int globalType, int type) {
+        //globalType
+        //--> lambda:       buttons
+        //--> scientific:   specific interface
+        /*switch(globalType) {
+            case INCIDENT_MIN: {
+                displayIncidentFragment(new OtherFragment()); //MinimumFragment + infos
+                break;
+            }
+            case INCIDENT_BASIC {
+                displayIncidentFragment(new BasicFragment());//+ infos on incident/icon
+                break;
+            }
+            case INCIDENT_BASIC {
+                switch(type) {
+                    case TEMPERATURE: displayIncidentFragment(new TemperatureFragment()); break;
+                    case WIND: displayIncidentFragment(new WindFragment()); break;
+                    case TRANSPARENCY: displayIncidentFragment(new TransparencyFragment()); break;
+                }
+            }
+        }*/
         switch(type) {
             case TEMPERATURE: displayIncidentFragment(new TemperatureFragment()); break;
             case RAIN: displayIncidentFragment(new RainFragment()); break;

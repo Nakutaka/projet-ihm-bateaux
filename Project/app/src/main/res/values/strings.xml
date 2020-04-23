@@ -5,7 +5,7 @@
     <string name="button_ok">Ok</string>
     <string name="button_send">Send</string>
     <string name="saved">Report added!</string>
-    <string name="empty_not_saved">Empty report not added</string>
+    <string name="empty_not_saved">Empty oldReport not added</string>
 
     <string name="title_temp">Temperature level</string>
     <string name="title_rain">Rain level</string>
@@ -18,7 +18,7 @@
     <string name="title_transparency">Transparency level</string>
     <string name="title_other">Other</string>
 
-    <string name="txt_temp">Temp</string>
+    <string name="txt_temp">Temperature</string>
     <string name="txt_rain">Rain</string>
     <string name="txt_hail">Hail</string>
     <string name="txt_fog">Fog</string>

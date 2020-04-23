@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- report fragment -->
+    <!-- oldReport fragment -->
     <FrameLayout
         android:id="@+id/frame_layout_report"
         android:layout_width="match_parent"

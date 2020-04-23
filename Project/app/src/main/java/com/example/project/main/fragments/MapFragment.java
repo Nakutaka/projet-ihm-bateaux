@@ -39,8 +39,6 @@ import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.TilesOverlay;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
-import java.util.Objects;
-
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
@@ -63,7 +61,7 @@ public class MapFragment extends Fragment implements LocationListener {
 
     /*******************GPS variables*******************/
     /* GPS stuff */
-    private Location currentLocation; // WARNING can be null
+    private Location lastLocation; // WARNING can be null --> means pb with GPS
     private String GPS_LOG_TOKEN = "GPS-LOGS";
     private LocationManager locationManager;
     /* GPS Constant Permission */
@@ -142,12 +140,16 @@ public class MapFragment extends Fragment implements LocationListener {
     }*/
 
 
-    public double getCurrentLatitude() {
-        return Objects.requireNonNull(currentLocation).getLatitude();
+    public double getLastLatitude() {
+        if(lastLocation == null) return -1;
+        return lastLocation.getLatitude();
+        //return Objects.requireNonNull(currentLocation).getLatitude();
     }
 
-    public double getCurrentLongitude() {
-        return Objects.requireNonNull(currentLocation).getLongitude();
+    public double getLastLongitude() {
+        if(lastLocation == null) return -1;
+        return lastLocation.getLongitude();
+        //return Objects.requireNonNull(currentLocation).getLongitude();
     }
     /********************************************************************/
 
@@ -157,10 +159,17 @@ public class MapFragment extends Fragment implements LocationListener {
     }
 
     private void recenter() {
-        if (currentLocation != null)
-            mapController.animateTo(new GeoPoint(currentLocation.getLatitude(),
-                    currentLocation.getLongitude()));
-        mapController.setZoom(zoom);
+        if (lastLocation != null) {
+            mapController.animateTo(new GeoPoint(lastLocation.getLatitude(),
+                    lastLocation.getLongitude()));
+            mapController.setZoom(zoom);
+        }
+        else {
+            Toast.makeText(
+                    mainActivity.getApplicationContext(),
+                    "Sorry location still loading!",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void updateMap(ItemizedOverlayWithFocus<OverlayItem> newOverlayItems) {
@@ -259,7 +268,10 @@ public class MapFragment extends Fragment implements LocationListener {
 
     @RequiresPermission(anyOf = {ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION})
     private void setUpLocationUpdates() {
-        locationManager.requestLocationUpdates("gps", MINIMUM_TIME, MINIMUM_DISTANCE, this);
+        //locationManager.requestLocationUpdates("gps", MINIMUM_TIME, MINIMUM_DISTANCE, this);
+        //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);//locationListener);
+        //LocationManager.NETWORK_PROVIDER --> when GPS not working BUT need wifi/network connection
     }
 
     private void onLocationPermissionResult(int[] grantResults) {
@@ -320,12 +332,18 @@ public class MapFragment extends Fragment implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         if (location != null) {
-            currentLocation = location;
+            lastLocation = location;
             currentLocationTextView.setText(location.getLatitude() + " - " + location.getLongitude());
             if(!onScroll) //To know if the user was browsing the map.
                 recenter();// --> otherwise not possible to navigate on the map
             Log.d(GPS_LOG_TOKEN,"Position updated");
             //updateMap();
+        }
+        else {
+            Toast.makeText(
+                    mainActivity.getApplicationContext(),
+                    "onLocationChanged triggered BUT got a null location...",
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
