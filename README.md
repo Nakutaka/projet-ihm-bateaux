@@ -50,17 +50,22 @@ DONE -  ** Implémenter une idée qui utilise les capteurs du dispositif gyrosco
 ###Pas primordial/justifiable (mais si qqun veut en faire en bonus... libre à lui):
 //* Appel à un service via Intent
 	bonus, en fait sert à communiquer entre applications --> agenda/contacts du tel etc..
+	
 //* Implémenter une idée qui utilise les capteurs du dispositif du type photo ou vidéo.
 	pas utile
 
 //** Visualiser une notification avec des images ou vidéo en entête.
 	pas utile non plus
+	
 //** Implémenter deux versions d'interfaces avec des layouts differents. Comparez-les.
 	mouai
+	
 //** Lier les informations de contact aux applications du téléphone (tel, sms, ...)
 	bonus
+	
 //** Lier les informations des incidents à l'agenda du téléphone.
 	bonus
+	
 
 //*** Trouver et implémenter une interaction à l’aide de smartwatch (Android Wear)
 	bonus
