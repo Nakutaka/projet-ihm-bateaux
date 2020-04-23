@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.MainActivity">
+
+    <FrameLayout
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/frame_layout_map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <!---nothing inside -->
+
+
+    <org.osmdroid.views.MapView
+        android:id="@+id/map_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/current_location"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="LATITUDE - LONGITUDE"
+        android:textAlignment="center"
+        android:textSize="18sp" />
+        <!--android:visibility="invisible" />-->
+
+    <TextView
+        android:id="@+id/tapped_location"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/current_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="LATITUDE - LONGITUDE"
+        android:textAlignment="center"
+        android:textSize="18sp" />
+        <!--android:visibility="invisible" />-->
+
+    <FrameLayout
+        android:id="@+id/frame_layout_report_details"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_erase"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tapped_location"
+        app:backgroundTint="@color/alphaBlue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="0dp"
+        android:src="@drawable/ic_delete_black_24dp"
+        android:tint="@color/white"
+        app:elevation="0dp"
+        app:pressedTranslationZ="0dp"/>
+
+    <ImageButton
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tapped_location"
+        android:id="@+id/img_btn_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="#55000000"
+        android:src="@drawable/ic_settings_black_24dp"
+        android:scaleX="2"
+        android:scaleY="2"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_recenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:backgroundTint="@color/transparent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:scaleX="1"
+        android:scaleY="1"
+        android:src="@drawable/ic_gps_fixed_black_24dp"
+        android:tint="@color/colorPrimaryDark"
+        app:elevation="0dp"
+        app:pressedTranslationZ="0dp"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:backgroundTint="@color/lightCherry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:src="@drawable/ic_add"
+        android:scaleX="1.2"
+        android:scaleY="1.2"
+        android:tint="@color/white"
+        app:elevation="0dp"
+        app:pressedTranslationZ="0dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

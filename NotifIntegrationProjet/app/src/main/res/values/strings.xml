@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Sea Report</string>
+    <string name="hint_comment">Add a comment...</string>
+    <string name="hint_general_comment">General comment...</string>
+    <string name="button_ok">Ok</string>
+    <string name="button_send">Send</string>
+    <string name="saved">Report added!</string>
+    <string name="empty_not_saved">Empty report not added</string>
+
+    <string name="title_temp">Temperature level</string>
+    <string name="title_rain">Rain level</string>
+    <string name="title_hail">Hail level</string>
+    <string name="title_fog">Fog level</string>
+    <string name="title_cloud">Cloud level</string>
+    <string name="title_storm">Storm level</string>
+    <string name="title_wind">Wind level</string>
+    <string name="title_current">Current level</string>
+    <string name="title_transparency">Transparency level</string>
+    <string name="title_other">Other</string>
+
+    <string name="txt_temp">Temp</string>
+    <string name="txt_rain">Rain</string>
+    <string name="txt_hail">Hail</string>
+    <string name="txt_fog">Fog</string>
+    <string name="txt_cloud">Cloud</string>
+    <string name="txt_storm">Storm</string>
+    <string name="txt_wind">Wind</string>
+    <string name="txt_current">Current</string>
+    <string name="txt_transparency">Transparency</string>
+    <string name="txt_other">Other</string>
+    <string name="button_comment">Comment</string>
+    <string name="txt_back">back</string>
+</resources>
