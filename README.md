@@ -2,7 +2,7 @@
 
 
 ##TODO
-- interfaces (dans fragments .xml) pour temperature/wind/transparency
+- Interactions btns + value/units + modify other inc bd/factory
 - ReportDetailFragments + lien on tap Overlay items/trigger fragment + location_markers (almost)
 
 ###le reste des axes
