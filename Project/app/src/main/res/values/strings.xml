@@ -7,18 +7,18 @@
     <string name="saved">Report added!</string>
     <string name="empty_not_saved">Empty oldReport not added</string>
 
-    <string name="title_temp">Temperature level</string>
-    <string name="title_rain">Rain level</string>
-    <string name="title_hail">Hail level</string>
-    <string name="title_fog">Fog level</string>
-    <string name="title_cloud">Cloud level</string>
-    <string name="title_storm">Storm level</string>
-    <string name="title_wind">Wind level</string>
-    <string name="title_current">Current level</string>
-    <string name="title_transparency">Transparency level</string>
+    <string name="title_temperature">Temperature</string>
+    <string name="title_rain">Rain</string>
+    <string name="title_hail">Hail</string>
+    <string name="title_fog">Fog</string>
+    <string name="title_cloud">Cloud</string>
+    <string name="title_storm">Storm</string>
+    <string name="title_wind">Wind</string>
+    <string name="title_current">Current</string>
+    <string name="title_transparency">Transparency</string>
     <string name="title_other">Other</string>
 
-    <string name="txt_temp">Temperature</string>
+    <string name="txt_temperature">Temperature</string>
     <string name="txt_rain">Rain</string>
     <string name="txt_hail">Hail</string>
     <string name="txt_fog">Fog</string>
@@ -31,7 +31,24 @@
     <string name="button_comment">Comment</string>
     <string name="txt_back">back</string>
 
+    <string name="level_one">low</string>
+    <string name="level_two">medium</string>
+    <string name="level_three">high</string>
+
     <string name="si_unit_degrees">K</string>
     <string name="si_unit_wind">m/s</string>
     <string name="si_unit_distance">m</string>
+
+    <string name="hint_temperature_value">50</string><!-- 50°F = 10°C -->
+    <string-array name="select_temperature_unit">
+        <item>°F</item><!-- (10 °C × 9/5) + 32 = 50 °F -> round int -->
+        <item>°C</item>
+        <item>" K"</item><!-- 10 °C + 273,15 = 283,15 K  -> round int too -->
+    </string-array>
+
+    <string name="hint_wind_value">5</string>
+    <string-array name="select_wind_unit">
+        <item>km/h</item>
+        <item>m/s</item>
+    </string-array>
 </resources>

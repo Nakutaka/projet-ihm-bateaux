@@ -6,6 +6,17 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:numberPickerStyle">@style/MyNumberPickerTheme</item>
+    </style>
+
+    <style name="mySpinnerItemStyle" parent="@android:style/Widget.Holo.DropDownItem.Spinner">
+        <item name="android:textColor">@color/petrolBlue</item>
+        <item name ="android:textSize">50sp</item>
+    </style>
+
+    <style name="MyNumberPickerTheme" parent="@android:style/Widget.Material.NumberPicker">
+        <item name="color">#33691e</item>
+        <item name="android:background">#00ffffff</item>
     </style>
 
 </resources>

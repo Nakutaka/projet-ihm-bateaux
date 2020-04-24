@@ -34,12 +34,12 @@
         android:minHeight="@dimen/min_height"
         android:fontFamily="sans-serif-light"
         android:hint="@string/hint_comment"
-        android:inputType="textAutoComplete"
-        android:layout_marginBottom="150sp"
+        android:layout_marginBottom="30sp"
         android:layout_marginStart="20sp"
         android:backgroundTint="@color/cherry"
         android:textSize="18sp"
         android:autofillHints=""
+        android:inputType="textAutoComplete|textCapSentences|textMultiLine"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 
@@ -50,10 +50,9 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/cherry"
         android:text="@string/button_ok"
-        android:layout_margin="150sp"
         android:textColor="@color/buttonLabel"
         app:layout_constraintStart_toEndOf="@id/edit_comment"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toTopOf="@id/edit_comment"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

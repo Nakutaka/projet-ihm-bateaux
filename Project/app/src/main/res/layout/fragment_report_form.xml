@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:id="@+id/txt_temp"
-        android:text="@string/txt_temp"/>
+        android:text="@string/txt_temperature"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         app:layout_constraintTop_toTopOf="parent"

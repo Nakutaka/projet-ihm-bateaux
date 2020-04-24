@@ -14,7 +14,106 @@
         android:textAlignment="center"
         android:id="@+id/title_other"
         android:textSize="@dimen/title_size"
-        android:fontFamily="sans-serif-light"
+        android:layout_marginTop="30sp"
         android:text="@string/title_other"/>
+
+    <TextView
+        app:layout_constraintTop_toBottomOf="@id/title_other"
+        app:layout_constraintBottom_toTopOf="@id/fab_level_one"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:id="@+id/des_other"
+        android:textSize="30sp"
+        android:layout_marginTop="0sp"
+        android:text="Specify gravity:"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_level_one"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/fab_level_two"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:backgroundTint="@color/alphaGrey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTintMode="src_over"
+        android:foregroundTint="@color/white"
+        android:scaleX="1.6"
+        android:scaleY="1.6"
+        android:tint="@color/white"
+        app:elevation="0dp"
+        app:pressedTranslationZ="0dp"
+        android:layout_marginBottom="100sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/fab_level_two"
+        app:layout_constraintTop_toTopOf="@id/fab_level_one"
+        app:layout_constraintBottom_toBottomOf="@id/fab_level_one"
+        android:layout_gravity="center"
+        android:text="1"
+        android:textSize="50sp"
+        android:textColor="@android:color/white" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_level_two"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:backgroundTint="@color/alphaGrey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleX="1.6"
+        android:scaleY="1.6"
+        android:tint="@color/white"
+        app:elevation="0dp"
+        app:pressedTranslationZ="0dp"
+        android:layout_marginBottom="100sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/fab_level_two"
+        app:layout_constraintEnd_toEndOf="@id/fab_level_two"
+        app:layout_constraintTop_toTopOf="@id/fab_level_one"
+        app:layout_constraintBottom_toBottomOf="@id/fab_level_one"
+        android:layout_gravity="center"
+        android:text="2"
+        android:textSize="50sp"
+        android:textColor="@android:color/white" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_level_three"
+        app:layout_constraintStart_toEndOf="@id/fab_level_two"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:backgroundTint="@color/alphaGrey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleX="1.6"
+        android:scaleY="1.6"
+        android:tint="@color/white"
+        app:elevation="0dp"
+        app:pressedTranslationZ="0dp"
+        android:layout_marginBottom="100sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/fab_level_three"
+        app:layout_constraintEnd_toEndOf="@id/fab_level_three"
+        app:layout_constraintTop_toTopOf="@id/fab_level_one"
+        app:layout_constraintBottom_toBottomOf="@id/fab_level_one"
+        android:layout_gravity="center"
+        android:text="3"
+        android:textSize="50sp"
+        android:textColor="@android:color/white" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

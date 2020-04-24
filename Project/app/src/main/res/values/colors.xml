@@ -14,7 +14,7 @@
     <color name="alphaGrey">#66555555</color>
     <color name="buttonLabel">#fff</color>
 
-
+    <color name="alphaTransparent">#00ffffff</color>
     <color name="alphaBlu">#883399ff</color>
     <color name="alphaYellow">#88dd8800</color>
     <color name="alphaPurple">#88aa22ff</color>
