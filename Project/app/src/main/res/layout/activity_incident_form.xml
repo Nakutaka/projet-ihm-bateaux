@@ -22,37 +22,44 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintTop_toBottomOf="@id/button_back"
-        app:layout_constraintBottom_toTopOf="@id/edit_comment"
+        app:layout_constraintBottom_toTopOf="@id/linear_buttons"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
     </FrameLayout>
 
-    <EditText
-        android:id="@+id/edit_comment"
-        android:layout_width="200sp"
-        android:layout_height="wrap_content"
-        android:minHeight="@dimen/min_height"
-        android:fontFamily="sans-serif-light"
-        android:hint="@string/hint_comment"
-        android:layout_marginBottom="30sp"
-        android:layout_marginStart="20sp"
-        android:backgroundTint="@color/cherry"
-        android:textSize="18sp"
-        android:autofillHints=""
-        android:inputType="textAutoComplete|textCapSentences|textMultiLine"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+    <LinearLayout
+        android:id="@+id/linear_buttons"
+        app:layout_constraintBottom_toBottomOf="@id/frame_layout_incident"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <Button
-        android:layout_gravity="center"
-        android:id="@+id/button_save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/cherry"
-        android:text="@string/button_ok"
-        android:textColor="@color/buttonLabel"
-        app:layout_constraintStart_toEndOf="@id/edit_comment"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/edit_comment"/>
+        <EditText
+            android:id="@+id/edit_comment"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="20sp"
+            android:layout_marginEnd="40sp"
+            android:layout_marginBottom="20sp"
+            android:minHeight="@dimen/min_height"
+            android:fontFamily="sans-serif-light"
+            android:hint="@string/hint_comment"
+            android:backgroundTint="@color/cherry"
+            android:textSize="18sp"
+            android:autofillHints=""
+            android:inputType="textAutoComplete|textCapSentences|textMultiLine"
+            android:layout_weight="2"/>
+
+        <Button
+            android:id="@+id/button_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20sp"
+            android:backgroundTint="@color/cherry"
+            android:text="@string/button_ok"
+            android:textSize="18sp"
+            android:textColor="@color/buttonLabel"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

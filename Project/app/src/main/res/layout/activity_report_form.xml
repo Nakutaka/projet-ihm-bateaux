@@ -35,26 +35,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="60sp"
+            android:layout_marginStart="60sp"
             android:layout_marginBottom="@dimen/small_padding"
             android:backgroundTint="@android:color/tertiary_text_dark"
             android:drawableStart="@drawable/ic_comment"
             android:drawablePadding="5sp"
             android:drawableTint="@color/white"
             android:text="@string/button_comment"
-            android:textColor="@color/buttonLabel" />
+            android:textColor="@color/buttonLabel"
+            android:layout_weight="1"/>
 
         <Button
             android:id="@+id/button_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="60sp"
+            android:layout_marginEnd="60sp"
             android:layout_marginBottom="@dimen/small_padding"
             android:backgroundTint="@color/cherry"
             android:drawableEnd="@drawable/ic_next"
             android:drawablePadding="10sp"
             android:drawableTint="@color/white"
             android:text="@string/button_send"
-            android:textColor="@color/buttonLabel" />
+            android:textColor="@color/buttonLabel"
+            android:layout_weight="1"/>
     </LinearLayout>
 
 </LinearLayout>

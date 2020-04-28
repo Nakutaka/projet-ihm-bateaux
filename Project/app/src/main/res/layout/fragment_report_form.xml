@@ -1,262 +1,312 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<com.google.android.flexbox.FlexboxLayout
+    app:flexWrap="wrap"
+    app:flexDirection="row"
+    app:justifyContent="space_around"
+    android:padding="20sp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--first row-->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/fab_rain"
-        app:backgroundTint="@color/red"
-
-        android:id="@+id/fab_temp"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="100sp"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:scaleX="1.2"
-        android:scaleY="1.2"
-        android:tint="@color/white"
-        android:src="@drawable/ic_temperature" />
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_margin="10sp">
 
-    <TextView
-        app:layout_constraintTop_toBottomOf="@id/fab_temp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/fab_rain"
-        android:layout_width="wrap_content"
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:backgroundTint="@color/red"
+            android:id="@+id/fab_temp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:scaleX="1.2"
+            android:scaleY="1.2"
+            android:tint="@color/white"
+            android:src="@drawable/ic_temperature" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:id="@+id/txt_temp"
+            android:text="@string/txt_temperature"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="100sp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:id="@+id/txt_temp"
-        android:text="@string/txt_temperature"/>
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_margin="10sp">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:backgroundTint="@color/lightBlue"
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            app:backgroundTint="@color/lightBlue"
 
-        android:id="@+id/fab_rain"
-        android:layout_width="wrap_content"
+            android:id="@+id/fab_rain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:scaleX="1.2"
+            android:scaleY="1.2"
+            android:tint="@color/white"
+            android:src="@drawable/ic_rain" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:id="@+id/txt_rain"
+            android:text="@string/txt_rain"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="100sp"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:scaleX="1.2"
-        android:scaleY="1.2"
-        android:tint="@color/white"
-        android:src="@drawable/ic_rain" />
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_margin="10sp">
 
-    <TextView
-        app:layout_constraintTop_toBottomOf="@id/fab_temp"
-        app:layout_constraintStart_toEndOf="@id/fab_temp"
-        app:layout_constraintEnd_toStartOf="@id/fab_hail"
-        android:layout_width="wrap_content"
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            app:backgroundTint="@color/icyBlue"
+
+            android:id="@+id/fab_hail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:scaleX="1.2"
+            android:scaleY="1.2"
+            android:tint="@color/white"
+            android:src="@drawable/ic_hail" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:id="@+id/txt_hail"
+            android:text="@string/txt_hail"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="100sp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:id="@+id/txt_rain"
-        android:text="@string/txt_rain"/>
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_margin="10sp">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@id/fab_rain"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:backgroundTint="@color/icyBlue"
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            app:backgroundTint="@color/lightGrey"
 
-        android:id="@+id/fab_hail"
-        android:layout_width="wrap_content"
+            android:id="@+id/fab_fog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:scaleX="1.2"
+            android:scaleY="1.2"
+            android:tint="@color/white"
+            android:src="@drawable/ic_fog" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:id="@+id/txt_fog"
+            android:text="@string/txt_fog"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="100sp"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:scaleX="1.2"
-        android:scaleY="1.2"
-        android:tint="@color/white"
-        android:src="@drawable/ic_hail" />
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_margin="10sp">
 
-    <TextView
-        app:layout_constraintTop_toBottomOf="@id/fab_temp"
-        app:layout_constraintStart_toEndOf="@id/fab_rain"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_width="wrap_content"
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            app:backgroundTint="@color/grey"
+
+            android:id="@+id/fab_cloud"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:scaleX="1.2"
+            android:scaleY="1.2"
+            android:tint="@color/white"
+            android:src="@drawable/ic_cloud" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:id="@+id/txt_cloud"
+            android:text="@string/txt_cloud"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="100sp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:id="@+id/txt_hail"
-        android:text="@string/txt_hail"/>
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_margin="10sp">
 
-    <!-- 2nd row -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        app:layout_constraintTop_toBottomOf="@id/txt_temp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/fab_rain"
-        app:backgroundTint="@color/lightGrey"
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            app:backgroundTint="@color/yellow"
 
-        android:id="@+id/fab_fog"
-        android:layout_width="wrap_content"
+            android:id="@+id/fab_storm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:scaleX="1.2"
+            android:scaleY="1.2"
+            android:tint="@color/white"
+            android:src="@drawable/ic_storm" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:id="@+id/txt_storm"
+            android:text="@string/txt_storm"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="100sp"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:scaleX="1.2"
-        android:scaleY="1.2"
-        android:tint="@color/white"
-        android:src="@drawable/ic_fog" />
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_margin="10sp">
 
-    <TextView
-        app:layout_constraintTop_toBottomOf="@id/fab_fog"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/fab_rain"
-        android:layout_width="wrap_content"
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            app:backgroundTint="@color/orange"
+
+            android:id="@+id/fab_wind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10sp"
+            android:layout_marginStart="10sp"
+            android:layout_marginEnd="10sp"
+            android:scaleX="1.2"
+            android:scaleY="1.2"
+            android:tint="@color/white"
+            android:src="@drawable/ic_wind" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10sp"
+            android:id="@+id/txt_wind"
+            android:text="@string/txt_wind"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="100sp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:id="@+id/txt_fog"
-        android:text="@string/txt_fog"/>
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_margin="10sp">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        app:layout_constraintTop_toBottomOf="@id/txt_temp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:backgroundTint="@color/grey"
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            app:backgroundTint="@color/blue"
 
-        android:id="@+id/fab_cloud"
-        android:layout_width="wrap_content"
+            android:id="@+id/fab_current"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10sp"
+            android:layout_marginStart="10sp"
+            android:layout_marginEnd="10sp"
+            android:scaleX="1.2"
+            android:scaleY="1.2"
+            android:tint="@color/white"
+            android:src="@drawable/ic_current" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:id="@+id/txt_current"
+            android:text="@string/txt_current"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="100sp"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:scaleX="1.2"
-        android:scaleY="1.2"
-        android:tint="@color/white"
-        android:src="@drawable/ic_cloud" />
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_margin="10sp">
 
-    <TextView
-        app:layout_constraintTop_toBottomOf="@id/fab_fog"
-        app:layout_constraintStart_toEndOf="@id/fab_temp"
-        app:layout_constraintEnd_toStartOf="@id/fab_hail"
-        android:layout_width="wrap_content"
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            app:backgroundTint="@color/petrolBlue"
+
+            android:id="@+id/fab_transparency"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10sp"
+            android:layout_marginStart="10sp"
+            android:layout_marginEnd="10sp"
+            android:scaleX="1.2"
+            android:scaleY="1.2"
+            android:tint="@color/white"
+            android:src="@drawable/ic_transparency" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:id="@+id/txt_transparency"
+            android:text="@string/txt_transparency"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="100sp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:id="@+id/txt_cloud"
-        android:text="@string/txt_cloud"/>
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_margin="10sp">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        app:layout_constraintTop_toBottomOf="@id/txt_temp"
-        app:layout_constraintStart_toEndOf="@id/fab_rain"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:backgroundTint="@color/yellow"
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            app:backgroundTint="@color/green"
 
-        android:id="@+id/fab_storm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:scaleX="1.2"
-        android:scaleY="1.2"
-        android:tint="@color/white"
-        android:src="@drawable/ic_storm" />
+            android:id="@+id/fab_other"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10sp"
+            android:layout_marginStart="10sp"
+            android:layout_marginEnd="10sp"
+            android:scaleX="1.2"
+            android:scaleY="1.2"
+            android:tint="@color/white"
+            android:src="@drawable/ic_other" />
 
-    <TextView
-        app:layout_constraintTop_toBottomOf="@id/fab_fog"
-        app:layout_constraintStart_toEndOf="@id/fab_rain"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:id="@+id/txt_storm"
-        android:text="@string/txt_storm"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:id="@+id/txt_other"
+            android:text="@string/txt_other"/>
 
-    <!-- 3rd row -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        app:layout_constraintTop_toBottomOf="@id/txt_fog"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/fab_rain"
-        app:backgroundTint="@color/orange"
+    </LinearLayout>
 
-        android:id="@+id/fab_wind"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:scaleX="1.2"
-        android:scaleY="1.2"
-        android:tint="@color/white"
-        android:src="@drawable/ic_wind" />
-
-    <TextView
-        app:layout_constraintTop_toBottomOf="@id/fab_wind"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/fab_rain"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:id="@+id/txt_wind"
-        android:text="@string/txt_wind"/>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        app:layout_constraintTop_toBottomOf="@id/txt_fog"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:backgroundTint="@color/blue"
-
-        android:id="@+id/fab_current"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:scaleX="1.2"
-        android:scaleY="1.2"
-        android:tint="@color/white"
-        android:src="@drawable/ic_current" />
-
-    <TextView
-        app:layout_constraintTop_toBottomOf="@id/fab_wind"
-        app:layout_constraintStart_toEndOf="@id/fab_temp"
-        app:layout_constraintEnd_toStartOf="@id/fab_hail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:id="@+id/txt_current"
-        android:text="@string/txt_current"/>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        app:layout_constraintTop_toBottomOf="@id/txt_fog"
-        app:layout_constraintStart_toEndOf="@id/fab_rain"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:backgroundTint="@color/petrolBlue"
-
-        android:id="@+id/fab_transparency"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:scaleX="1.2"
-        android:scaleY="1.2"
-        android:tint="@color/white"
-        android:src="@drawable/ic_transparency" />
-
-    <TextView
-        app:layout_constraintTop_toBottomOf="@id/fab_wind"
-        app:layout_constraintStart_toEndOf="@id/fab_rain"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:id="@+id/txt_transparency"
-        android:text="@string/txt_transparency"/>
-
-    <!-- last button -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        app:layout_constraintTop_toBottomOf="@id/txt_wind"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:backgroundTint="@color/green"
-
-        android:id="@+id/fab_other"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:scaleX="1.2"
-        android:scaleY="1.2"
-        android:tint="@color/white"
-        android:src="@drawable/ic_other" />
-
-    <TextView
-        app:layout_constraintTop_toBottomOf="@id/fab_other"
-        app:layout_constraintStart_toEndOf="@id/fab_temp"
-        app:layout_constraintEnd_toStartOf="@id/fab_hail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:id="@+id/txt_other"
-        android:text="@string/txt_other"/>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.flexbox.FlexboxLayout>
