@@ -264,6 +264,8 @@ public class MapFragment extends Fragment implements LocationListener {
 
         String providerName = locationManager.getBestProvider(criteria, true);
         Log.d(GPS_LOG_TOKEN,"provider="+ providerName);
+        lastLocation = locationManager.getLastKnownLocation(providerName);
+       // Log.d(GPS_LOG_TOKEN," location "+lastLocation.getAltitude());
     }
 
     @RequiresPermission(anyOf = {ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION})
