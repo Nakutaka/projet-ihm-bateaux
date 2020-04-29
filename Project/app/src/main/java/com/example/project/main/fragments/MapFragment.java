@@ -224,7 +224,7 @@ public class MapFragment extends Fragment implements LocationListener {
         locationManager = (LocationManager) mainActivity.getSystemService(Context.LOCATION_SERVICE);
 
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            // When GPS disabled
+        //     When GPS disabled
             sendUserToLocationSettings();
         }
 

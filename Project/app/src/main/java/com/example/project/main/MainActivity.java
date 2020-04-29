@@ -65,12 +65,12 @@ public class MainActivity extends AppCompatActivity {
         mWeatherReportViewModel = new ViewModelProvider(this).get(WeatherReportViewModel.class);
         // Update the cached copy of the reports in the map overlays (method reference style)
         mWeatherReportViewModel.getWeatherReports().observe(this, this::setReports);
-/*
-        findViewById(R.id.settings).setOnClickListener(v -> {
+
+        findViewById(R.id.btn_settings).setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
             startActivity(intent);
         });
-*/
+
         findViewById(R.id.fab_add).setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), ReportFormActivity.class);
             startActivityForResult(intent, NEW_REPORT_ACTIVITY_REQUEST_CODE);

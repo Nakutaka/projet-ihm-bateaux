@@ -15,12 +15,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".main.SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
+        <activity android:name=".main.SettingsActivity"
+            android:label="Settings"
+            android:launchMode="singleTop">
+            </activity>
         <activity
             android:name=".main.MainActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize">
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTop"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

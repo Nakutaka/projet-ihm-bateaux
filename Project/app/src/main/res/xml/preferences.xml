@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        app:icon="@drawable/ic_settings_black_24dp"
+        app:key="general"
+        app:title="General"
+        app:fragment="com.example.project.main.fragments.settings.SettingsGeneralFragment"
+        />
+
+    <Preference
+        app:icon="@drawable/ic_map_black_24dp"
+        app:key="map"
+        app:title="Map Display"
+        app:fragment="com.example.project.main.fragments.settings.SettingsMapFragment"
+        />
+    <Preference
+        android:iconSpaceReserved="true"
+        app:icon="@drawable/ic_volume_up_black_24dp"
+        app:key="sounds"
+        app:title="Sounds"
+        app:fragment="com.example.project.main.fragments.settings.SettingsSoundsFragment"
+        />
+
+    <Preference
+        app:icon="@drawable/ic_notifications"
+        app:key="notifications"
+        app:title="Notifications"
+        app:fragment="com.example.project.main.fragments.settings.SettingsNotificationsFragment"
+        />
+
+
+    <Preference
+        app:icon="@drawable/ic_account_circle_black_24dp"
+        app:key="account"
+        app:title="Account"
+        app:fragment="com.example.project.main.fragments.settings.SettingsAccountFragment"
+        />
+    <Preference
+        app:icon="@drawable/ic_bug_report_black_24dp"
+        app:key="bug"
+        app:title="Report a bug"
+        app:fragment="com.example.project.main.fragments.settings.SettingsBugFragment"
+        />
+</PreferenceScreen>
