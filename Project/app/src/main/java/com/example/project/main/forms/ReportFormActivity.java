@@ -1,6 +1,12 @@
 package com.example.project.main.forms;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -16,6 +22,8 @@ import com.example.project.types.ITypeParam;
 import com.example.project.main.fragments.ReportFormFragment;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,15 +48,30 @@ public class ReportFormActivity extends AppCompatActivity implements IButtonClic
         minList = new ArrayList<>();
         basicList = new ArrayList<>();
         measuredList = new ArrayList<>();
+        createNotificationChanel();
 
         ReportFormFragment reportFormFragment = new ReportFormFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout_report,
                 reportFormFragment).commit();
 
+
+        NotificationCompat.Builder builder= new NotificationCompat.Builder(this,"chanel1")
+                .setSmallIcon(R.drawable.ic_notifications)
+                .setContentTitle("New notification")
+                .setContentText("There is a new incident")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+
+
         findViewById(R.id.button_send).setOnClickListener(view -> {
             //mEditCommentView = findViewById(R.id.edit_word);
             //general comment
             //+ GPS chosen coordinates
+
+
+            notificationManager.notify(100,builder.build());
+
             Intent result = new Intent();
             result.putParcelableArrayListExtra(MainActivity.EXTRA_INCIDENT_MIN_LIST,
                 (ArrayList<MinIncident>) minList);
@@ -58,7 +81,45 @@ public class ReportFormActivity extends AppCompatActivity implements IButtonClic
                 (ArrayList<MeasuredIncident>) measuredList);
             setResult(RESULT_OK, result);
             finish();
+
+
+
         });
+
+        /*findViewById(R.id.button_send).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String message="There is a new incident";
+                NotificationCompat.Builder builder= new NotificationCompat.Builder(ReportFormActivity.this)
+                        .setSmallIcon(R.drawable.ic_notifications)
+                        .setContentTitle("New notification")
+                        .setContentText(message)
+                        .setAutoCancel(true);
+                Intent intent = new Intent(ReportFormActivity.this,MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("message",message);
+
+                PendingIntent pendingIntent= PendingIntent.getActivity(ReportFormActivity.this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+                builder.setContentIntent(pendingIntent);
+
+                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.notify(0,builder.build());
+            }
+        });*/
+
+    }
+
+    public void createNotificationChanel(){
+        if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
+            CharSequence name ="StudentChanel";
+            String description = "Chanel for student notifications";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("chanel1",name,importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager= getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     private void removePossibleExistingIncident(String name) {
