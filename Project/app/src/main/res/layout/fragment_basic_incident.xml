@@ -13,8 +13,13 @@
         android:layout_height="wrap_content"
         android:text="Incident Name Here"
         android:textAlignment="center"
-        android:layout_marginTop="30sp"
         android:textSize="@dimen/title_size" />
+
+    <LinearLayout
+        app:layout_constraintTop_toBottomOf="@id/incident_name"
+        android:layout_width="match_parent"
+        android:layout_height="5px"
+        android:background="#555"/>
 
     <TextView
         app:layout_constraintTop_toBottomOf="@id/incident_name"
@@ -26,7 +31,6 @@
         android:textAlignment="center"
         android:id="@+id/des_basic"
         android:textSize="30sp"
-        android:layout_marginTop="0sp"
         android:text="Specify scale:"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
