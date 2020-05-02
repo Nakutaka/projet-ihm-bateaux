@@ -47,6 +47,7 @@
     </string-array>
 
     <string name="hint_wind_value">5</string>
+    <string name="defaultLocation">loading...</string>
     <string-array name="select_wind_unit">
         <item>km/h</item>
         <item>m/s</item>

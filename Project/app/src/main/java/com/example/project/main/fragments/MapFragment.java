@@ -1,26 +1,13 @@
 package com.example.project.main.fragments;
 
-import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresPermission;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.project.R;
 
@@ -39,15 +26,12 @@ import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.TilesOverlay;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
-import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-
-public class MapFragment extends Fragment implements LocationListener {
+public class MapFragment extends Fragment implements IGPSActivity {
 
     private Activity mainActivity;
+    private GPSFragment gpsFragment;
 
     //List<OverlayItem> items;// = new ArrayList<>();
-    private TextView currentLocationTextView;
     private MyLocationNewOverlay myPosition;
     private MapView map;
     private final OnlineTileSourceBase seaMarks = TileSourceFactory.OPEN_SEAMAP;
@@ -59,17 +43,6 @@ public class MapFragment extends Fragment implements LocationListener {
     /**********User Settings (default value for the time being)*********/
     private double zoom = 15.5;
 
-    /*******************GPS variables*******************/
-    /* GPS stuff */
-    private Location lastLocation; // WARNING can be null --> means pb with GPS
-    private String GPS_LOG_TOKEN = "GPS-LOGS";
-    private LocationManager locationManager;
-    /* GPS Constant Permission */
-    private static final int MY_PERMISSION_ACCESS_LOCATION = 10;
-    /* GPS update config */
-    private static final int MINIMUM_TIME = 5*1000;// 5s
-    private static final int MINIMUM_DISTANCE = 1;// 1m
-
 
     public MapFragment() {}
 
@@ -79,10 +52,16 @@ public class MapFragment extends Fragment implements LocationListener {
         mainActivity = getActivity();
         /*Configuration.getInstance().load(getApplicationContext(),
                 PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));*/
-        setupGPS();
         map = mainActivity.findViewById(R.id.map_view);
-        currentLocationTextView = mainActivity.findViewById(R.id.current_location);
-        currentLocationTextView.setText("Loading ...");
+
+        gpsFragment = (GPSFragment) getActivity().getSupportFragmentManager().findFragmentById( R.id.gpsLocation );
+        if (gpsFragment==null) {
+            gpsFragment = new GPSFragment( this );
+            FragmentTransaction gpsTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+            gpsTransaction.replace( R.id.gpsLocation, gpsFragment );
+            gpsTransaction.commit();
+        }
+
         setupMap();
         recenter();
     }
@@ -113,20 +92,6 @@ public class MapFragment extends Fragment implements LocationListener {
         map.onResume(); //needed for compass, my location overlays, v6.0.0 and up
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        locationManager.removeUpdates(this);//this? or mainActivity.getContext()???
-        Log.d(GPS_LOG_TOKEN,"Goodbye");
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == MY_PERMISSION_ACCESS_LOCATION) {
-                onLocationPermissionResult(grantResults);
-        }
-    }
     /*******************************************************************/
 
     /////////////////////////////////////////////////////////////////////
@@ -141,12 +106,16 @@ public class MapFragment extends Fragment implements LocationListener {
 
 
     public double getLastLatitude() {
+        Location lastLocation = gpsFragment.getCurrentLocation();
+
         if(lastLocation == null) return -1;
         return lastLocation.getLatitude();
         //return Objects.requireNonNull(currentLocation).getLatitude();
     }
 
     public double getLastLongitude() {
+        Location lastLocation = gpsFragment.getCurrentLocation();
+
         if(lastLocation == null) return -1;
         return lastLocation.getLongitude();
         //return Objects.requireNonNull(currentLocation).getLongitude();
@@ -154,20 +123,28 @@ public class MapFragment extends Fragment implements LocationListener {
     /********************************************************************/
 
     public void recenterButtonAction() {
-        recenter();
+        focus(true);
         onScroll = false;
     }
 
+    public void focus(boolean resetZoom) {
+        recenter();
+        if (resetZoom) mapController.setZoom(zoom);
+    }
+
     private void recenter() {
+        Location lastLocation = gpsFragment.getCurrentLocation();
+
         if (lastLocation != null) {
             mapController.animateTo(new GeoPoint(lastLocation.getLatitude(),
                     lastLocation.getLongitude()));
-            mapController.setZoom(zoom);
+            // Resetting zoom should be donne when pressing recenter button only
+            //mapController.setZoom(zoom);
         }
         else {
             Toast.makeText(
                     mainActivity.getApplicationContext(),
-                    "Sorry location still loading!",
+                    "Location is still loading..",
                     Toast.LENGTH_SHORT).show();
         }
     }
@@ -219,144 +196,5 @@ public class MapFragment extends Fragment implements LocationListener {
         });
     }
     ///////////////////////////////////////////////////////////////////
-    /*************************GPS permissions & setup***************************/
-    private void setupGPS() {
-        locationManager = (LocationManager) mainActivity.getSystemService(Context.LOCATION_SERVICE);
 
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            // When GPS disabled
-            sendUserToLocationSettings();
-        }
-
-        // Define minimum criteria for location provider
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-        criteria.setAltitudeRequired(false);
-        criteria.setBearingRequired(false); // Need direction ?
-        criteria.setCostAllowed(false); // Needs payment (ex:google?) ?
-        criteria.setSpeedRequired(false); // Need speed ?
-
-        //Unnecessary; SDK_INT is always >= 26
-        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            // Need to ask explicitly for permission access
-
-            if (mainActivity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    || mainActivity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // Permission is not granted yet
-
-                requestPermissions(new String[]{
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.INTERNET
-                }, MY_PERMISSION_ACCESS_LOCATION);
-                Log.d(GPS_LOG_TOKEN,"Requesting permissions");
-                return;
-            } else {
-                // Permission already granted explicitly
-                setUpLocationUpdates();
-            }
-        /*} else {
-            // Permission access already granted implicitly (just manifest declaration)
-
-            Log.d(GPS_LOG_TOKEN,"No need to ask for permissions");
-            setUpLocationUpdates();
-        }*/
-
-        String providerName = locationManager.getBestProvider(criteria, true);
-        Log.d(GPS_LOG_TOKEN,"provider="+ providerName);
-    }
-
-    @RequiresPermission(anyOf = {ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION})
-    private void setUpLocationUpdates() {
-        //locationManager.requestLocationUpdates("gps", MINIMUM_TIME, MINIMUM_DISTANCE, this);
-        //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);//locationListener);
-        //LocationManager.NETWORK_PROVIDER --> when GPS not working BUT need wifi/network connection
-    }
-
-    private void onLocationPermissionResult(int[] grantResults) {
-        if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.d(GPS_LOG_TOKEN,"Permissions granted");
-
-            if (mainActivity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                    && mainActivity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                // Double check because of Android being picky
-                setUpLocationUpdates();
-            }
-        } else {
-            Log.d(GPS_LOG_TOKEN,"Permissions denied");
-            currentLocationTextView.setText("Unknown\n(Permission denied)");
-            Toast.makeText(mainActivity.getApplicationContext(),"Location access required\n for position", Toast.LENGTH_SHORT).show();
-        }
-    }
-    ////////////////////////////////////////////////////////////////////////
-
-    /*********************Prompts a dialog to go to location settings****************************/
-    private void sendUserToLocationSettings() {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());//MainActivity.this);
-
-        // set title
-        alertDialogBuilder.setTitle("Please enable location");
-
-        // set dialog message
-        alertDialogBuilder
-                .setMessage("This application needs location to retrieve your position")
-                .setCancelable(false)
-                .setPositiveButton("SETTINGS", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Toast.makeText(mainActivity.getApplicationContext(), "Sending you to settings ...", Toast.LENGTH_SHORT).show();
-                        dialog.cancel(); // Close dialog
-
-                        // Send user to GPS settings
-                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivity(intent);
-                    }
-                })
-                .setNegativeButton("CANCEL",new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Toast.makeText(mainActivity.getApplicationContext(), "Proposition rejected", Toast.LENGTH_SHORT).show();
-
-                        dialog.cancel();
-                    }
-                });
-
-        // create alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
-
-        // show it
-        alertDialog.show();
-    }
-    ///////////////////////////////////////////////////////////////////////////////
-
-    /************************ LocationListener interface*************************/
-    @Override
-    public void onLocationChanged(Location location) {
-        if (location != null) {
-            lastLocation = location;
-            currentLocationTextView.setText(location.getLatitude() + " - " + location.getLongitude());
-            if(!onScroll) //To know if the user was browsing the map.
-                recenter();// --> otherwise not possible to navigate on the map
-            Log.d(GPS_LOG_TOKEN,"Position updated");
-            //updateMap();
-        }
-        else {
-            Toast.makeText(
-                    mainActivity.getApplicationContext(),
-                    "onLocationChanged triggered BUT got a null location...",
-                    Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {}
-
-    @Override
-    public void onProviderEnabled(String s) {}
-
-    @Override
-    public void onProviderDisabled(String s) {
-        // When GPS disabled
-        sendUserToLocationSettings();
-    }
-/////////////////////////////////////////////////////////////////////////////
 }
