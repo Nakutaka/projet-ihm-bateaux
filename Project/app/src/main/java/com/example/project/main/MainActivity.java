@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
         NotificationCompat.Builder builder= new NotificationCompat.Builder(this,"chanel1")
                 .setSmallIcon(R.drawable.ic_notifications)
                 .setContentTitle("New notification")
-                .setContentText("Reprt :"+t)
+                .setContentText("Report :"+t)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);

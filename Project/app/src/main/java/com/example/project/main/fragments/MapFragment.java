@@ -4,8 +4,13 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -49,10 +54,17 @@ public class MapFragment extends Fragment implements IGPSActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainActivity = getActivity();
         /*Configuration.getInstance().load(getApplicationContext(),
                 PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));*/
-        map = mainActivity.findViewById(R.id.map_view);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        View rootView = inflater.inflate(R.layout.fragment_map,container,false);
+
+        map = rootView.findViewById(R.id.map_not_working_view);
 
         gpsFragment = (GPSFragment) getActivity().getSupportFragmentManager().findFragmentById( R.id.gpsLocation );
         if (gpsFragment==null) {
@@ -61,12 +73,10 @@ public class MapFragment extends Fragment implements IGPSActivity {
             gpsTransaction.replace( R.id.gpsLocation, gpsFragment );
             gpsTransaction.commit();
         }
-
         setupMap();
         recenter();
+        return rootView;
     }
-
-
 
     /*@Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -143,7 +153,7 @@ public class MapFragment extends Fragment implements IGPSActivity {
         }
         else {
             Toast.makeText(
-                    mainActivity.getApplicationContext(),
+                    getActivity().getApplicationContext(),
                     "Location is still loading..",
                     Toast.LENGTH_SHORT).show();
         }
@@ -173,9 +183,9 @@ public class MapFragment extends Fragment implements IGPSActivity {
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.setBackgroundColor(Color.TRANSPARENT);
         final MapTileProviderBase tileProvider = new MapTileProviderBasic(
-                mainActivity.getApplicationContext(), seaMarks);
+                getActivity().getApplicationContext(), seaMarks);
         final TilesOverlay seaMarksOverlay = new TilesOverlay(tileProvider,
-                mainActivity.getApplicationContext());
+                getActivity().getApplicationContext());
         seaMarksOverlay.setLoadingBackgroundColor(Color.TRANSPARENT);
         map.getOverlays().add(seaMarksOverlay);
         myPosition = new MyLocationNewOverlay(map);

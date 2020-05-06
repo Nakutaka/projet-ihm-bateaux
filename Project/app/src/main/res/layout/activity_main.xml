@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".main.MainActivity">
 
+
     <FrameLayout
         android:id="@+id/frame_layout_map"
         app:layout_constraintStart_toStartOf="parent"
@@ -16,15 +17,10 @@
     <!---nothing inside -->
 
 
-    <org.osmdroid.views.MapView
-        android:id="@+id/map_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
     <FrameLayout
         android:id="@+id/gpsLocation"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frame_layout_map"
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -76,7 +72,9 @@
         android:background="#55000000"
         android:src="@drawable/ic_settings_black_24dp"
         android:scaleX="2"
-        android:scaleY="2"/>
+        android:scaleY="2"
+        app:elevation="0dp"
+        app:pressedTranslationZ="0dp"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_recenter"
@@ -107,5 +105,7 @@
         android:tint="@color/white"
         app:elevation="0dp"
         app:pressedTranslationZ="0dp"/>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
