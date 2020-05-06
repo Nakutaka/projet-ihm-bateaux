@@ -14,12 +14,16 @@
         android:textAlignment="center"
         android:id="@+id/title_transparency"
         android:textSize="@dimen/title_size"
-        android:layout_marginTop="30sp"
         android:text="@string/title_transparency"/>
+
+    <LinearLayout
+        app:layout_constraintTop_toBottomOf="@id/title_transparency"
+        android:layout_width="match_parent"
+        android:layout_height="5px"
+        android:background="#555"/>
 
     <TextView
         app:layout_constraintTop_toBottomOf="@id/title_transparency"
-        app:layout_constraintBottom_toTopOf="@id/number_picker"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="wrap_content"
@@ -27,7 +31,7 @@
         android:textAlignment="center"
         android:id="@+id/des_transparency"
         android:textSize="30sp"
-        android:layout_marginTop="30sp"
+        android:layout_marginTop="15sp"
         android:text="Specify measure:"/>
 
     <NumberPicker

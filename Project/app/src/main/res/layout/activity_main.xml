@@ -8,9 +8,9 @@
     tools:context=".main.MainActivity">
 
     <FrameLayout
+        android:id="@+id/frame_layout_map"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/frame_layout_map"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <!---nothing inside -->
@@ -21,21 +21,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <TextView
-        android:id="@+id/current_location"
+    <FrameLayout
+        android:id="@+id/gpsLocation"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/frame_layout_map"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="LATITUDE - LONGITUDE"
-        android:textAlignment="center"
-        android:textSize="18sp" />
-        <!--android:visibility="invisible" />-->
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="left"
+        android:background="#F3F1F1"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"/>
 
     <TextView
         android:id="@+id/tapped_location"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/current_location"
+        app:layout_constraintTop_toBottomOf="@id/gpsLocation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="LATITUDE - LONGITUDE"

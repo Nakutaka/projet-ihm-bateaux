@@ -14,8 +14,13 @@
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:text="@string/title_temperature"
-        android:layout_marginTop="30sp"
         android:textSize="@dimen/title_size" />
+
+    <LinearLayout
+        app:layout_constraintTop_toBottomOf="@id/incident_temperature"
+        android:layout_width="match_parent"
+        android:layout_height="5px"
+        android:background="#555"/>
 
     <TextView
         app:layout_constraintTop_toBottomOf="@id/incident_temperature"
@@ -27,7 +32,7 @@
         android:textAlignment="center"
         android:id="@+id/des_basic"
         android:textSize="30sp"
-        android:layout_marginTop="10sp"
+        android:layout_marginTop="15sp"
         android:text="Specify measure:"/>
 
     <LinearLayout
