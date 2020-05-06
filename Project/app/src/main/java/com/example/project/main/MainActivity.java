@@ -1,5 +1,6 @@
 package com.example.project.main;
 
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -8,6 +9,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.project.R;
@@ -150,7 +153,31 @@ public class MainActivity extends AppCompatActivity {
                     r.getBasicIncidentList().size() + r.getMeasuredIncidentList().size()
                     + "incident(s)", "" + typeCom,
                     new GeoPoint(r.getReport().getLatitude(), r.getReport().getLongitude())));
+
         });
+
+        Intent intent = new Intent(this,MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+        int x = reports.size();
+        Date d = reports.get(x-1).getReport().getDate();
+        String t = d.getFullHour();
+
+        NotificationCompat.Builder builder= new NotificationCompat.Builder(this,"chanel1")
+                .setSmallIcon(R.drawable.ic_notifications)
+                .setContentTitle("New notification")
+                .setContentText("Reprt :"+t)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+
+
+
+
+        notificationManager.notify(100,builder.build());
 
         //link to trigger Fragment ReportDetailsFragment
         ItemizedOverlayWithFocus<OverlayItem> reportOverlayItems = new ItemizedOverlayWithFocus<>(this,

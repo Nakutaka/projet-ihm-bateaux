@@ -55,11 +55,18 @@ public class ReportFormActivity extends AppCompatActivity implements IButtonClic
                 reportFormFragment).commit();
 
 
+        Intent intent = new Intent(this,MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+
         NotificationCompat.Builder builder= new NotificationCompat.Builder(this,"chanel1")
                 .setSmallIcon(R.drawable.ic_notifications)
                 .setContentTitle("New notification")
                 .setContentText("There is a new incident")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
@@ -113,7 +120,7 @@ public class ReportFormActivity extends AppCompatActivity implements IButtonClic
         if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
             CharSequence name ="StudentChanel";
             String description = "Chanel for student notifications";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel channel = new NotificationChannel("chanel1",name,importance);
             channel.setDescription(description);
 
