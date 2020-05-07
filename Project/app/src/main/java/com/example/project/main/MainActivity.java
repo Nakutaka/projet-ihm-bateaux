@@ -61,9 +61,13 @@ public class MainActivity extends AppCompatActivity {
                 PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
 
         itemIndex = -1;
-        mapFragment = new MapFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout_map,
-                mapFragment).commit();
+        mapFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.frame_layout_map);
+        if (mapFragment==null){
+            mapFragment = new MapFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout_map,
+                    mapFragment).commit();
+        }
+
 
         mWeatherReportViewModel = new ViewModelProvider(this).get(WeatherReportViewModel.class);
         // Update the cached copy of the reports in the map overlays (method reference style)

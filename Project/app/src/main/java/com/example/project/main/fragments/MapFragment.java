@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +54,7 @@ public class MapFragment extends Fragment implements IGPSActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d("DEBUG >>>>", "onCreate: MapFragment <<<<");
         super.onCreate(savedInstanceState);
         /*Configuration.getInstance().load(getApplicationContext(),
                 PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));*/
@@ -61,18 +63,16 @@ public class MapFragment extends Fragment implements IGPSActivity {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         View rootView = inflater.inflate(R.layout.fragment_map,container,false);
 
         map = rootView.findViewById(R.id.map_not_working_view);
 
-        gpsFragment = (GPSFragment) getActivity().getSupportFragmentManager().findFragmentById( R.id.gpsLocation );
-        if (gpsFragment==null) {
-            gpsFragment = new GPSFragment( this );
-            FragmentTransaction gpsTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-            gpsTransaction.replace( R.id.gpsLocation, gpsFragment );
-            gpsTransaction.commit();
-        }
+        gpsFragment = new GPSFragment( this );
+
+        FragmentTransaction gpsTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        gpsTransaction.replace( R.id.gpsLocation, gpsFragment );
+        gpsTransaction.commit();
+
         setupMap();
         recenter();
         return rootView;
@@ -153,7 +153,7 @@ public class MapFragment extends Fragment implements IGPSActivity {
         }
         else {
             Toast.makeText(
-                    getActivity().getApplicationContext(),
+                    this.getContext(),
                     "Location is still loading..",
                     Toast.LENGTH_SHORT).show();
         }

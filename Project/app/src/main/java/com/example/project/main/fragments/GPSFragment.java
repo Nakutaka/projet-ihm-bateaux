@@ -60,6 +60,7 @@ public class GPSFragment extends Fragment implements LocationListener {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if (igpsActivity==null) return super.onCreateView(inflater,container,savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_gps, container, false);
         locationView = rootView.findViewById( R.id.locationView );
         imgGPSoff = rootView.findViewById( R.id.imgGPSoff );
@@ -92,7 +93,7 @@ public class GPSFragment extends Fragment implements LocationListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        locationManager.removeUpdates(this);
+        //locationManager.removeUpdates(this);
         Log.d(IGPSActivity.GPS_LOG_TOKEN,"Goodbye");
     }
 
