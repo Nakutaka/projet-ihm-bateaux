@@ -34,7 +34,6 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 public class MapFragment extends Fragment implements IGPSActivity {
 
-    private Activity mainActivity;
     private GPSFragment gpsFragment;
 
     //List<OverlayItem> items;// = new ArrayList<>();
@@ -54,10 +53,9 @@ public class MapFragment extends Fragment implements IGPSActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d("DEBUG >>>>", "onCreate: MapFragment <<<<");
         super.onCreate(savedInstanceState);
-        /*Configuration.getInstance().load(getApplicationContext(),
-                PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));*/
+        /*Configuration.getInstance().load(getContext(),
+                PreferenceManager.getDefaultSharedPreferences(getContext()));*/
     }
 
     @Nullable
@@ -174,7 +172,7 @@ public class MapFragment extends Fragment implements IGPSActivity {
         if(map!=null) mapController = map.getController();
         else {
             Toast.makeText(
-                    mainActivity.getApplicationContext(),"pb!!!!!!!",
+                    getContext(),"pb!!!!!!!",
                     Toast.LENGTH_SHORT).show();
         }
         map.setBuiltInZoomControls(true);
@@ -183,9 +181,9 @@ public class MapFragment extends Fragment implements IGPSActivity {
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.setBackgroundColor(Color.TRANSPARENT);
         final MapTileProviderBase tileProvider = new MapTileProviderBasic(
-                getActivity().getApplicationContext(), seaMarks);
+                getContext(), seaMarks);
         final TilesOverlay seaMarksOverlay = new TilesOverlay(tileProvider,
-                getActivity().getApplicationContext());
+                getContext());
         seaMarksOverlay.setLoadingBackgroundColor(Color.TRANSPARENT);
         map.getOverlays().add(seaMarksOverlay);
         myPosition = new MyLocationNewOverlay(map);

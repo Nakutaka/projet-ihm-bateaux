@@ -98,8 +98,15 @@ public class GPSFragment extends Fragment implements LocationListener {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        locationManager.removeUpdates(this);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
+        setupGPS();
     }
 
     public Location getCurrentLocation() {
@@ -171,7 +178,7 @@ public class GPSFragment extends Fragment implements LocationListener {
         }
         else {
             Toast.makeText(
-                    getActivity().getApplicationContext(),
+                    getContext(),
                     "onLocationChanged triggered BUT got a null location...",
                     Toast.LENGTH_SHORT).show();
         }
@@ -217,7 +224,7 @@ public class GPSFragment extends Fragment implements LocationListener {
         } else {
             Log.d(IGPSActivity.GPS_LOG_TOKEN,"Permissions denied");
             //currentLocationTextView.setText("Unknown\n(Permission denied)");
-            Toast.makeText(getActivity().getApplicationContext(),"Location access required\n for position", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),"Location access required\n for position", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -229,7 +236,7 @@ public class GPSFragment extends Fragment implements LocationListener {
 
     private void sendUserToLocationSettings() {
         // Send user to GPS settings
-        Toast.makeText(getActivity().getApplicationContext(), "Please enable location", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Please enable location", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
         startActivity(intent);
     }
@@ -237,7 +244,7 @@ public class GPSFragment extends Fragment implements LocationListener {
     /*********************Prompts a dialog to go to location settings****************************/
 
     private void promptLocationSettingOff() {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());//MainActivity.this);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.getContext());//MainActivity.this);
         // set title
         alertDialogBuilder.setTitle("Please enable location");
         // set dialog message
@@ -252,7 +259,7 @@ public class GPSFragment extends Fragment implements LocationListener {
                 })
                 .setNegativeButton("CANCEL",new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Toast.makeText(getActivity().getApplicationContext(), "Proposition rejected", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Proposition rejected", Toast.LENGTH_SHORT).show();
                         dialog.cancel();
                     }
                 });
