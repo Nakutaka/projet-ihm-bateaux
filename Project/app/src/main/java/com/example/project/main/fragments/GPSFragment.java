@@ -22,14 +22,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresPermission;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.project.R;
-
-import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 /**
  * This fragment is able to manage autorisation for location module (GPS)
@@ -52,6 +47,7 @@ public class GPSFragment extends Fragment implements LocationListener {
     /* GPS stuff */
     private static final int MINIMUM_TIME = 1000; // 5*1000;// 5s
     private static final int MINIMUM_DISTANCE = 1;// 1m
+    private String provider = LocationManager.GPS_PROVIDER; //LocationManager.NETWORK_PROVIDER
 
 
     public GPSFragment() { }
@@ -93,7 +89,6 @@ public class GPSFragment extends Fragment implements LocationListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //locationManager.removeUpdates(this);
         Log.d(IGPSActivity.GPS_LOG_TOKEN,"Goodbye");
     }
 
@@ -140,7 +135,7 @@ public class GPSFragment extends Fragment implements LocationListener {
             return;
         } else {
             // Permission already granted explicitly
-            setUpLocationUpdates();
+            locationManager.requestLocationUpdates(provider, MINIMUM_TIME, MINIMUM_DISTANCE, this);
         }
 
         String providerName = locationManager.getBestProvider(criteria, true);
@@ -149,13 +144,6 @@ public class GPSFragment extends Fragment implements LocationListener {
 
     ////////////////////////////////////////////////////////////////////////
 
-    @RequiresPermission(anyOf = {ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION})
-    private void setUpLocationUpdates() {
-        //locationManager.requestLocationUpdates("gps", MINIMUM_TIME, MINIMUM_DISTANCE, this);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MINIMUM_TIME, MINIMUM_DISTANCE, this);
-        //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MINIMUM_TIME, 0, MINIMUM_DISTANCE);//locationListener);
-        //LocationManager.NETWORK_PROVIDER --> when GPS not working BUT need wifi/network connection
-    }
     /******************* LocationListener interface *******************/
 
     @Override
@@ -219,7 +207,7 @@ public class GPSFragment extends Fragment implements LocationListener {
             if (getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                     && getActivity().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 // Double check because of Android being picky
-                setUpLocationUpdates();
+                locationManager.requestLocationUpdates(provider, MINIMUM_TIME, MINIMUM_DISTANCE, this);
             }
         } else {
             Log.d(IGPSActivity.GPS_LOG_TOKEN,"Permissions denied");
