@@ -39,7 +39,6 @@ public class GPSFragment extends Fragment implements LocationListener {
     LocationManager locationManager;
 
     // Overlay icons
-    private ImageView imgGPSoff;
     private ImageView imgLocationOff;
 
 
@@ -59,11 +58,9 @@ public class GPSFragment extends Fragment implements LocationListener {
         if (igpsActivity==null) return super.onCreateView(inflater,container,savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_gps, container, false);
         locationView = rootView.findViewById( R.id.locationView );
-        imgGPSoff = rootView.findViewById( R.id.imgGPSoff );
         imgLocationOff = rootView.findViewById( R.id.imgLocationOff );
 
         //Duct Tape
-        imgGPSoff.setVisibility( View.INVISIBLE );
         imgLocationOff.setVisibility( View.INVISIBLE );
 
         setupGPS();
@@ -71,17 +68,9 @@ public class GPSFragment extends Fragment implements LocationListener {
         imgLocationOff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //changeLocationSettings();
+                promptLocationSettingOff();
             }
         });
-
-        imgGPSoff.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //changeLocationPermission();
-            }
-        });
-
 
         return rootView;
     }
@@ -101,6 +90,7 @@ public class GPSFragment extends Fragment implements LocationListener {
     @Override
     public void onResume() {
         super.onResume();
+        imgLocationOff.setVisibility( (locationManager.isProviderEnabled(provider)) ? View.INVISIBLE : View.VISIBLE);
         setupGPS();
     }
 
