@@ -34,12 +34,6 @@
         <item name="android:layout_marginBottom">20dp</item>
     </style>
 
-    <style name="MyFloatingButtonTablet" parent="MyFloatingButton">
-        <item name="android:scaleX">1.5</item>
-        <item name="android:scaleY">1.5</item>
-        <item name="android:layout_margin">40dp</item>
-    </style>
-
     <!--    -->
 
     <!-- FRAGMENT_REPORT_FORM -->
@@ -51,11 +45,6 @@
         <item name="android:layout_margin">10sp</item>
     </style>
 
-    <style name="LayoutFormTablet" parent="LayoutForm">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_margin">15sp</item>
-    </style>
-
     <style name="MyFloatingButtonForm" parent="Widget.MaterialComponents.FloatingActionButton">
         <item name="backgroundTint">@color/transparent</item>
         <item name="android:layout_width">wrap_content</item>
@@ -65,23 +54,12 @@
         <item name="android:scaleY">1.2</item>
     </style>
 
-    <style name="MyFloatingButtonFormTablet" parent="MyFloatingButtonForm">
-        <item name="android:layout_marginTop">30dp</item>
-        <item name="android:scaleX">2</item>
-        <item name="android:scaleY">2</item>
-    </style>
 
     <style name="TextViewForm" parent="android:Widget.TextView">
         <item name="android:layout_width">90sp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">10dp</item>
         <item name="android:textAlignment">center</item>
-    </style>
-
-    <style name="TextViewFormTablet" parent="TextViewForm">
-        <item name="android:layout_width">155sp</item>
-        <item name="android:textSize">25sp</item>
-        <item name="android:layout_marginTop">30dp</item>
     </style>
 
     <style name="MyButtons" parent="TextAppearance.AppCompat.Button">
@@ -94,11 +72,6 @@
         <item name="android:textColor">@color/buttonLabel</item>
     </style>
 
-    <style name="MyButtonsTablet" parent="MyButtons">
-        <item name="android:textSize">36sp</item>
-    </style>
-
     <!--    -->
-
 
 </resources>
