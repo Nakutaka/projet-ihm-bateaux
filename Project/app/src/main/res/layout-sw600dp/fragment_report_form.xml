@@ -9,19 +9,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout style="@style/LayoutForm">
+    <LinearLayout style="@style/LayoutFormTablet">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            style="@style/MyFloatingButtonForm"
+            style="@style/MyFloatingButtonFormTablet"
             android:backgroundTint="@color/red"
             android:id="@+id/fab_temp"
             android:tint="@color/white"
             android:src="@drawable/ic_temperature" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            style="@style/TextViewFormTablet"
             android:id="@+id/txt_temp"
             android:text="@string/txt_temperature"/>
 
@@ -29,118 +27,118 @@
 
 
     <LinearLayout
-        style="@style/LayoutForm">
+        style="@style/LayoutFormTablet">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            style="@style/MyFloatingButtonForm"
-            app:backgroundTint="@color/lightBlue"
+            style="@style/MyFloatingButtonFormTablet"
+            android:backgroundTint="@color/lightBlue"
             android:id="@+id/fab_rain"
             android:tint="@color/white"
             android:src="@drawable/ic_rain" />
 
         <TextView
-            style="@style/TextViewForm"
+            style="@style/TextViewFormTablet"
             android:id="@+id/txt_rain"
             android:text="@string/txt_rain"/>
 
     </LinearLayout>
 
     <LinearLayout
-        style="@style/LayoutForm">
+        style="@style/LayoutFormTablet">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            style="@style/MyFloatingButtonForm"
-            app:backgroundTint="@color/icyBlue"
+            style="@style/MyFloatingButtonFormTablet"
+            android:backgroundTint="@color/icyBlue"
             android:id="@+id/fab_hail"
             android:tint="@color/white"
             android:src="@drawable/ic_hail" />
 
         <TextView
-            style="@style/TextViewForm"
+            style="@style/TextViewFormTablet"
             android:id="@+id/txt_hail"
             android:text="@string/txt_hail"/>
 
     </LinearLayout>
 
     <LinearLayout
-        style="@style/LayoutForm">
+        style="@style/LayoutFormTablet">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            style="@style/MyFloatingButtonForm"
-            app:backgroundTint="@color/lightGrey"
+            style="@style/MyFloatingButtonFormTablet"
+            android:backgroundTint="@color/lightGrey"
             android:id="@+id/fab_fog"
             android:tint="@color/white"
             android:src="@drawable/ic_fog" />
 
         <TextView
-            style="@style/TextViewForm"
+            style="@style/TextViewFormTablet"
             android:id="@+id/txt_fog"
             android:text="@string/txt_fog"/>
 
     </LinearLayout>
 
     <LinearLayout
-        style="@style/LayoutForm">
+        style="@style/LayoutFormTablet">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            style="@style/MyFloatingButtonForm"
-            app:backgroundTint="@color/grey"
+            style="@style/MyFloatingButtonFormTablet"
+            android:backgroundTint="@color/grey"
             android:id="@+id/fab_cloud"
             android:tint="@color/white"
             android:src="@drawable/ic_cloud" />
 
         <TextView
-            style="@style/TextViewForm"
+            style="@style/TextViewFormTablet"
             android:id="@+id/txt_cloud"
             android:text="@string/txt_cloud"/>
     </LinearLayout>
 
     <LinearLayout
-        style="@style/LayoutForm">
+        style="@style/LayoutFormTablet">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            style="@style/MyFloatingButtonForm"
-            app:backgroundTint="@color/yellow"
+            style="@style/MyFloatingButtonFormTablet"
+            android:backgroundTint="@color/yellow"
             android:id="@+id/fab_storm"
             android:tint="@color/white"
             android:src="@drawable/ic_storm" />
 
         <TextView
-            style="@style/TextViewForm"
+            style="@style/TextViewFormTablet"
             android:id="@+id/txt_storm"
             android:text="@string/txt_storm"/>
 
     </LinearLayout>
 
     <LinearLayout
-        style="@style/LayoutForm">
+        style="@style/LayoutFormTablet">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            style="@style/MyFloatingButtonForm"
-            app:backgroundTint="@color/orange"
+            style="@style/MyFloatingButtonFormTablet"
+            android:backgroundTint="@color/orange"
             android:id="@+id/fab_wind"
             android:tint="@color/white"
             android:src="@drawable/ic_wind" />
 
         <TextView
-            style="@style/TextViewForm"
+            style="@style/TextViewFormTablet"
             android:id="@+id/txt_wind"
             android:text="@string/txt_wind"/>
 
     </LinearLayout>
 
     <LinearLayout
-        style="@style/LayoutForm">
+        style="@style/LayoutFormTablet">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            style="@style/MyFloatingButtonForm"
-            app:backgroundTint="@color/blue"
+            style="@style/MyFloatingButtonFormTablet"
+            android:backgroundTint="@color/blue"
             android:id="@+id/fab_current"
             android:tint="@color/white"
             android:src="@drawable/ic_current" />
 
         <TextView
-            style="@style/TextViewForm"
+            style="@style/TextViewFormTablet"
             android:id="@+id/txt_current"
             android:text="@string/txt_current"/>
 
@@ -148,36 +146,34 @@
     </LinearLayout>
 
     <LinearLayout
-        style="@style/LayoutForm">
+        style="@style/LayoutFormTablet">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            style="@style/MyFloatingButtonForm"
-            app:backgroundTint="@color/petrolBlue"
+            style="@style/MyFloatingButtonFormTablet"
+            android:backgroundTint="@color/petrolBlue"
             android:id="@+id/fab_transparency"
             android:tint="@color/white"
             android:src="@drawable/ic_transparency" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            style="@style/TextViewFormTablet"
             android:id="@+id/txt_transparency"
             android:text="@string/txt_transparency"/>
 
     </LinearLayout>
 
     <LinearLayout
-        style="@style/LayoutForm">
+        style="@style/LayoutFormTablet">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            style="@style/MyFloatingButtonForm"
-            app:backgroundTint="@color/green"
+            style="@style/MyFloatingButtonFormTablet"
+            android:backgroundTint="@color/green"
             android:id="@+id/fab_other"
             android:tint="@color/white"
             android:src="@drawable/ic_other" />
 
         <TextView
-            style="@style/TextViewForm"
+            style="@style/TextViewFormTablet"
             android:id="@+id/txt_other"
             android:text="@string/txt_other"/>
 

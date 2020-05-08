@@ -44,7 +44,7 @@
             android:fontFamily="sans-serif-light"
             android:hint="@string/hint_comment"
             android:backgroundTint="@color/cherry"
-            android:textSize="18sp"
+            android:textSize="36sp"
             android:autofillHints=""
             android:inputType="textAutoComplete|textCapSentences|textMultiLine"
             android:layout_weight="2"/>
@@ -55,6 +55,7 @@
             android:layout_marginEnd="20sp"
             android:backgroundTint="@color/cherry"
             android:text="@string/button_ok"
+            android:textSize="36sp"
             android:layout_weight="1"/>
 
     </LinearLayout>

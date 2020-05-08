@@ -40,15 +40,17 @@ public class ReportFormFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onClick(View btn) {
-        if(btn.getId() == R.id.fab_temp) mCallBack.onButtonTempClicked(btn);
-        else if(btn.getId() == R.id.fab_rain) mCallBack.onButtonRainClicked(btn);
-        else if(btn.getId() == R.id.fab_hail) mCallBack.onButtonHailClicked(btn);
-        else if(btn.getId() == R.id.fab_fog) mCallBack.onButtonFogClicked(btn);
-        else if(btn.getId() == R.id.fab_cloud) mCallBack.onButtonCloudClicked(btn);
-        else if(btn.getId() == R.id.fab_storm) mCallBack.onButtonStormClicked(btn);
-        else if(btn.getId() == R.id.fab_wind) mCallBack.onButtonWindClicked(btn);
-        else if(btn.getId() == R.id.fab_current) mCallBack.onButtonCurrentClicked(btn);
-        else if(btn.getId() == R.id.fab_transparency) mCallBack.onButtonTransparencyClicked(btn);
-        else if(btn.getId() == R.id.fab_other) mCallBack.onButtonOtherClicked(btn);
+        switch (btn.getId()){
+            case R.id.fab_temp: mCallBack.onButtonTempClicked(btn); break;
+            case R.id.fab_rain: mCallBack.onButtonRainClicked(btn); break;
+            case R.id.fab_hail: mCallBack.onButtonHailClicked(btn); break;
+            case R.id.fab_fog: mCallBack.onButtonFogClicked(btn); break;
+            case R.id.fab_cloud: mCallBack.onButtonCloudClicked(btn); break;
+            case R.id.fab_storm: mCallBack.onButtonStormClicked(btn); break;
+            case R.id.fab_wind: mCallBack.onButtonWindClicked(btn); break;
+            case R.id.fab_current: mCallBack.onButtonCurrentClicked(btn); break;
+            case R.id.fab_transparency: mCallBack.onButtonTransparencyClicked(btn); break;
+            case R.id.fab_other: mCallBack.onButtonOtherClicked(btn); break;
+        }
     }
 }
