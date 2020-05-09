@@ -10,12 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.project.R;
 import com.example.project.data.model.SettingsModel;
 import com.google.gson.Gson;
-import com.twitter.sdk.android.core.Twitter;
-import com.twitter.sdk.android.core.TwitterAuthToken;
 import com.twitter.sdk.android.core.TwitterSession;
-import com.twitter.sdk.android.core.internal.TwitterApi;
-import com.twitter.sdk.android.core.models.TweetBuilder;
-import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -30,8 +25,6 @@ public class SettingsViewModel extends AndroidViewModel {
     private final boolean soundDefault = getBool(R.bool.pref_sound_on);
     private final boolean incidentNotificationDefault = getBool(R.bool.pref_notifications_on);
     private final boolean displayCoordinatesDefault = getBool(R.bool.pref_coordinates_displayed);
-
-
     private SettingsModel currentSettings;
     private SharedPreferences sharedPref;
     private MutableLiveData<SettingsModel> settingsModelMutableLiveData = new MutableLiveData<>();
@@ -90,13 +83,17 @@ public class SettingsViewModel extends AndroidViewModel {
         return currentSettings;
     }
 
+    public String getTwitterToken() {
+        return gson.toJson(currentSettings.getTwitterAccount());
+    }
+
     public void setReportsArea(String value) {
         currentSettings.setReportsArea(value);
         saveSettings(currentSettings);
     }
 
-    public void setTwitterAccount(TwitterSession twitterSession) {
-        currentSettings.setTwitterAccount(twitterSession);
+    public void setTwitterAccount(String twitterSession) {
+        currentSettings.setTwitterAccount(gson.fromJson(twitterSession, TwitterSession.class));
         saveSettings(currentSettings);
     }
 

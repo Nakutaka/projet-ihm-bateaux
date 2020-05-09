@@ -1,14 +1,12 @@
 package com.example.project.main;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.project.R;
 import com.example.project.data.model.Tweet;
@@ -18,7 +16,6 @@ import com.twitter.sdk.android.core.DefaultLogger;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
-import com.twitter.sdk.android.core.TwitterAuthToken;
 import com.twitter.sdk.android.core.TwitterConfig;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterException;
@@ -26,14 +23,13 @@ import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 import com.twitter.sdk.android.tweetcomposer.ComposerActivity;
 
-import java.util.Arrays;
-
 public class TwitterActivity extends AppCompatActivity {
     public final static String TWITTER_ACTION = "TWEET_ACTION";
     public final static String TWITTER_SESSION = "TWITTER_SESSION";
     public final static String TWITTER_CONNECT = "TWITTER_CONNECT";
     public final static String TWEET = "TWEET";
     public final static int TWEET_REQUEST = 6;
+    public static final String TWEET_INTENT = "TWEET_INTENT";
     private TwitterLoginButton loginButton;
     private Gson gson = new Gson();
 
@@ -65,15 +61,23 @@ public class TwitterActivity extends AppCompatActivity {
         Twitter.initialize(config);
     }
 
+    public static Intent tweetIntentBuilder(Intent intent, String tweet, String twitterAccount) {
+        intent.putExtra(TwitterActivity.TWITTER_ACTION, TwitterActivity.TWEET);
+        intent.putExtra(TwitterActivity.TWITTER_SESSION, twitterAccount);
+        intent.putExtra(TwitterActivity.TWEET, tweet);
+        return intent;
+    }
+
     private void tweet(TwitterSession session, Tweet tweet) {
         final Intent intent = new ComposerActivity.Builder(this)
                 .session(session)
                 .text(tweet.getBody())
                 .hashtags(tweet.getHashtags())
                 .createIntent();
-   //     WorkManager workManager = WorkManager.getInstance(this);
-     //   workManager.enqueue(new OneTimeWorkRequest.Builder())
+
+
         startActivityForResult(intent, TWEET_REQUEST);
+
     }
 
     private void setUpTwitterButton() {
@@ -81,9 +85,8 @@ public class TwitterActivity extends AppCompatActivity {
         loginButton.setCallback(new Callback<TwitterSession>() {
             @Override
             public void success(Result<TwitterSession> result) {
-                // Do something with result, which provides a TwitterSession for making API calls
+                // Result provides a TwitterSession for making API calls
                 TwitterSession session = TwitterCore.getInstance().getSessionManager().getActiveSession();
-                TwitterAuthToken authToken = session.getAuthToken();
                 Intent intent = new Intent();
                 intent.putExtra(TWITTER_SESSION, gson.toJson(session));
                 setResult(Activity.RESULT_OK, intent);
@@ -92,16 +95,16 @@ public class TwitterActivity extends AppCompatActivity {
 
             @Override
             public void failure(TwitterException exception) {
-                // Do something on failure
+                exception.getCause();
                 Toast.makeText(getApplicationContext(),"Login fail",Toast.LENGTH_LONG).show();
                 Intent intent = new Intent();
                 setResult(Activity.RESULT_CANCELED, intent);
                 finish();
             }
         });
+        //To avoid the user to click on it
         loginButton.performClick();
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -112,5 +115,8 @@ public class TwitterActivity extends AppCompatActivity {
             loginButton.onActivityResult(requestCode, resultCode, data);
             finish();
         }
+
     }
+
 }
+

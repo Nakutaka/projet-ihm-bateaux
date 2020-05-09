@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
@@ -12,11 +13,13 @@ import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreference;
+
 import com.example.project.R;
 import com.example.project.control.SettingsViewModel;
+import com.example.project.data.model.Tweet;
 import com.example.project.main.TwitterActivity;
 import com.google.gson.Gson;
-import com.twitter.sdk.android.core.TwitterSession;
+
 import java.util.Objects;
 import java.util.Set;
 
@@ -58,7 +61,13 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     Toast.makeText(getContext(), getString(R.string.account_disconnected), Toast.LENGTH_SHORT).show();
 
                 });
-                builder.setNegativeButton(R.string.button_cancel, (dialog, id) -> spTwitter.setChecked(true));
+
+                builder.setNegativeButton(R.string.button_cancel, (dialog, id) -> {
+                    //TWEET TEST
+                    Tweet tw = new Tweet("This is a test", "#SeaReports", "#Polytech");
+                    spTwitter.setChecked(true);
+                    startActivity(TwitterActivity.tweetIntentBuilder(intent, gson.toJson(tw), viewModel.getTwitterToken()));
+                });
 
                 builder.setTitle(R.string.title_twitter_log_out);
                 builder.setMessage(R.string.message_twitter_log_out);
@@ -79,7 +88,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             spTwitter.setChecked(newSettings.hasTwitterAccount());
         });
 
-        //update the modelView 
+        //update the modelView
         lpArea.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -125,14 +134,14 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        appendProgressCircle(View.GONE);
         if (requestCode == REQUEST_CONNECT_TWITTER) {
-            appendProgressCircle(View.GONE);
             if (resultCode == Activity.RESULT_CANCELED) {
                 SwitchPreference sp_twitter = findPreference(getString(R.string.key_twitter));
                 assert sp_twitter != null;
                 sp_twitter.setChecked(false);
             } else if(resultCode==Activity.RESULT_OK) {
-                viewModel.setTwitterAccount(gson.fromJson(data.getStringExtra(TwitterActivity.TWITTER_SESSION), TwitterSession.class));
+                viewModel.setTwitterAccount(data.getStringExtra(TwitterActivity.TWITTER_SESSION));
                 Toast.makeText(getContext(), "Hello " + viewModel.getCurrentSettings().getTwitterAccount().getUserName() + ", your account has been successfully added.", Toast.LENGTH_LONG).show();
             }
         }
