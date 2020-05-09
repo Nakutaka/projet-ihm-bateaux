@@ -15,15 +15,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".main.SettingsActivity"
+        <activity android:name=".main.TwitterActivity"></activity>
+        <activity
+            android:name=".main.SettingsActivity"
             android:label="Settings"
-            android:launchMode="singleTop">
-            </activity>
+            android:launchMode="singleTop"></activity>
         <activity
             android:name=".main.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTop"
-            >
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,6 +32,15 @@
         </activity>
         <activity android:name=".main.forms.ReportFormActivity" />
         <activity android:name=".main.forms.IncidentFormActivity" />
+        <receiver
+            android:name=".main.receiver.TwitterReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.twitter.sdk.android.tweetcomposer.UPLOAD_SUCCESS"/>
+                <action android:name="com.twitter.sdk.android.tweetcomposer.UPLOAD_FAILURE"/>
+                <action android:name="com.twitter.sdk.android.tweetcomposer.TWEET_COMPOSE_CANCEL"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

@@ -9,4 +9,32 @@
         <item>reply</item>
         <item>reply_all</item>
     </string-array>
+
+    <string-array name="area_entries">
+        <item>@string/pref_area_5_label</item>
+        <item>@string/pref_area_25_label</item>
+        <item>@string/pref_area_50_label</item>
+        <item>@string/pref_area_100_label</item>
+        <item>@string/pref_area_all_label</item>
+    </string-array>
+
+<string-array name="incident_entries">
+    <item>@string/report_settings_temperature</item>
+    <item>@string/report_settings_rain</item>
+    <item>@string/report_settings_hail</item>
+    <item>@string/report_settings_fog</item>
+    <item>@string/report_settings_cloud</item>
+    <item>@string/report_settings_storm</item>
+    <item>@string/report_settings_wind</item>
+    <item>@string/report_settings_current</item>
+    <item>@string/report_settings_transparency</item>
+    <item>@string/report_settings_other</item>
+</string-array>
+   <string-array name="area_values">
+        <item>@string/pref_area_5_value</item>
+        <item>@string/pref_area_25_value</item>
+        <item>@string/pref_area_50_value</item>
+        <item>@string/pref_area_100_value</item>
+        <item>@string/pref_area_all_value</item>
+    </string-array>
 </resources>

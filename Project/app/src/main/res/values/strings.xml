@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Sea Report</string>
     <string name="hint_comment">Add a comment...</string>
     <string name="hint_general_comment">General comment...</string>
@@ -46,6 +46,36 @@
         <item>" K"</item><!-- 10 °C + 273,15 = 283,15 K  -> round int too -->
     </string-array>
 
+    <string name="title_area">Area</string>
+    <string name="pref_area_5_label">5 km</string>
+    <string name="pref_area_25_label">25 km</string>
+    <string name="pref_area_50_label">50 km</string>
+    <string name="pref_area_100_label">100 km</string>
+    <string name="pref_area_all_label">All</string>
+
+    <string name="pref_area_5_value">5</string>
+    <string name="pref_area_25_value">25</string>
+    <string name="pref_area_50_value">50</string>
+    <string name="pref_area_100_value">100</string>
+    <string name="pref_area_all_value">all</string>
+
+    <string name="report_settings_temperature">Temperature</string>
+    <string name="report_settings_rain">Rain</string>
+    <string name="report_settings_hail">Hail</string>
+    <string name="report_settings_fog">Fog</string>
+    <string name="report_settings_cloud">Cloud</string>
+    <string name="report_settings_storm">Storm</string>
+    <string name="report_settings_wind">Wind</string>
+    <string name="report_settings_current">Current</string>
+    <string name="report_settings_transparency">Transparency</string>
+    <string name="report_settings_other">Other</string>
+    <string name="report_settings_title">View on map</string>
+    <string name="report_area_settings_title">Reports area</string>
+
+
+    <string name="bug_report">Describe your problem</string>
+
+
     <string name="hint_wind_value">5</string>
     <string-array name="select_wind_unit">
         <item>km/h</item>
@@ -70,4 +100,29 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="report_settings_dialog_title">Display on map</string>
+    <string name="add_twitter_summary">Add your Twitter account</string>
+    <string name="delete_twitter_summary">Switch to log off</string>
+
+    <string name="settings_twitter">Twitter</string>
+
+    <!-- API TWITTER - CREDENTIALS -->
+    <string name="com.twitter.sdk.android.CONSUMER_KEY" tools:ignore="ExtraTranslation">NdrTXUcmGndNHYuXCoXJv0FJ0</string>
+    <string name="com.twitter.sdk.android.CONSUMER_SECRET" tools:ignore="ExtraTranslation">Lq5sW1CoijmKY9zvr0QrQLYhfKQOrMPQnVaEx66xOj00Cii2ap</string>
+    <string name="key_area">list_preference_area</string>
+    <string name="key_incident">multi_list_report</string>
+    <string name="key_coordinates">coordinates</string>
+    <string name="key_zoom">zoom</string>
+    <string name="key_sound">sound</string>
+    <string name="key_twitter">twitter</string>
+    <string name="key_bug">bug</string>
+    <string name="key_notifications">notifications</string>
+    <string name="pref_title_notifications">Notifications</string>
+    <string name="pref_title_sounds_notifications"><![CDATA[Sounds & Notifications]]></string>
+    <string name="button_confirm">Confirm</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="title_twitter_log_out">Log out ?</string>
+    <string name="message_twitter_log_out">Are you sure to log out ?</string>
+
 </resources>
+

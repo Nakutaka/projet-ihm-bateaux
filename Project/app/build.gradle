@@ -62,4 +62,13 @@ dependencies {
     //-----------------------------Flex Box in Android (oui oui)--------------------------------
     implementation 'com.google.android:flexbox:2.0.1'
     //-----------------------------Flex Box in Android (magnifique)-----------------------------
+
+    //-----------------------------Twitter--------------------------------
+    implementation 'com.twitter.sdk.android:twitter-core:3.1.1'
+    implementation 'com.twitter.sdk.android:tweet-ui:3.1.1'
+    implementation 'com.twitter.sdk.android:tweet-composer:3.1.1'
+    implementation 'com.twitter.sdk.android:twitter-mopub:3.1.1'
+    implementation 'org.twitter4j:twitter4j-core:4.0.6'
+    implementation 'androidx.work:work-runtime:2.1.0'
+
 }

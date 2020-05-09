@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <bool name="pref_sound_on">true</bool>
+    <bool name="pref_notifications_on">true</bool>
+    <bool name="pref_coordinates_displayed">true</bool>
+</resources>
