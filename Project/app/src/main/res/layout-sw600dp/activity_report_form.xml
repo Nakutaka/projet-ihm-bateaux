@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <!-- oldReport fragment -->
     <FrameLayout
@@ -12,17 +12,6 @@
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/big_padding" />
 
-    <!--<EditText
-        android:id="@+id/edit_comment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="@dimen/min_height"
-        android:fontFamily="sans-serif-light"
-        android:hint="@string/hint_general_comment"
-        android:inputType="textAutoComplete"
-        android:layout_margin="@dimen/big_padding"
-        android:backgroundTint="@color/cherry"
-        android:textSize="18sp" />-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,24 +20,24 @@
         android:orientation="horizontal">
 
         <Button
-            style="@style/MyButtons"
+            style="@style/MyButtonsTablet"
             android:id="@+id/button_comment"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="10dp"
-            android:layout_weight="1"
             android:backgroundTint="@android:color/tertiary_text_dark"
             android:drawableStart="@drawable/ic_comment"
-            android:text="@string/button_comment"/>
+            android:text="@string/button_comment"
+            android:layout_weight="1"/>
 
         <Button
-            style="@style/MyButtons"
+            style="@style/MyButtonsTablet"
             android:id="@+id/button_send"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="20dp"
-            android:layout_weight="1"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="10dp"
             android:backgroundTint="@color/cherry"
             android:drawableEnd="@drawable/ic_next"
-            android:text="@string/button_send"/>
+            android:text="@string/button_send"
+            android:layout_weight="1"/>
     </LinearLayout>
 
 </LinearLayout>

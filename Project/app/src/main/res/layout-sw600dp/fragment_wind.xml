@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:id="@+id/title_wind"
+        android:textSize="@dimen/title_size"
+        android:text="@string/title_wind"/>
+
+    <LinearLayout
+        app:layout_constraintTop_toBottomOf="@id/title_wind"
+        android:layout_width="match_parent"
+        android:layout_height="5px"
+        android:background="#555"/>
+
+    <TextView
+        app:layout_constraintTop_toBottomOf="@id/title_wind"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:id="@+id/des_wind"
+        android:textSize="40sp"
+        android:layout_marginTop="15sp"
+        android:text="Specify measure:"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_number_picker_wind"
+        app:layout_constraintTop_toBottomOf="@id/des_wind"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/des_beaufort"
+            android:textSize="30sp"
+            android:text="Beaufort scale:"/>
+
+        <NumberPicker
+            android:id="@+id/number_picker_wind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleX="1"
+            android:scaleY="1"
+            android:solidColor="@color/alphaTransparent"
+            android:layout_marginStart="20sp" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/linear_temp_measure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_number_picker_wind"
+        android:layout_marginTop="20sp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:id="@+id/des_speed"
+        android:textSize="30sp"
+        android:text="Speed value:"/>
+
+        <EditText
+            android:id="@+id/edit_wind_value"
+            android:layout_width="80sp"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/min_height"
+            android:hint="@string/hint_wind_value"
+            android:inputType="number"
+            android:paddingRight="@dimen/big_padding"
+            android:textAlignment="textEnd"
+            android:textSize="30sp"
+            android:autofillHints=""
+            android:layout_marginStart="10sp"/>
+
+        <Spinner
+            android:id="@+id/spinner_wind"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:entries="@array/select_wind_unit"
+            android:layout_marginStart="@dimen/small_padding"
+            style="@style/mySpinnerItemStyle"/>
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
