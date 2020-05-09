@@ -22,7 +22,6 @@
             android:launchMode="singleTop" />
         <activity
             android:name=".main.MainActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTop">
 
             <intent-filter>
