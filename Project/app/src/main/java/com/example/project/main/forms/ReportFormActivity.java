@@ -22,6 +22,7 @@ import com.example.project.types.ITypeParam;
 import com.example.project.main.fragments.ReportFormFragment;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -49,6 +50,11 @@ public class ReportFormActivity extends AppCompatActivity implements IButtonClic
         basicList = new ArrayList<>();
         measuredList = new ArrayList<>();
         createNotificationChanel();
+
+        Toolbar mytoolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(mytoolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ReportFormFragment reportFormFragment = new ReportFormFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout_report,
@@ -114,6 +120,12 @@ public class ReportFormActivity extends AppCompatActivity implements IButtonClic
             }
         });*/
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 
     public void createNotificationChanel(){
@@ -188,51 +200,52 @@ public class ReportFormActivity extends AppCompatActivity implements IButtonClic
         Toast.makeText(getApplicationContext(),"No changes", Toast.LENGTH_SHORT).show();
     }
 
-    private void startIncidentActivity(int globalType, int incidentType, int icon) {
+    private void startIncidentActivity(int globalType, int incidentType, int icon, String title) {
         Intent intent = new Intent(getApplicationContext(), IncidentFormActivity.class);
         intent.putExtra(ITypeParam.REPORT_ACTIVITY_GLOBAL_TYPE, globalType);
         intent.putExtra(ITypeParam.REPORT_ACTIVITY_INCIDENT_TYPE, incidentType);
         intent.putExtra(ITypeParam.REPORT_ACTIVITY_ICON, icon);
+        intent.putExtra(ITypeParam.REPORT_ACTIVITY_TITLE, title);
         startActivityForResult(intent, NEW_INCIDENT_ACTIVITY_REQUEST_CODE);
     }
 
     @Override
     public void onButtonTempClicked(View button) { startIncidentActivity(INCIDENT_MEASURED,
-            TEMPERATURE, R.drawable.ic_temperature); }
+            TEMPERATURE, R.drawable.ic_temperature, "Temperature"); }
 
     @Override
     public void onButtonRainClicked(View button) { startIncidentActivity(INCIDENT_BASIC,
-            RAIN, R.drawable.ic_rain); }
+            RAIN, R.drawable.ic_rain, "Rain"); }
 
     @Override
     public void onButtonHailClicked(View button) { startIncidentActivity(INCIDENT_BASIC,
-            HAIL, R.drawable.ic_hail); }
+            HAIL, R.drawable.ic_hail, "Hail"); }
 
     @Override
     public void onButtonFogClicked(View button) { startIncidentActivity(INCIDENT_BASIC,
-            FOG, R.drawable.ic_fog); }
+            FOG, R.drawable.ic_fog, "Fog"); }
 
     @Override
     public void onButtonCloudClicked(View button) { startIncidentActivity(INCIDENT_BASIC,
-            CLOUD, R.drawable.ic_cloud); }
+            CLOUD, R.drawable.ic_cloud, "Cloud"); }
 
     @Override
     public void onButtonStormClicked(View button) { startIncidentActivity(INCIDENT_BASIC,
-            STORM, R.drawable.ic_storm); }
+            STORM, R.drawable.ic_storm, "Storm"); }
 
     @Override
     public void onButtonWindClicked(View button) { startIncidentActivity(INCIDENT_MEASURED,
-            WIND, R.drawable.ic_wind); }
+            WIND, R.drawable.ic_wind, "Wind"); }
 
     @Override
     public void onButtonCurrentClicked(View button) { startIncidentActivity(INCIDENT_BASIC,
-            CURRENT, R.drawable.ic_current); }
+            CURRENT, R.drawable.ic_current, "Current"); }
 
     @Override
     public void onButtonTransparencyClicked(View button) { startIncidentActivity(INCIDENT_MEASURED,
-            TRANSPARENCY, R.drawable.ic_transparency); }
+            TRANSPARENCY, R.drawable.ic_transparency, "Transparency"); }
 
     @Override
     public void onButtonOtherClicked(View button) { startIncidentActivity(INCIDENT_MIN,
-            OTHER, R.drawable.ic_other); }
+            OTHER, R.drawable.ic_other, "Other"); }
 }

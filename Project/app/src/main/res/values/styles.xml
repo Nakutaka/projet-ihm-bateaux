@@ -19,6 +19,18 @@
         <item name="android:background">#00ffffff</item>
     </style>
 
+    <style name="MyToolBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="homeAsUpIndicator">@drawable/ic_back</item>
+        <item name="title">Default Title</item>
+        <item name="titleTextColor">@color/white</item>
+        <item name="elevation">4dp</item>
+    </style>
+
+    <style name="MyToolBar.Title" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <!-- ACTIVITY_MAIN (carte) -->
     <style name="MyFloatingButton" parent="Widget.MaterialComponents.FloatingActionButton">
         <item name="android:tint">@color/white</item>

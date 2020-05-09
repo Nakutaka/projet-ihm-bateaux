@@ -5,24 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageButton
-        android:layout_gravity="start"
-        android:id="@+id/button_back"
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.Toolbar
+        android:theme="@style/MyToolBarTablet"
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/transparent"
-        android:layout_marginStart="@dimen/big_padding"
-        android:src="@drawable/ic_back"
-        android:contentDescription="@string/txt_back"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@color/cherry"
+        app:titleTextAppearance="@style/MyToolBar.TitleTablet"/>
 
     <FrameLayout
         android:id="@+id/frame_layout_incident"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toTopOf="@id/linear_buttons"
-        app:layout_constraintTop_toBottomOf="@id/button_back"
+        app:layout_constraintTop_toBottomOf="@id/my_toolbar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
     </FrameLayout>

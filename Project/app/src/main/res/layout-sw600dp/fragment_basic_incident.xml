@@ -6,23 +6,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/incident_name"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Incident Name Here"
-        android:textAlignment="center"
-        android:textSize="@dimen/title_size" />
-
-    <LinearLayout
-        app:layout_constraintTop_toBottomOf="@id/incident_name"
-        android:layout_width="match_parent"
-        android:layout_height="5px"
-        android:background="#555"/>
-
-    <TextView
-        app:layout_constraintTop_toBottomOf="@id/incident_name"
         app:layout_constraintBottom_toTopOf="@id/fab_level_one"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
