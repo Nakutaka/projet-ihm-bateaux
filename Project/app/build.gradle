@@ -26,8 +26,8 @@ android {
 
 repositories {
     mavenCentral()
-    maven{
-        url  'https://oss.sonatype.org/content/repositories/snapshots/'
+    maven {
+        url 'https://oss.sonatype.org/content/repositories/snapshots/'
         name 'OSS-Sonatype'
     }
 }
@@ -37,6 +37,7 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
@@ -61,4 +62,13 @@ dependencies {
     //-----------------------------Flex Box in Android (oui oui)--------------------------------
     implementation 'com.google.android:flexbox:2.0.1'
     //-----------------------------Flex Box in Android (magnifique)-----------------------------
+
+    //-----------------------------Twitter--------------------------------
+    implementation 'com.twitter.sdk.android:twitter-core:3.1.1'
+    implementation 'com.twitter.sdk.android:tweet-ui:3.1.1'
+    implementation 'com.twitter.sdk.android:tweet-composer:3.1.1'
+    implementation 'com.twitter.sdk.android:twitter-mopub:3.1.1'
+    implementation 'org.twitter4j:twitter4j-core:4.0.6'
+    implementation 'androidx.work:work-runtime:2.1.0'
+
 }
