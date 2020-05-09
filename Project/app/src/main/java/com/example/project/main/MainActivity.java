@@ -15,12 +15,12 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.project.R;
 import com.example.project.control.WeatherReportViewModel;
-import com.example.project.data.model.incident.BasicIncident;
 import com.example.project.data.model.Date;
-import com.example.project.data.model.incident.MeasuredIncident;
-import com.example.project.data.model.incident.MinIncident;
 import com.example.project.data.model.Report;
 import com.example.project.data.model.WeatherReport;
+import com.example.project.data.model.incident.BasicIncident;
+import com.example.project.data.model.incident.MeasuredIncident;
+import com.example.project.data.model.incident.MinIncident;
 import com.example.project.main.factory.IncidentFactory_classic;
 import com.example.project.main.forms.ReportFormActivity;
 import com.example.project.main.fragments.MapFragment;
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         // Update the cached copy of the reports in the map overlays (method reference style)
         mWeatherReportViewModel.getWeatherReports().observe(this, this::setReports);
 
-        findViewById(R.id.btn_settings).setOnClickListener(v -> {
+        findViewById(R.id.img_btn_settings).setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
             startActivity(intent);
         });
