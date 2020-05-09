@@ -1,11 +1,10 @@
 package com.example.project.main.fragments;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-
+import android.view.View;
+import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
@@ -15,30 +14,22 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreference;
 import com.example.project.R;
 import com.example.project.control.SettingsViewModel;
-import com.example.project.data.model.Tweet;
 import com.example.project.main.TwitterActivity;
 import com.google.gson.Gson;
-import com.twitter.sdk.android.core.DefaultLogger;
-import com.twitter.sdk.android.core.Twitter;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
-import com.twitter.sdk.android.core.TwitterConfig;
 import com.twitter.sdk.android.core.TwitterSession;
-import com.twitter.sdk.android.tweetcomposer.ComposerActivity;
-
 import java.util.Objects;
 import java.util.Set;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
     public final static int REQUEST_CONNECT_TWITTER = 11;
-    public final static int REQUEST_DISCONNECT_TWITTER = 10;
-    public final static String REQUEST = "Request";
     private SettingsViewModel viewModel;
     private Gson gson = new Gson();
+
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences, rootKey);
         viewModel = new SettingsViewModel(Objects.requireNonNull(getActivity()).getApplication());
-
         EditTextPreference editTextBug = findPreference(getString(R.string.key_bug));
         SwitchPreference spTwitter = findPreference(getString(R.string.key_twitter));
         ListPreference lpArea = findPreference(getString(R.string.key_area));
@@ -56,18 +47,24 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         Objects.requireNonNull(spTwitter).setOnPreferenceClickListener(preference -> {
             Intent intent = new Intent(getActivity(), TwitterActivity.class);
             if (spTwitter.isChecked()) {
+                appendProgressCircle(View.VISIBLE);
                 intent.putExtra(TwitterActivity.TWITTER_ACTION, TwitterActivity.TWITTER_CONNECT);
                 startActivityForResult(intent, REQUEST_CONNECT_TWITTER);
             }
             else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setPositiveButton(R.string.button_confirm, (dialog, id) -> viewModel.setTwitterAccount(null));
+                builder.setPositiveButton(R.string.button_confirm, (dialog, id) -> {
+                    viewModel.setTwitterAccount(null);
+                    Toast.makeText(getContext(), getString(R.string.account_disconnected), Toast.LENGTH_SHORT).show();
+
+                });
                 builder.setNegativeButton(R.string.button_cancel, (dialog, id) -> spTwitter.setChecked(true));
 
                 builder.setTitle(R.string.title_twitter_log_out);
                 builder.setMessage(R.string.message_twitter_log_out);
                 AlertDialog dialog = builder.create();
                 dialog.show();
+                return true;
             }
             return false;
         });
@@ -82,7 +79,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             spTwitter.setChecked(newSettings.hasTwitterAccount());
         });
 
-        //update the modelView
+        //update the modelView 
         lpArea.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -129,15 +126,21 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CONNECT_TWITTER) {
+            appendProgressCircle(View.GONE);
             if (resultCode == Activity.RESULT_CANCELED) {
                 SwitchPreference sp_twitter = findPreference(getString(R.string.key_twitter));
                 assert sp_twitter != null;
                 sp_twitter.setChecked(false);
             } else if(resultCode==Activity.RESULT_OK) {
                 viewModel.setTwitterAccount(gson.fromJson(data.getStringExtra(TwitterActivity.TWITTER_SESSION), TwitterSession.class));
+                Toast.makeText(getContext(), "Hello " + viewModel.getCurrentSettings().getTwitterAccount().getUserName() + ", your account has been successfully added.", Toast.LENGTH_LONG).show();
             }
         }
 
+    }
+
+    private void appendProgressCircle(int state){
+        Objects.requireNonNull(getActivity()).findViewById(R.id.loadingPanel).setVisibility(state);
     }
 
 }
