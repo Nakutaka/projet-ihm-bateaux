@@ -7,6 +7,7 @@ import com.example.project.data.model.incident.BasicIncident;
 import com.example.project.data.model.incident.MeasuredIncident;
 import com.example.project.data.model.incident.MinIncident;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WeatherReport {
@@ -45,5 +46,14 @@ public class WeatherReport {
 
     public List<MeasuredIncident> getMeasuredIncidentList() {
         return measuredIncidentList;
+    }
+
+
+    public ArrayList<Incident> getIncidentList() {
+        ArrayList<Incident> incidents = new ArrayList<>();
+        incidents.addAll(basicIncidentList);
+        incidents.addAll(measuredIncidentList);
+        //minIncident missing
+        return incidents;
     }
 }

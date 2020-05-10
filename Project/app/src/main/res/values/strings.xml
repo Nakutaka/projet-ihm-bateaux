@@ -125,6 +125,7 @@
     <string name="title_twitter_log_out">Log out ?</string>
     <string name="message_twitter_log_out">Are you sure to log out ?</string>
     <string name="account_disconnected">Account disconnected</string>
+    <string name="close_details">Close</string>
 
 </resources>
 

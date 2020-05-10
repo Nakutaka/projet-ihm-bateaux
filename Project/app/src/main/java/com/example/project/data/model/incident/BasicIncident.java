@@ -11,11 +11,12 @@ import com.example.project.data.model.Info;
 
 @Entity
 public class BasicIncident extends Incident implements Parcelable {
-    public String level;
-    public String comment;
+    private String level;
+    private String comment;
 
     @Ignore
     public BasicIncident(int num, String level, String comment) {
+        super(comment, level);
         this.num = num;
         this.info = null;
         this.level = level;
@@ -59,6 +60,7 @@ public class BasicIncident extends Incident implements Parcelable {
         dest.writeString(level);
         dest.writeString(comment);
     }
+
 
     public String getLevel() {
         return level;

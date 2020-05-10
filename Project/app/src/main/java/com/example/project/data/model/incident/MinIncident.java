@@ -11,7 +11,7 @@ import com.example.project.data.model.Info;
 
 @Entity
 public class MinIncident extends Incident implements Parcelable {
-    public String comment;
+    private String comment;
 
     @Ignore
     public MinIncident(int num, String comment) {

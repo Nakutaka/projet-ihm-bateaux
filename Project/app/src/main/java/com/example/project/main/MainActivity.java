@@ -2,8 +2,10 @@ package com.example.project.main;
 
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -11,6 +13,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.project.R;
@@ -25,15 +29,16 @@ import com.example.project.main.factory.IncidentFactory_classic;
 import com.example.project.main.forms.ReportFormActivity;
 import com.example.project.main.fragments.MapFragment;
 import com.example.project.main.fragments.ReportDetailsFragment;
+import com.google.gson.Gson;
 
 import org.osmdroid.config.Configuration;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.overlay.ItemizedIconOverlay;
-import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
 import org.osmdroid.views.overlay.OverlayItem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class MainActivity extends AppCompatActivity {
@@ -45,18 +50,19 @@ public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_INCIDENT_BASIC_LIST = "com.example.project.main.activities.INCIDENT_BASIC_LIST";
     public static final String EXTRA_INCIDENT_MEASURED_LIST = "com.example.project.main.activities.INCIDENT_MEASURED_LIST";
     public long start;
-
+    private Gson gson = new Gson();
     private int itemIndex;
     private MapFragment mapFragment;
     private TextView tappedLocation;
     private FrameLayout reportDetails;//TODO
     private WeatherReportViewModel mWeatherReportViewModel;
+    private FragmentManager fm;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        fm = getSupportFragmentManager();
         Configuration.getInstance().load(getApplicationContext(),
                 PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
 
@@ -144,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
     //TODO + continue (trigger Fragment instead of ugly green box)
     public void setReports(List<WeatherReport> reports) {
         List<OverlayItem> reportItems = new ArrayList<>();
+        Map<OverlayItem, WeatherReport> overlayItemWeatherReportMap = new HashMap<>();
         reports.forEach(r -> {
             Date d = r.getReport().getDate();
             String time = d.getFullHour();
@@ -157,11 +164,14 @@ public class MainActivity extends AppCompatActivity {
             r.getMeasuredIncidentList().forEach(i -> typeCom.updateAndGet(v -> v + "\n" + i.getNum()
                     + ": " + i.getInfo().getName() + " - " + i.getInfo().getIcon()
                     + " - " + i.getValue() + i.getUnit() + " - " + i.getComment()));
-            reportItems.add(new OverlayItem("Report: " + time + " - " + r.getMinIncidentList().size() +
+            OverlayItem item = new OverlayItem("Report: " + time + " - " + r.getMinIncidentList().size() +
                     r.getBasicIncidentList().size() + r.getMeasuredIncidentList().size()
                     + "incident(s)", "" + typeCom,
-                    new GeoPoint(r.getReport().getLatitude(), r.getReport().getLongitude())));
-
+                    new GeoPoint(r.getReport().getLatitude(), r.getReport().getLongitude()));
+            Drawable drawable = getDrawable(R.drawable.ic_hail);
+            item.setMarker(drawable);
+            reportItems.add(item);
+            overlayItemWeatherReportMap.put(item, r);
         });
 
         Intent intent = new Intent(this,MainActivity.class);
@@ -188,20 +198,12 @@ public class MainActivity extends AppCompatActivity {
         notificationManager.notify(100,builder.build());
 
         //link to trigger Fragment ReportDetailsFragment
-        ItemizedOverlayWithFocus<OverlayItem> reportOverlayItems = new ItemizedOverlayWithFocus<>(this,
-                reportItems, new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+        ReportItemizedOverlay reportOverlayItems = new ReportItemizedOverlay(
+                reportItems, getDrawable(R.drawable.direction_arrow), new ReportItemizedOverlay.OnItemGestureListener<OverlayItem>() {
                     @Override
                     public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
-                        //do something
-                        if(index == itemIndex) {
-                            //hide Fragment/destroy it
-                            itemIndex = -1;
-                            tappedLocation.setText("");
-                            return false;//change something or not?
-                        }
-                        //trigger Fragment + fill in fields
-                        itemIndex = index;
-                        tappedLocation.setText(item.getPoint().getLatitude() + " - " + item.getPoint().getLongitude());
+                        hideMapElements(true);
+                        displayFragment(prepareDetailsFragment(overlayItemWeatherReportMap.get(item)));
                         return true;
                     }
 
@@ -209,9 +211,34 @@ public class MainActivity extends AppCompatActivity {
                     public boolean onItemLongPress(final int index, final OverlayItem item) {
                         return false;//true??
                     }
-                });
+        }, getApplicationContext());
         //ugly green box
         reportOverlayItems.setFocusItemsOnTap(true);
         mapFragment.updateMap(reportOverlayItems);
     }
+
+    private void hideMapElements(boolean b) {
+        findViewById(R.id.gpsLocation).setVisibility(View.GONE);
+        findViewById(R.id.tapped_location).setVisibility(View.GONE);
+        findViewById(R.id.fab_erase).setVisibility(View.GONE);
+        findViewById(R.id.img_btn_settings).setVisibility(View.GONE);
+    }
+
+    void displayFragment(Fragment frag) {
+        fm
+                .beginTransaction()
+                .setCustomAnimations(R.anim.fragment_fade_enter, R.anim.fragment_fade_exit)
+                .add(R.id.frame_layout_map, frag)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    private Fragment prepareDetailsFragment(WeatherReport report) {
+        ReportDetailsFragment fragment = new ReportDetailsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(EXTRA_REPORT, gson.toJson(report));
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
 }
