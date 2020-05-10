@@ -1,4 +1,4 @@
-package com.example.project.data.model;
+package com.example.project.data.model.unused;
 
 import androidx.room.Entity;
 import androidx.room.Ignore;

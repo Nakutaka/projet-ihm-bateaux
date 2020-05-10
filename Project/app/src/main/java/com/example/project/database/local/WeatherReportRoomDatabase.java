@@ -8,12 +8,12 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.example.project.data.model.incident.BasicIncident;
-import com.example.project.data.model.Date;
-import com.example.project.data.model.Info;
-import com.example.project.data.model.incident.MeasuredIncident;
-import com.example.project.data.model.incident.MinIncident;
-import com.example.project.data.model.Report;
+import com.example.project.data.model.weather.local.incident.BasicIncident;
+import com.example.project.data.model.unused.Date;
+import com.example.project.data.model.weather.local.Info;
+import com.example.project.data.model.weather.local.incident.MeasuredIncident;
+import com.example.project.data.model.weather.local.incident.MinIncident;
+import com.example.project.data.model.weather.Report;
 import com.example.project.types.ITypeIncident;
 
 import java.util.Calendar;

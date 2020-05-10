@@ -1,11 +1,11 @@
-package com.example.project.data.model;
+package com.example.project.data.model.weather;
 
 import androidx.room.Embedded;
 import androidx.room.Relation;
 
-import com.example.project.data.model.incident.BasicIncident;
-import com.example.project.data.model.incident.MeasuredIncident;
-import com.example.project.data.model.incident.MinIncident;
+import com.example.project.data.model.weather.local.incident.BasicIncident;
+import com.example.project.data.model.weather.local.incident.MeasuredIncident;
+import com.example.project.data.model.weather.local.incident.MinIncident;
 
 import java.util.List;
 

@@ -7,11 +7,11 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
 
-import com.example.project.data.model.incident.BasicIncident;
-import com.example.project.data.model.incident.MeasuredIncident;
-import com.example.project.data.model.incident.MinIncident;
-import com.example.project.data.model.Report;
-import com.example.project.data.model.WeatherReport;
+import com.example.project.data.model.weather.local.incident.BasicIncident;
+import com.example.project.data.model.weather.local.incident.MeasuredIncident;
+import com.example.project.data.model.weather.local.incident.MinIncident;
+import com.example.project.data.model.weather.Report;
+import com.example.project.data.model.weather.WeatherReport;
 
 import java.util.List;
 

@@ -1,7 +1,6 @@
-package com.example.project.data.model;
+package com.example.project.data.model.weather;
 
 import androidx.annotation.NonNull;
-import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
@@ -40,26 +39,29 @@ public class Report {
     public String device;
     public double latitude;
     public double longitude;
+    public long time;
 
-    @Embedded
-    private Date date;
+    /*@Embedded
+    private Date date;*/
 
     //for Room db only
-    public Report(String id, double latitude, double longitude, Date date, String device) {
+    public Report(String id, String device, double latitude, double longitude, long time) {
         this.id = id;
         this.device = device;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.date = date;
+        this.time = time;
+        //this.date = date;
     }
 
     @Ignore
-    public Report(double latitude, double longitude, Date date, String device) {
+    public Report(String device, double latitude, double longitude) {
         this.id = makeId();
         this.device = device;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.date = date;
+        //this.date = date;
+        this.time = Calendar.getInstance().getTimeInMillis();
     }
 
     @Ignore
@@ -92,7 +94,31 @@ public class Report {
         return longitude;
     }
 
-    public Date getDate() {
-        return date;
+    public long getTime() {
+        return time;
     }
+
+    public void setId(@NonNull String id) {
+        this.id = id;
+    }
+
+    public void setDevice(String device) {
+        this.device = device;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+    }
+
+    /*public Date getDate() {
+        return date;
+    }*/
 }
