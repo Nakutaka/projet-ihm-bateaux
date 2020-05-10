@@ -28,69 +28,19 @@
 
     </LinearLayout>
 
-
     <LinearLayout
         style="@style/LayoutForm"
-        app:layout_flexBasisPercent="33%">
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            style="@style/ReportFloatingButtonForm"
-            app:backgroundTint="@color/lightBlue"
-            android:id="@+id/fab_rain"
-            android:tint="@color/white"
-            android:src="@drawable/ic_rain" />
-
-        <TextView
-            style="@style/TextViewForm"
-            android:id="@+id/txt_rain"
-            android:text="@string/txt_rain"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        style="@style/LayoutForm"
-        app:layout_flexBasisPercent="33%">
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            style="@style/ReportFloatingButtonForm"
-            app:backgroundTint="@color/icyBlue"
-            android:id="@+id/fab_hail"
-            android:tint="@color/white"
-            android:src="@drawable/ic_hail" />
-        <TextView
-            style="@style/TextViewForm"
-            android:id="@+id/txt_hail"
-            android:text="@string/txt_hail"/>
-    </LinearLayout>
-
-    <LinearLayout
-        style="@style/LayoutForm"
-        app:layout_wrapBefore="true"
         app:layout_flexBasisPercent="33%" >
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             style="@style/ReportFloatingButtonForm"
-            app:backgroundTint="@color/lightGrey"
-            android:id="@+id/fab_fog"
+            app:backgroundTint="@color/orange"
+            android:id="@+id/fab_wind"
             android:tint="@color/white"
-            android:src="@drawable/ic_fog" />
+            android:src="@drawable/ic_wind" />
         <TextView
             style="@style/TextViewForm"
-            android:id="@+id/txt_fog"
-            android:text="@string/txt_fog"/>
-    </LinearLayout>
-
-    <LinearLayout
-        style="@style/LayoutForm"
-        app:layout_flexBasisPercent="33%">
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            style="@style/ReportFloatingButtonForm"
-            app:backgroundTint="@color/grey"
-            android:id="@+id/fab_cloud"
-            android:tint="@color/white"
-            android:src="@drawable/ic_cloud" />
-        <TextView
-            style="@style/TextViewForm"
-            android:id="@+id/txt_cloud"
-            android:text="@string/txt_cloud"/>
+            android:id="@+id/txt_wind"
+            android:text="@string/txt_wind"/>
     </LinearLayout>
 
     <LinearLayout
@@ -111,33 +61,20 @@
     <LinearLayout
         style="@style/LayoutForm"
         app:layout_wrapBefore="true"
-        app:layout_flexBasisPercent="33%" >
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            style="@style/ReportFloatingButtonForm"
-            app:backgroundTint="@color/orange"
-            android:id="@+id/fab_wind"
-            android:tint="@color/white"
-            android:src="@drawable/ic_wind" />
-        <TextView
-            style="@style/TextViewForm"
-            android:id="@+id/txt_wind"
-            android:text="@string/txt_wind"/>
-    </LinearLayout>
-
-    <LinearLayout
-        style="@style/LayoutForm"
         app:layout_flexBasisPercent="33%">
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             style="@style/ReportFloatingButtonForm"
-            app:backgroundTint="@color/blue"
-            android:id="@+id/fab_current"
+            app:backgroundTint="@color/green"
+            android:id="@+id/fab_cloud"
             android:tint="@color/white"
-            android:src="@drawable/ic_current"/>
+            android:src="@drawable/ic_cloud" />
         <TextView
             style="@style/TextViewForm"
-            android:id="@+id/txt_current"
-            android:text="@string/txt_current"/>
+            android:id="@+id/txt_cloud"
+            android:text="@string/txt_cloud"/>
     </LinearLayout>
+
+
 
     <LinearLayout
         style="@style/LayoutForm"
@@ -158,11 +95,76 @@
 
     <LinearLayout
         style="@style/LayoutForm"
+        app:layout_flexBasisPercent="33%">
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            style="@style/ReportFloatingButtonForm"
+            app:backgroundTint="@color/lightBlue"
+            android:id="@+id/fab_hail"
+            android:tint="@color/white"
+            android:src="@drawable/ic_hail" />
+        <TextView
+            style="@style/TextViewForm"
+            android:id="@+id/txt_hail"
+            android:text="@string/txt_hail"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        style="@style/LayoutForm"
+        app:layout_wrapBefore="true"
+        app:layout_flexBasisPercent="33%">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            style="@style/ReportFloatingButtonForm"
+            app:backgroundTint="#66ADFF"
+            android:id="@+id/fab_rain"
+            android:tint="@color/white"
+            android:src="@drawable/ic_rain" />
+
+        <TextView
+            style="@style/TextViewForm"
+            android:id="@+id/txt_rain"
+            android:text="@string/txt_rain"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/LayoutForm"
+        app:layout_flexBasisPercent="33%">
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            style="@style/ReportFloatingButtonForm"
+            app:backgroundTint="@color/blue"
+            android:id="@+id/fab_current"
+            android:tint="@color/white"
+            android:src="@drawable/ic_current"/>
+        <TextView
+            style="@style/TextViewForm"
+            android:id="@+id/txt_current"
+            android:text="@string/txt_current"/>
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/LayoutForm"
+        app:layout_flexBasisPercent="33%" >
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            style="@style/ReportFloatingButtonForm"
+            app:backgroundTint="@color/lightGrey"
+            android:id="@+id/fab_fog"
+            android:tint="@color/white"
+            android:src="@drawable/ic_fog" />
+        <TextView
+            style="@style/TextViewForm"
+            android:id="@+id/txt_fog"
+            android:text="@string/txt_fog"/>
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/LayoutForm"
         app:layout_wrapBefore="true"
         app:layout_flexBasisPercent="33%">
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             style="@style/ReportFloatingButtonForm"
-            app:backgroundTint="@color/green"
+            app:backgroundTint="@color/grey"
             android:id="@+id/fab_other"
             android:tint="@color/white"
             android:src="@drawable/ic_other" />
@@ -171,5 +173,8 @@
             android:id="@+id/txt_other"
             android:text="@string/txt_other"/>
     </LinearLayout>
+
+
+
 
 </com.google.android.flexbox.FlexboxLayout>

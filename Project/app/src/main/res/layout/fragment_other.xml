@@ -16,6 +16,7 @@
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:id="@+id/des_basic"
+        android:layout_marginBottom="40dp"
         android:textSize="30sp"
         android:text="Specify scale:"/>
 
