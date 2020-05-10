@@ -2,37 +2,31 @@
 
 
 ##TODO
-- Interactions btns + value/units + modify other inc bd/factory
+- requêtes/lien bd
+- affichage tablette
+- Interactions btns + value/units
 - ReportDetailFragments + lien on tap Overlay items/trigger fragment + location_markers (almost)
 
-###le reste des axes
-- orientation --> layout-land/ (already created), besoin de le remplir + autorisation de l'app sûrement
-- notifs à intégrer (création + visualisation image) en local pour le moment
-- flux réseaux sociaux
-- affichage tablette
-- back-end server/remote bd
-
-
 ### Hamza Ayoub
--  \* Créer une notification utile avec temps d'affichage
+DONE -  \* Créer une notification utile avec temps d'affichage
 	justification: pour que l'application donne du feedback
 	
 - ** Notifier et organiser les notifications d’une période donnée de façon utile
 	justification: pour avoir les (5? dernières) infos des dernières 2h (par exemple)
 
 ### Angèle Badia
--  \*** Afficher les incidents dynamiquement à partir d'un Web Service en ligne
+ALMOST -  \*** Afficher les incidents dynamiquement à partir d'un Web Service en ligne
 	justification: pour récupérer les incidents signalés par les autres utilisateurs et ne pas se contenter d'une application 100% en local...
 
 ### Alexandre Col
--  \* Gérer l'orientation paysage/portait de l'appareil dans les différentes vues, principalement lorsqu’elle apporte un plus à l’application.
+DONE -  \* Gérer l'orientation paysage/portait de l'appareil dans les différentes vues, principalement lorsqu’elle apporte un plus à l’application.
 	justification: permet la continuité avec les autres applications avec carte/GPS --> google maps, Waze... pour conserver les habitudes des utilisateurs
 
 - ** Faire une application compatible avec une affichage différent pour tablette et smartphone
 	justification: pour les personnes qui prennent leur tablette en mer, avantage écran plus grand, plus de visibilité
 
 ### Armand Fargeon
--  \* Intégrer un flux réseaux sociaux (ex. Twitter)
+DONE -  \* Intégrer un flux réseaux sociaux (ex. Twitter)
 	justification: partage des incidents sur Facebook/Twitter, permet de toucher/attirer un plus grand nb d'utilisateurs
 
 DONE -  ** Intégrer ~~OpenStreetMap~~ OpenSeeMap dans l'application, pour indiquer le lieu des incidents par exemple
