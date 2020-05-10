@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -39,12 +40,20 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ViewHolder
         // Get the data model based on position
         Incident incident = incidents.get(position);
         // Set item views based on your views and data model
-        TextView tv1 = viewHolder.tv_NameIncident;
-        tv1.setText(incident.getInfo().getName());
-        TextView tv2 = viewHolder.tv_value;
-        tv2.setText(incident.getValue());
-        TextView tv3 = viewHolder.tv_commentIncident;
-        tv3.setText(incident.getComment());
+        TextView tv_name = viewHolder.tv_NameIncident;
+        if (incident.getInfo().getName() != null)
+            tv_name.setText(String.format("Incident: %s", incident.getInfo().getName()));
+        else tv_name.setVisibility(View.GONE);
+
+        TextView tv_value = viewHolder.tv_value;
+        if (incident.getValue() != null)
+            tv_value.setText(String.format("Information:  %s", incident.getValue()));
+        else tv_value.setVisibility(View.GONE);
+
+        TextView tv_comment = viewHolder.tv_commentIncident;
+        if (incident.getComment() != null)
+            tv_comment.setText(String.format("Comment: %s", incident.getComment()));
+        else tv_comment.setVisibility(View.GONE);
     }
 
     // Returns the total count of items in the list
@@ -59,6 +68,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ViewHolder
         TextView tv_commentIncident;
         TextView tv_value;
         ImageView iv_icon;
+        Button btn_close;
 
         ViewHolder(View itemView) {
             super(itemView);

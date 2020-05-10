@@ -28,6 +28,8 @@ public class ReportDetailsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_report_details, container,false);
+        rootView.findViewById(R.id.btn_close_details).setOnClickListener(view -> getParentFragmentManager().popBackStack());
+        rootView.findViewById(R.id.coverViewDetails).setOnClickListener(view -> getParentFragmentManager().popBackStack());
         WeatherReport report = null;
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -42,6 +44,8 @@ public class ReportDetailsFragment extends Fragment {
         RecyclerView rvReport = view.findViewById(R.id.rv_report);
         rvReport.setAdapter(reportAdapter);
         rvReport.setLayoutManager(new LinearLayoutManager(getContext()));
+
     }
+
 
 }

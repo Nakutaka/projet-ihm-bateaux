@@ -63,15 +63,27 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         fm = getSupportFragmentManager();
+        fm.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                //to handle when the detail fragment is closed
+                Fragment reportDetails = getSupportFragmentManager().findFragmentById(R.id.frame_layout_details);
+                if (reportDetails == null) {
+                    hideMapElements(View.VISIBLE);
+                }
+            }
+        });
         Configuration.getInstance().load(getApplicationContext(),
                 PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
 
         itemIndex = -1;
-        mapFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.frame_layout_map);
+        mapFragment = (MapFragment) fm.findFragmentById(R.id.frame_layout_map);
         if (mapFragment==null){
             mapFragment = new MapFragment();
-            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout_map,
-                    mapFragment).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.frame_layout_map,
+                    mapFragment).
+                    addToBackStack(null).
+                    commit();
         }
 
 
@@ -139,13 +151,6 @@ public class MainActivity extends AppCompatActivity {
         //setReports triggered automatically (observe)
     }
 
-    void displayReportDetailsFragment() {
-        ReportDetailsFragment details = new ReportDetailsFragment();
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frame_layout_report_details, details)
-                .commit();
-    }
-
     //TODO clean (use ReportWithIncidents instead of ReportWithIncidentsDB)
     //TODO + continue (trigger Fragment instead of ugly green box)
     public void setReports(List<WeatherReport> reports) {
@@ -168,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
                     r.getBasicIncidentList().size() + r.getMeasuredIncidentList().size()
                     + "incident(s)", "" + typeCom,
                     new GeoPoint(r.getReport().getLatitude(), r.getReport().getLongitude()));
-            Drawable drawable = getDrawable(R.drawable.ic_hail);
+            Drawable drawable = getDrawable(R.drawable.ic_place_black_36dp);
             item.setMarker(drawable);
             reportItems.add(item);
             overlayItemWeatherReportMap.put(item, r);
@@ -202,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
                 reportItems, getDrawable(R.drawable.direction_arrow), new ReportItemizedOverlay.OnItemGestureListener<OverlayItem>() {
                     @Override
                     public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
-                        hideMapElements(true);
+                        hideMapElements(View.GONE);
                         displayFragment(prepareDetailsFragment(overlayItemWeatherReportMap.get(item)));
                         return true;
                     }
@@ -212,23 +217,23 @@ public class MainActivity extends AppCompatActivity {
                         return false;//true??
                     }
         }, getApplicationContext());
-        //ugly green box
+        //ugly green box -- not anymore
         reportOverlayItems.setFocusItemsOnTap(true);
         mapFragment.updateMap(reportOverlayItems);
     }
 
-    private void hideMapElements(boolean b) {
-        findViewById(R.id.gpsLocation).setVisibility(View.GONE);
-        findViewById(R.id.tapped_location).setVisibility(View.GONE);
-        findViewById(R.id.fab_erase).setVisibility(View.GONE);
-        findViewById(R.id.img_btn_settings).setVisibility(View.GONE);
+
+    private void hideMapElements(int visibility) {
+        findViewById(R.id.gpsLocation).setVisibility(visibility);
+        findViewById(R.id.tapped_location).setVisibility(visibility);
+        findViewById(R.id.fab_erase).setVisibility(visibility);
+        findViewById(R.id.img_btn_settings).setVisibility(visibility);
     }
 
     void displayFragment(Fragment frag) {
         fm
                 .beginTransaction()
-                .setCustomAnimations(R.anim.fragment_fade_enter, R.anim.fragment_fade_exit)
-                .add(R.id.frame_layout_map, frag)
+                .replace(R.id.frame_layout_details, frag)
                 .addToBackStack(null)
                 .commit();
     }

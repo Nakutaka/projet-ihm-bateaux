@@ -3,56 +3,75 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:alpha="0.9"
     android:background="#B9000000"
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="3dp"
+        android:layout_margin="3dp"
         app:cardCornerRadius="6dp"
+        android:background="#B9000000"
+        android:padding="5dp"
         app:cardElevation="6dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="#B9000000"
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:alpha="0.7"
+                android:layout_width="360dp"
+                android:layout_height="wrap_content"
                 android:background="#B9000000"
                 android:orientation="vertical">
-
                 <TextView
                     android:id="@+id/txtNameIncident"
-                    android:layout_width="200dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/blue"
-                    android:textSize="18sp" />
+                    android:fontFamily="@font/baloo"
+                    android:padding="5sp"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/txtCommentIncident"
-                    android:layout_width="200dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/blue" />
+                    android:fontFamily="@font/baloo"
+                    android:padding="5sp"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/txtValueIncident"
-                    android:layout_width="200dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/blue" />
+                    android:fontFamily="@font/baloo"
+                    android:padding="5sp"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
             <ImageView
                 android:id="@+id/iconIncident"
-                android:layout_width="match_parent"
+                android:layout_width="45dp"
                 android:layout_height="match_parent"
-                app:srcCompat="@drawable/ic_anchor" />
+                android:layout_gravity="end|center"
+                android:background="#B9000000"
+                android:padding="5dp"
+                android:scaleType="fitCenter"
+                android:tint="@color/white"
+                app:srcCompat="@drawable/ic_other" />
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@android:color/darker_gray" />
 </LinearLayout>
