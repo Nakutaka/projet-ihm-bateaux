@@ -20,6 +20,7 @@ import com.example.project.database.remote.WebService;
 import com.example.project.model.unused.Date;
 import com.example.project.model.weather.Report;
 import com.example.project.model.weather.WeatherReport;
+import com.example.project.model.weather.local.Incident;
 import com.example.project.model.weather.local.incident.BasicIncident;
 import com.example.project.model.weather.local.incident.MeasuredIncident;
 import com.example.project.model.weather.local.incident.MinIncident;
@@ -27,7 +28,9 @@ import com.example.project.main.factory.IncidentFactory_classic;
 import com.example.project.main.forms.ReportFormActivity;
 import com.example.project.main.fragments.MapFragment;
 import com.example.project.main.fragments.ReportDetailsFragment;
+import com.example.project.model.weather.remote.RemoteIncident;
 import com.example.project.model.weather.remote.RemoteWeatherReport;
+import com.example.project.types.ITypeIncident;
 
 import org.osmdroid.config.Configuration;
 import org.osmdroid.util.GeoPoint;
@@ -57,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     private FrameLayout reportDetails;//TODO
     ReportDetailsFragment detailsFragment;
     private WeatherReportViewModel mWeatherReportViewModel;
+    private WebService service;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,21 +104,67 @@ public class MainActivity extends AppCompatActivity {
         tappedLocation = findViewById(R.id.tapped_location);
         reportDetails = findViewById(R.id.frame_layout_report_details);
 
-        //pushReports();
-        //retrieveReports();
+        service = RetrofitInstance.getInstance().create(WebService.class);
+
+        retrieveReports();
     }
 
-    void pushReports() {
+    void pushOneReport(WeatherReport weatherReport) {
+        Report report = weatherReport.getReport();
+        List<RemoteIncident> incidents = new ArrayList<>();
+        weatherReport.getMinIncidentList().forEach(i -> {
+            incidents.add(new RemoteIncident(ITypeIncident.INCIDENT_MIN, i.getNum()+10, null, null, i.getComment()));
+        });
+        weatherReport.getBasicIncidentList().forEach(i -> {
+            incidents.add(new RemoteIncident(ITypeIncident.INCIDENT_BASIC, i.getNum()+10, i.getLevel(), null, i.getComment()));
+        });
+        weatherReport.getMeasuredIncidentList().forEach(i -> {
+            incidents.add(new RemoteIncident(ITypeIncident.INCIDENT_MEASURED, i.getNum()+10, i.getValue(), i.getUnit(), i.getComment()));
+        });
+        RemoteWeatherReport toSend = new RemoteWeatherReport(report, incidents);
+        Call<RemoteWeatherReport> call = service.postReport(toSend);
+        call.enqueue(new Callback<RemoteWeatherReport>() {
 
+            @Override
+            public void onResponse(Call<RemoteWeatherReport> call, Response<RemoteWeatherReport> response) {
+                Toast.makeText(MainActivity.this, "Report sent!", Toast.LENGTH_SHORT).show();
+                retrieveReports();//not pretty but for now voila...
+            }
+
+            @Override
+            public void onFailure(Call<RemoteWeatherReport> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "Report not sent...", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     void retrieveReports() {
-        WebService service = RetrofitInstance.getInstance().create(WebService.class);
         Call<List<RemoteWeatherReport>> call = service.getAllReports();
         call.enqueue(new Callback<List<RemoteWeatherReport>>() {
             @Override
             public void onResponse(Call<List<RemoteWeatherReport>> call, Response<List<RemoteWeatherReport>> response) {
                 //db
+                List<RemoteWeatherReport> reports = response.body();
+                if(reports == null) return;
+                reports.forEach(r -> {
+                    Report report = r.getReport();
+                    if(report == null) return;
+                    List<MinIncident> minList = new ArrayList<>();
+                    List<BasicIncident> basicList = new ArrayList<>();
+                    List<MeasuredIncident> measuredList = new ArrayList<>();
+                    IncidentFactory_classic factory = new IncidentFactory_classic();
+                    r.getIncidents().forEach(i -> {
+                       Incident newOne = factory.getIncident(i.getTypeIncident(), i.getTypeInfo(), i.getValue(), i.getUnit(), i.getComment());
+                        switch(i.getTypeIncident()) {
+                            case ITypeIncident.INCIDENT_MIN: minList.add((MinIncident)newOne); break;
+                            case ITypeIncident.INCIDENT_BASIC: basicList.add((BasicIncident)newOne); break;
+                            case ITypeIncident.INCIDENT_MEASURED: measuredList.add((MeasuredIncident)newOne); break;
+                        }
+                    });
+                    WeatherReport weatherReport = new WeatherReport(report, minList, basicList, measuredList);
+                    mWeatherReportViewModel.insert(weatherReport);
+                });
+                Toast.makeText(MainActivity.this, "Data retrieved!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -147,7 +197,9 @@ public class MainActivity extends AppCompatActivity {
                 if(minList!=null && basicList!=null && measuredList!=null &&
                         (!minList.isEmpty() || !basicList.isEmpty() || !measuredList.isEmpty())) {
                     WeatherReport weatherReport = new WeatherReport(report, minList, basicList, measuredList);
-                    mWeatherReportViewModel.insert(weatherReport);
+                    pushOneReport(weatherReport);
+                    //then --> linked with db, but for now only one or the other
+                    //mWeatherReportViewModel.insert(weatherReport);
                     Toast.makeText(
                             getApplicationContext(),
                             "Report added!",
