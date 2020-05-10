@@ -2,8 +2,10 @@ package com.example.project.main;
 
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -11,35 +13,37 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.project.R;
 import com.example.project.control.WeatherReportViewModel;
 import com.example.project.database.remote.RetrofitInstance;
 import com.example.project.database.remote.WebService;
-import com.example.project.model.unused.Date;
+import com.example.project.main.factory.IncidentFactory_classic;
+import com.example.project.main.forms.ReportFormActivity;
+import com.example.project.main.fragments.MapFragment;
+import com.example.project.main.fragments.ReportDetailsFragment;
 import com.example.project.model.weather.Report;
 import com.example.project.model.weather.WeatherReport;
 import com.example.project.model.weather.local.Incident;
 import com.example.project.model.weather.local.incident.BasicIncident;
 import com.example.project.model.weather.local.incident.MeasuredIncident;
 import com.example.project.model.weather.local.incident.MinIncident;
-import com.example.project.main.factory.IncidentFactory_classic;
-import com.example.project.main.forms.ReportFormActivity;
-import com.example.project.main.fragments.MapFragment;
-import com.example.project.main.fragments.ReportDetailsFragment;
 import com.example.project.model.weather.remote.RemoteIncident;
 import com.example.project.model.weather.remote.RemoteWeatherReport;
 import com.example.project.types.ITypeIncident;
+import com.google.gson.Gson;
 
 import org.osmdroid.config.Configuration;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.overlay.ItemizedIconOverlay;
-import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
 import org.osmdroid.views.overlay.OverlayItem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import retrofit2.Call;
@@ -53,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_INCIDENT_MIN_LIST = "com.example.project.main.activities.INCIDENT_MIN_LIST";
     public static final String EXTRA_INCIDENT_BASIC_LIST = "com.example.project.main.activities.INCIDENT_BASIC_LIST";
     public static final String EXTRA_INCIDENT_MEASURED_LIST = "com.example.project.main.activities.INCIDENT_MEASURED_LIST";
+    public long start;
+    private Gson gson = new Gson();
 
     private int itemIndex;
     private MapFragment mapFragment;
@@ -61,21 +67,34 @@ public class MainActivity extends AppCompatActivity {
     ReportDetailsFragment detailsFragment;
     private WeatherReportViewModel mWeatherReportViewModel;
     private WebService service;
+    private FragmentManager fm;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        fm = getSupportFragmentManager();
+        fm.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                //to handle when the detail fragment is closed
+                Fragment reportDetails = getSupportFragmentManager().findFragmentById(R.id.frame_layout_details);
+                if (reportDetails == null) {
+                    hideMapElements(View.VISIBLE);
+                }
+            }
+        });
         Configuration.getInstance().load(getApplicationContext(),
                 PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
 
         itemIndex = -1;
-        mapFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.frame_layout_map);
+        mapFragment = (MapFragment) fm.findFragmentById(R.id.frame_layout_map);
         if (mapFragment==null){
             mapFragment = new MapFragment();
-            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout_map,
-                    mapFragment).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.frame_layout_map,
+                    mapFragment).
+                    addToBackStack(null).
+                    commit();
         }
 
 
@@ -215,21 +234,11 @@ public class MainActivity extends AppCompatActivity {
         //setReports triggered automatically (observe)
     }
 
-    void EraseReportDetailsFragment() {
-        if(detailsFragment!=null) getSupportFragmentManager().beginTransaction().remove(detailsFragment).commit();
-    }
-
-    void displayReportDetailsFragment() {
-        detailsFragment = new ReportDetailsFragment();
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frame_layout_report_details, detailsFragment)
-                .commit();
-    }
-
     //TODO clean (use ReportWithIncidents instead of ReportWithIncidentsDB)
     //TODO + continue (trigger Fragment instead of ugly green box)
     public void setReports(List<WeatherReport> reports) {
         List<OverlayItem> reportItems = new ArrayList<>();
+        Map<OverlayItem, WeatherReport> overlayItemWeatherReportMap = new HashMap<>();
         reports.forEach(r -> {
             //Date d = r.getReport().getDate();
             long time = r.getReport().getTime();
@@ -245,10 +254,14 @@ public class MainActivity extends AppCompatActivity {
             r.getMeasuredIncidentList().forEach(i -> typeCom.updateAndGet(v -> v + "\n" + i.getNum()
                     + ": " + i.getInfo().getName() + " - " + i.getInfo().getIcon()
                     + " - " + i.getValue() + i.getUnit() + " - " + i.getComment()));
-            reportItems.add(new OverlayItem("Report: " + txtTime + " - " + r.getMinIncidentList().size() +
+            OverlayItem item = new OverlayItem("Report: " + time + " - " + r.getMinIncidentList().size() +
                     r.getBasicIncidentList().size() + r.getMeasuredIncidentList().size()
                     + "incident(s)", "" + typeCom,
-                    new GeoPoint(r.getReport().getLatitude(), r.getReport().getLongitude())));
+                    new GeoPoint(r.getReport().getLatitude(), r.getReport().getLongitude()));
+            Drawable drawable = getDrawable(R.drawable.ic_place_black_36dp);
+            item.setMarker(drawable);
+            reportItems.add(item);
+            overlayItemWeatherReportMap.put(item, r);
         });
 
         int size = reports.size();
@@ -274,30 +287,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //link to trigger Fragment ReportDetailsFragment
-        ItemizedOverlayWithFocus<OverlayItem> reportOverlayItems = new ItemizedOverlayWithFocus<>(this,
-                reportItems, new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+        ReportItemizedOverlay reportOverlayItems = new ReportItemizedOverlay(
+                reportItems, getDrawable(R.drawable.direction_arrow), new ReportItemizedOverlay.OnItemGestureListener<OverlayItem>() {
                     @Override
                     public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
-                        EraseReportDetailsFragment();
-                        //do something
-                        if(index == itemIndex) {
-                            //hide Fragment/destroy it
-                            itemIndex = -1;
-                            tappedLocation.setText("");
-                            return false;//change something or not?
-                        }
-                        WeatherReport current = reports.get(index);
-                        Report report = current.getReport();
-                        List<MinIncident> minIncidentList = current.getMinIncidentList();
-                        List<BasicIncident> basicIncidentList = current.getBasicIncidentList();
-                        List<MeasuredIncident> measuredIncidentList = current.getMeasuredIncidentList();
-                        //trigger Fragment + fill in fields
-
-                        displayReportDetailsFragment();
-
-                        //pass report + lists to Fragment
-                        itemIndex = index;
-                        tappedLocation.setText(item.getPoint().getLatitude() + " - " + item.getPoint().getLongitude());
+                        hideMapElements(View.GONE);
+                        displayFragment(prepareDetailsFragment(overlayItemWeatherReportMap.get(item)));
                         return true;
                     }
 
@@ -305,9 +300,33 @@ public class MainActivity extends AppCompatActivity {
                     public boolean onItemLongPress(final int index, final OverlayItem item) {
                         return false;//true??
                     }
-                });
-        //ugly green box
+        }, getApplicationContext());
+        //ugly green box -- not anymore
         reportOverlayItems.setFocusItemsOnTap(true);
         mapFragment.updateMap(reportOverlayItems);
     }
+
+
+    private void hideMapElements(int visibility) {
+        findViewById(R.id.gpsLocation).setVisibility(visibility);
+        findViewById(R.id.tapped_location).setVisibility(visibility);
+        findViewById(R.id.img_btn_settings).setVisibility(visibility);
+    }
+
+    void displayFragment(Fragment frag) {
+        fm
+                .beginTransaction()
+                .replace(R.id.frame_layout_details, frag)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    private Fragment prepareDetailsFragment(WeatherReport report) {
+        ReportDetailsFragment fragment = new ReportDetailsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(EXTRA_REPORT, gson.toJson(report));
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
 }

@@ -19,6 +19,9 @@ public abstract class Incident implements Parcelable {
     @Embedded
     public Info info;
 
+    private transient String comment;
+    private transient String value;
+
     public Incident () {
     }
 
@@ -26,6 +29,11 @@ public abstract class Incident implements Parcelable {
         reportId = Objects.requireNonNull(in.readString());
         num = in.readInt();
         info = in.readParcelable(Info.class.getClassLoader());
+    }
+
+    public Incident(String comment, String value) {
+        this.comment = comment;
+        this.value = value;
     }
 
     @Override
@@ -53,5 +61,13 @@ public abstract class Incident implements Parcelable {
 
     public Info getInfo() {
         return info;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public String getValue() {
+        return value;
     }
 }

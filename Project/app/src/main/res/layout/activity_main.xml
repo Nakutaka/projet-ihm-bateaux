@@ -15,7 +15,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <!---nothing inside -->
-
+    <FrameLayout
+        android:id="@+id/frame_layout_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <!---nothing inside -->
 
     <FrameLayout
         android:id="@+id/gpsLocation"

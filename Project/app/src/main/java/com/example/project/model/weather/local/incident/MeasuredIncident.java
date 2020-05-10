@@ -11,12 +11,13 @@ import com.example.project.model.weather.local.Info;
 
 @Entity
 public class MeasuredIncident extends Incident implements Parcelable {
-    public String value;
-    public String unit;
-    public String comment;
+    private String value;
+    private String unit;
+    private String comment;
 
     @Ignore
     public MeasuredIncident(int num, String value, String unit, String comment) {
+        super(comment, (value + " " + unit));
         this.num = num;
         this.info = null;
         this.value = value;

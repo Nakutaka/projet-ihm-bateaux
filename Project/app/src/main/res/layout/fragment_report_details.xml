@@ -1,21 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:background="#B9000000"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:layout_gravity="end"
-        style="@style/MyFloatingButton"
-        android:id="@+id/fab_close_details"
-        android:src="@drawable/ic_delete_black_24dp"/>
+    android:layout_height="match_parent"
+    android:alpha="0.95"
+    android:background="#B9000000"
+    android:orientation="vertical">
 
     <TextView
+        android:id="@+id/txt_date_report"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#B9000000"
+        android:fontFamily="@font/baloo"
+        android:maxLines="1"
+        android:padding="5sp"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_report"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_close_details"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#B9000000"
+        android:fontFamily="@font/baloo"
+        android:padding="5sp"
+        android:text="@string/close_details"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:layout_marginHorizontal="20sp"
+        app:backgroundTint="@color/blue"
+        app:strokeColor="#FFFFFF"
+        app:strokeWidth="5sp" />
+
+    <View
+        android:id="@+id/coverViewDetails"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Report details!"
-        android:textSize="40sp"
-        android:textAlignment="center"/>
-
+        android:background="#00000000"
+        android:clickable="true" />
 </LinearLayout>

@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.project.R;
+import com.example.project.main.ReportItemizedOverlay;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.events.MapListener;
@@ -25,8 +26,6 @@ import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
-import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.TilesOverlay;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
@@ -39,7 +38,7 @@ public class MapFragment extends Fragment implements IGPSFragment {
     private MapView map;
     private final OnlineTileSourceBase seaMarks = TileSourceFactory.OPEN_SEAMAP;
     //private FrameLayout reportDetails;
-    ItemizedOverlayWithFocus<OverlayItem> mOverlay;
+    ReportItemizedOverlay mOverlay;
     IMapController mapController;
     boolean onScroll = false;
 
@@ -171,7 +170,8 @@ public class MapFragment extends Fragment implements IGPSFragment {
         }
     }
 */
-    public void updateMap(ItemizedOverlayWithFocus<OverlayItem> newOverlayItems) {
+
+    public void updateMap(ReportItemizedOverlay newOverlayItems) {
         map.getOverlays().remove(mOverlay);
         mOverlay = newOverlayItems;
         //mOverlay.setFocusItemsOnTap(true);
