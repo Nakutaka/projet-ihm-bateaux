@@ -139,13 +139,10 @@ public class GPSFragment extends Fragment implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        if (currentLocation==null) {
-            Log.d(IGPSFragment.GPS_LOG_TOKEN,"first location change");
-            igpsFragment.focus(true);
-        }
-
+        boolean firstUpdate = currentLocation==null;
         currentLocation = location;
-        //igpsFragment.focus(false); // recentrer
+        Log.d("SCROLL","UPDATE");
+        igpsFragment.focus(firstUpdate); // needs new location
 
         locationView.setText(String.format("%s - %s", currentLocation.getLatitude(), currentLocation.getLongitude()));
 

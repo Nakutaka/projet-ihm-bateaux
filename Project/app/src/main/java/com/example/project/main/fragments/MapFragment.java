@@ -151,25 +151,6 @@ public class MapFragment extends Fragment implements IGPSFragment {
                     Toast.LENGTH_SHORT).show();
         }
     }
-/*
-    private void recenter(boolean resetZoom) {
-        Location lastLocation = gpsFragment.getCurrentLocation();
-
-        if (lastLocation != null) {
-            mapController.animateTo(new GeoPoint(lastLocation.getLatitude(),
-                    lastLocation.getLongitude()));
-            // Resetting zoom should be donne when pressing recenter button only
-            //mapController.setZoom(zoom);
-            if (resetZoom) mapController.setZoom(zoom);
-        }
-        else {
-            Toast.makeText(
-                    this.getContext(),
-                    "Location is still loading...",
-                    Toast.LENGTH_SHORT).show();
-        }
-    }
-*/
 
     public void updateMap(ReportItemizedOverlay newOverlayItems) {
         map.getOverlays().remove(mOverlay);
