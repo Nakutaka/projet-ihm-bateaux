@@ -13,15 +13,15 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:background="@color/cherry"
+        android:background="@color/purple"
         app:titleTextAppearance="@style/MyToolBar.Title"/>
 
     <FrameLayout
         android:id="@+id/frame_layout_incident"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toTopOf="@id/linear_buttons"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/my_toolbar"
+        app:layout_constraintBottom_toTopOf="@id/linear_buttons"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
     </FrameLayout>

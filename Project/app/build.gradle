@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion "29.0.2"
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "com.example.project"
         minSdkVersion 26
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -42,22 +42,34 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
+    // Map
     implementation 'org.osmdroid:osmdroid-android:6.0.2'
-    implementation 'androidx.preference:preference:1.1.0'
+
+    // Preferences
+    implementation 'androidx.preference:preference:1.1.1'
+
+    // Lifecycle components
+    implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.archLifecycleVersion"
+    annotationProcessor "androidx.lifecycle:lifecycle-compiler:$rootProject.archLifecycleVersion"
+
+    // UI
+    implementation "com.google.android.material:material:$rootProject.materialVersion"
+
+    // Testing
+    androidTestImplementation "androidx.arch.core:core-testing:$rootProject.coreTestingVersion"
 
     //-----------------------------Local Database-----------------------------
     // Room components
     implementation "androidx.room:room-runtime:$rootProject.roomVersion"
     annotationProcessor "androidx.room:room-compiler:$rootProject.roomVersion"
     androidTestImplementation "androidx.room:room-testing:$rootProject.roomVersion"
-    // Lifecycle components
-    implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.archLifecycleVersion"
-    annotationProcessor "androidx.lifecycle:lifecycle-compiler:$rootProject.archLifecycleVersion"
-    // UI
-    implementation "com.google.android.material:material:$rootProject.materialVersion"
-    // Testing
-    androidTestImplementation "androidx.arch.core:core-testing:$rootProject.coreTestingVersion"
     //-----------------------------Local Database-----------------------------
+
+    //---------------------------------Remote---------------------------------
+    // Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+    //---------------------------------Remote---------------------------------
 
     //-----------------------------Flex Box in Android (oui oui)--------------------------------
     implementation 'com.google.android:flexbox:2.0.1'
@@ -69,6 +81,7 @@ dependencies {
     implementation 'com.twitter.sdk.android:tweet-composer:3.1.1'
     implementation 'com.twitter.sdk.android:twitter-mopub:3.1.1'
     implementation 'org.twitter4j:twitter4j-core:4.0.6'
-    implementation 'androidx.work:work-runtime:2.1.0'
+    implementation 'androidx.work:work-runtime:2.3.4'
     implementation 'com.google.code.gson:gson:2.8.6'
+    //-----------------------------Twitter--------------------------------
 }

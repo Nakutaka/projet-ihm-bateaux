@@ -11,7 +11,7 @@
         app:titleTextAppearance="@style/MyToolBar.TitleTablet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/cherry"
+        android:background="@color/purple"
         app:title="Incident Report"/>
 
     <FrameLayout

@@ -1,6 +1,6 @@
-package com.example.project.data.model.weather.local.info;
+package com.example.project.model.weather.local.info;
 
-import com.example.project.data.model.weather.local.Info;
+import com.example.project.model.weather.local.Info;
 import com.example.project.types.ITypeIncident;
 
 public class Transparency extends Info {

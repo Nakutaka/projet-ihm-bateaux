@@ -1,11 +1,9 @@
-package com.example.project.data.model.unused;
+package com.example.project.model.unused;
 
 import androidx.room.Entity;
 import androidx.room.Ignore;
 
 import java.util.Calendar;
-import java.util.Formatter;
-import java.util.Locale;
 
 @Entity
 public class Date {    //2010-04-16 15:15:17

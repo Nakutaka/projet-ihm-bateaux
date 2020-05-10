@@ -1,6 +1,6 @@
-package com.example.project.data.model.weather.remote;
+package com.example.project.model.weather.remote;
 
-import com.example.project.data.model.weather.Report;
+import com.example.project.model.weather.Report;
 
 import java.util.List;
 

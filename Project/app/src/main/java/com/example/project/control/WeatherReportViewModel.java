@@ -1,13 +1,11 @@
 package com.example.project.control;
 
 import android.app.Application;
-import android.widget.Toast;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.example.project.data.model.WeatherReport;
-import com.example.project.main.MainActivity;
+import com.example.project.model.weather.WeatherReport;
 
 import java.util.List;
 

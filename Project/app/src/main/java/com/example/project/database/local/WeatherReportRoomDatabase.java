@@ -1,4 +1,4 @@
-package com.example.project.data.localdb;
+package com.example.project.database.local;
 
 import android.content.Context;
 
@@ -8,15 +8,13 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.example.project.data.model.weather.local.incident.BasicIncident;
-import com.example.project.data.model.unused.Date;
-import com.example.project.data.model.weather.local.Info;
-import com.example.project.data.model.weather.local.incident.MeasuredIncident;
-import com.example.project.data.model.weather.local.incident.MinIncident;
-import com.example.project.data.model.weather.Report;
+import com.example.project.model.weather.local.incident.BasicIncident;
+import com.example.project.model.weather.local.Info;
+import com.example.project.model.weather.local.incident.MeasuredIncident;
+import com.example.project.model.weather.local.incident.MinIncident;
+import com.example.project.model.weather.Report;
 import com.example.project.types.ITypeIncident;
 
-import java.util.Calendar;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -49,9 +47,21 @@ public abstract class WeatherReportRoomDatabase extends RoomDatabase {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {//onCreate//onOpen... re-init at each start
             super.onCreate(db);
-            populate();
+            //populate();
+            clean();
         };
     };
+
+    public static void clean() {
+        databaseWriteExecutor.execute(() -> {
+            // Populate the database in the background.
+            WeatherReportDao dao = INSTANCE.weatherReportDao();
+            dao.deleteAllReports();
+            dao.deleteAllMinIncidents();
+            dao.deleteAllBasicIncidents();
+            dao.deleteAllMeasuredIncidents();
+        });
+    }
 
     public static void populate() {
         databaseWriteExecutor.execute(() -> {
@@ -62,8 +72,7 @@ public abstract class WeatherReportRoomDatabase extends RoomDatabase {
             dao.deleteAllBasicIncidents();
             dao.deleteAllMeasuredIncidents();
 
-            Date date = new Date(Calendar.getInstance());
-            Report report = new Report(43.7, 6.9966, date, "my-device");
+            Report report = new Report("my-device", false,43.7, 6.9966);
             dao.insert(report);
 
             BasicIncident basic = new BasicIncident(report.getId(), 0,
@@ -75,8 +84,8 @@ public abstract class WeatherReportRoomDatabase extends RoomDatabase {
                     "Thunder... thunder... thunderstruck!");
             dao.insert(basic);
 
-            date = new Date(Calendar.getInstance());
-            report = new Report(43.68, 6.89, date, "my-device");
+
+            report = new Report("my-device", false,43.68, 6.89);
             dao.insert(report);
 
             basic = new BasicIncident(report.getId(), 2,

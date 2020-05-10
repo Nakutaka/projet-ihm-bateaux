@@ -1,15 +1,12 @@
 package com.example.project.control;
 
 import android.app.Application;
-import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 
-import com.example.project.data.localdb.WeatherReportDao;
-import com.example.project.data.localdb.WeatherReportRoomDatabase;
-import com.example.project.data.model.Report;
-import com.example.project.data.model.WeatherReport;
-import com.example.project.data.model.incident.BasicIncident;
+import com.example.project.database.local.WeatherReportDao;
+import com.example.project.database.local.WeatherReportRoomDatabase;
+import com.example.project.model.weather.WeatherReport;
 
 import java.util.List;
 
@@ -61,6 +58,6 @@ class WeatherReportRepository {
             mWeatherReportDao.deleteAllMeasuredIncidents();
             mWeatherReportDao.deleteAllReports();
         });
-        WeatherReportRoomDatabase.populate();//repopulate
+        //WeatherReportRoomDatabase.populate();//repopulate
     }
 }

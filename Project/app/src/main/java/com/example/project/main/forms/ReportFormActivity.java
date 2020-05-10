@@ -1,10 +1,8 @@
 package com.example.project.main.forms;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,9 +11,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.project.R;
-import com.example.project.data.model.incident.BasicIncident;
-import com.example.project.data.model.incident.MeasuredIncident;
-import com.example.project.data.model.incident.MinIncident;
+import com.example.project.model.weather.local.incident.BasicIncident;
+import com.example.project.model.weather.local.incident.MeasuredIncident;
+import com.example.project.model.weather.local.incident.MinIncident;
 import com.example.project.main.MainActivity;
 import com.example.project.types.ITypeIncident;
 import com.example.project.types.ITypeParam;
@@ -28,6 +26,7 @@ import androidx.core.app.NotificationManagerCompat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ReportFormActivity extends AppCompatActivity implements IButtonClickedListenerIncident, ITypeIncident {
 
@@ -51,10 +50,10 @@ public class ReportFormActivity extends AppCompatActivity implements IButtonClic
         measuredList = new ArrayList<>();
         createNotificationChanel();
 
-        Toolbar mytoolbar = findViewById(R.id.my_toolbar);
-        setSupportActionBar(mytoolbar);
+        Toolbar myToolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         ReportFormFragment reportFormFragment = new ReportFormFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout_report,

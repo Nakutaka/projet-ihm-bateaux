@@ -5,10 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_gravity="end"
+        style="@style/MyFloatingButton"
+        android:id="@+id/fab_close_details"
+        android:src="@drawable/ic_delete_black_24dp"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Ceci est une boite d'info"
+        android:text="Report details!"
         android:textSize="40sp"
         android:textAlignment="center"/>
 

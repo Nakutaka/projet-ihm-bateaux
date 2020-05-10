@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.flexbox.FlexboxLayout
-    app:flexWrap="wrap"
-    app:flexDirection="row"
-    app:justifyContent="space_around"
-    android:padding="20sp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:flexWrap="wrap"
+    app:flexDirection="row"
+    app:justifyContent="center"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
-    <LinearLayout style="@style/LayoutForm">
+    <LinearLayout style="@style/LayoutForm"
+        app:layout_wrapBefore="true"
+        app:layout_flexBasisPercent="33%">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            style="@style/MyFloatingButtonForm"
+            style="@style/ReportFloatingButtonForm"
             android:backgroundTint="@color/red"
             android:id="@+id/fab_temp"
             android:tint="@color/white"
@@ -29,10 +30,11 @@
 
 
     <LinearLayout
-        style="@style/LayoutForm">
+        style="@style/LayoutForm"
+        app:layout_flexBasisPercent="33%">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            style="@style/MyFloatingButtonForm"
+            style="@style/ReportFloatingButtonForm"
             app:backgroundTint="@color/lightBlue"
             android:id="@+id/fab_rain"
             android:tint="@color/white"
@@ -46,49 +48,45 @@
     </LinearLayout>
 
     <LinearLayout
-        style="@style/LayoutForm">
-
+        style="@style/LayoutForm"
+        app:layout_flexBasisPercent="33%">
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            style="@style/MyFloatingButtonForm"
+            style="@style/ReportFloatingButtonForm"
             app:backgroundTint="@color/icyBlue"
             android:id="@+id/fab_hail"
             android:tint="@color/white"
             android:src="@drawable/ic_hail" />
-
         <TextView
             style="@style/TextViewForm"
             android:id="@+id/txt_hail"
             android:text="@string/txt_hail"/>
-
     </LinearLayout>
 
     <LinearLayout
-        style="@style/LayoutForm">
-
+        style="@style/LayoutForm"
+        app:layout_wrapBefore="true"
+        app:layout_flexBasisPercent="33%" >
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            style="@style/MyFloatingButtonForm"
+            style="@style/ReportFloatingButtonForm"
             app:backgroundTint="@color/lightGrey"
             android:id="@+id/fab_fog"
             android:tint="@color/white"
             android:src="@drawable/ic_fog" />
-
         <TextView
             style="@style/TextViewForm"
             android:id="@+id/txt_fog"
             android:text="@string/txt_fog"/>
-
     </LinearLayout>
 
     <LinearLayout
-        style="@style/LayoutForm">
-
+        style="@style/LayoutForm"
+        app:layout_flexBasisPercent="33%">
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            style="@style/MyFloatingButtonForm"
+            style="@style/ReportFloatingButtonForm"
             app:backgroundTint="@color/grey"
             android:id="@+id/fab_cloud"
             android:tint="@color/white"
             android:src="@drawable/ic_cloud" />
-
         <TextView
             style="@style/TextViewForm"
             android:id="@+id/txt_cloud"
@@ -96,91 +94,82 @@
     </LinearLayout>
 
     <LinearLayout
-        style="@style/LayoutForm">
-
+        style="@style/LayoutForm"
+        app:layout_flexBasisPercent="33%">
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            style="@style/MyFloatingButtonForm"
+            style="@style/ReportFloatingButtonForm"
             app:backgroundTint="@color/yellow"
             android:id="@+id/fab_storm"
             android:tint="@color/white"
             android:src="@drawable/ic_storm" />
-
         <TextView
             style="@style/TextViewForm"
             android:id="@+id/txt_storm"
             android:text="@string/txt_storm"/>
-
     </LinearLayout>
 
     <LinearLayout
-        style="@style/LayoutForm">
-
+        style="@style/LayoutForm"
+        app:layout_wrapBefore="true"
+        app:layout_flexBasisPercent="33%" >
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            style="@style/MyFloatingButtonForm"
+            style="@style/ReportFloatingButtonForm"
             app:backgroundTint="@color/orange"
             android:id="@+id/fab_wind"
             android:tint="@color/white"
             android:src="@drawable/ic_wind" />
-
         <TextView
             style="@style/TextViewForm"
             android:id="@+id/txt_wind"
             android:text="@string/txt_wind"/>
-
     </LinearLayout>
 
     <LinearLayout
-        style="@style/LayoutForm">
-
+        style="@style/LayoutForm"
+        app:layout_flexBasisPercent="33%">
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            style="@style/MyFloatingButtonForm"
+            style="@style/ReportFloatingButtonForm"
             app:backgroundTint="@color/blue"
             android:id="@+id/fab_current"
             android:tint="@color/white"
-            android:src="@drawable/ic_current" />
-
+            android:src="@drawable/ic_current"/>
         <TextView
             style="@style/TextViewForm"
             android:id="@+id/txt_current"
             android:text="@string/txt_current"/>
-
-
     </LinearLayout>
 
     <LinearLayout
-        style="@style/LayoutForm">
-
+        style="@style/LayoutForm"
+        app:layout_flexBasisPercent="33%">
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            style="@style/MyFloatingButtonForm"
+            style="@style/ReportFloatingButtonForm"
             app:backgroundTint="@color/petrolBlue"
             android:id="@+id/fab_transparency"
             android:tint="@color/white"
             android:src="@drawable/ic_transparency" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:id="@+id/txt_transparency"
             android:text="@string/txt_transparency"/>
-
     </LinearLayout>
 
     <LinearLayout
-        style="@style/LayoutForm">
-
+        style="@style/LayoutForm"
+        app:layout_wrapBefore="true"
+        app:layout_flexBasisPercent="33%">
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            style="@style/MyFloatingButtonForm"
+            style="@style/ReportFloatingButtonForm"
             app:backgroundTint="@color/green"
             android:id="@+id/fab_other"
             android:tint="@color/white"
             android:src="@drawable/ic_other" />
-
         <TextView
             style="@style/TextViewForm"
             android:id="@+id/txt_other"
             android:text="@string/txt_other"/>
-
     </LinearLayout>
 
 </com.google.android.flexbox.FlexboxLayout>

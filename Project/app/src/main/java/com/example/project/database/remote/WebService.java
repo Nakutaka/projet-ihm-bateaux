@@ -1,43 +1,27 @@
-package com.example.lastretrofittest.network;
+package com.example.project.database.remote;
 
-import com.example.lastretrofittest.model.Report;
-import com.example.lastretrofittest.model.User;
+import com.example.project.model.weather.remote.RemoteWeatherReport;
 
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.http.Body;
-import retrofit2.http.DELETE;
-import retrofit2.http.GET;
-import retrofit2.http.Header;
 import retrofit2.http.Headers;
+import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.PUT;
 
 public interface WebService {
 
     final static String boxPath = "/box_e997ba1f18a999988402";
 
-    @GET(boxPath+"/tests")
-    Call<List<User>> getAllUsers();
+    @GET(boxPath+"/reports")
+    Call<List<RemoteWeatherReport>> getAllReports();
 
     @Headers("content-type: application/json")
-    @POST(boxPath+"/tests")
-    Call<User> postUser(@Body User user);
+    @POST(boxPath+"/reports")
+    Call<RemoteWeatherReport> postReport(@Body RemoteWeatherReport report);
 
     @Headers("content-type: application/json")
-    @POST(boxPath+"/tests")
-    Call<List<User>> postUsers(@Body List<User> users);
-
-    @GET("/photos")
-    Call<List<Report>> getAllPhotos();
-
-    @POST(boxPath)
-    Call<Report> postReport(Report report);
-
-    @PUT(boxPath)
-    Call<Report> putReport(String jsonId, Report report);
-
-    @DELETE(boxPath)
-    Call<Report> deleteReport(String jsonId);
+    @POST(boxPath+"/reports")
+    Call<List<RemoteWeatherReport>> postUsers(@Body List<RemoteWeatherReport> reports);
 }

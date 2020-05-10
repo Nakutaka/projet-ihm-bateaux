@@ -1,4 +1,4 @@
-package com.example.lastretrofittest.network;
+package com.example.project.database.remote;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

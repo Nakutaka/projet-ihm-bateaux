@@ -1,30 +1,27 @@
 package com.example.project.main.factory;
 
-import com.example.project.data.model.incident.BasicIncident;
-import com.example.project.data.model.info.Cloud;
-import com.example.project.data.model.info.Current;
-import com.example.project.data.model.Date;
-import com.example.project.data.model.info.Fog;
-import com.example.project.data.model.info.Hail;
-import com.example.project.data.model.Incident;
-import com.example.project.data.model.Info;
-import com.example.project.data.model.incident.MeasuredIncident;
-import com.example.project.data.model.incident.MinIncident;
-import com.example.project.data.model.info.Other;
-import com.example.project.data.model.info.Rain;
-import com.example.project.data.model.Report;
-import com.example.project.data.model.info.Storm;
-import com.example.project.data.model.info.Temperature;
-import com.example.project.data.model.info.Transparency;
-import com.example.project.data.model.info.Wind;
-
-import java.util.Calendar;
+import com.example.project.model.weather.local.incident.BasicIncident;
+import com.example.project.model.weather.local.info.Cloud;
+import com.example.project.model.weather.local.info.Current;
+import com.example.project.model.weather.local.info.Fog;
+import com.example.project.model.weather.local.info.Hail;
+import com.example.project.model.weather.local.Incident;
+import com.example.project.model.weather.local.Info;
+import com.example.project.model.weather.local.incident.MeasuredIncident;
+import com.example.project.model.weather.local.incident.MinIncident;
+import com.example.project.model.weather.local.info.Other;
+import com.example.project.model.weather.local.info.Rain;
+import com.example.project.model.weather.Report;
+import com.example.project.model.weather.local.info.Storm;
+import com.example.project.model.weather.local.info.Temperature;
+import com.example.project.model.weather.local.info.Transparency;
+import com.example.project.model.weather.local.info.Wind;
 
 public class IncidentFactory_classic extends IncidentFactory {
 
     @Override
     public Report getReport(double latitude, double longitude) {
-        return new Report(latitude, longitude, new Date(Calendar.getInstance()), "my-device");//temporary for now
+        return new Report("my-device", false, latitude, longitude);//temporary for now
     }//TODO my-device --> UUID coupled with SSAID or else
 
     @Override

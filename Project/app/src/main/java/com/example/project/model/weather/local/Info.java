@@ -1,4 +1,4 @@
-package com.example.project.data.model.weather.local;
+package com.example.project.model.weather.local;
 
 import android.os.Parcel;
 import android.os.Parcelable;

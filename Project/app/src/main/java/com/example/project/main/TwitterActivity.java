@@ -9,7 +9,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.project.R;
-import com.example.project.data.model.Tweet;
+import com.example.project.model.Tweet;
 import com.google.gson.Gson;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.DefaultLogger;

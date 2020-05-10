@@ -1,8 +1,8 @@
 package com.example.project.main.factory;
 
-import com.example.project.data.model.Incident;
-import com.example.project.data.model.Info;
-import com.example.project.data.model.Report;
+import com.example.project.model.weather.local.Incident;
+import com.example.project.model.weather.local.Info;
+import com.example.project.model.weather.Report;
 import com.example.project.types.ITypeIncident;
 
 public abstract class IncidentFactory {

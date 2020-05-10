@@ -1,9 +1,4 @@
-package com.example.project.data.model;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+package com.example.project.model;
 
 public class Tweet {
     private final String body;

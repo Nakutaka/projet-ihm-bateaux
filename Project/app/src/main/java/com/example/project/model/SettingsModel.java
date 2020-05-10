@@ -1,4 +1,4 @@
-package com.example.project.data.model;
+package com.example.project.model;
 import com.twitter.sdk.android.core.TwitterSession;
 
 import java.util.HashSet;

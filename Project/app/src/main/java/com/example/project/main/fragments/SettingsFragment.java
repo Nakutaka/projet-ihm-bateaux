@@ -16,7 +16,7 @@ import androidx.preference.SwitchPreference;
 
 import com.example.project.R;
 import com.example.project.control.SettingsViewModel;
-import com.example.project.data.model.Tweet;
+import com.example.project.model.Tweet;
 import com.example.project.main.TwitterActivity;
 import com.google.gson.Gson;
 

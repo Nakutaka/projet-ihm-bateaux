@@ -27,13 +27,13 @@ import androidx.fragment.app.Fragment;
 import com.example.project.R;
 
 /**
- * This fragment is able to manage autorisation for location module (GPS)
+ * This fragment is able to manage authorization for location module (GPS)
  * It can get the GPS position in a LatLng
  * It can get the placeName to the GPS position (nearest city)
  * It can force to display a placeName in the TextView
  */
 public class GPSFragment extends Fragment implements LocationListener {
-    private IGPSActivity igpsActivity; // able to recenter camera
+    private IGPSFragment igpsFragment; // able to recenter camera
     private TextView locationView;
     private Location currentLocation;
     LocationManager locationManager;
@@ -50,18 +50,18 @@ public class GPSFragment extends Fragment implements LocationListener {
 
 
     public GPSFragment() { }
-    public GPSFragment(IGPSActivity activity) { igpsActivity = activity; }
+    public GPSFragment(IGPSFragment activity) { igpsFragment = activity; }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (igpsActivity==null) return super.onCreateView(inflater,container,savedInstanceState);
+        if (igpsFragment ==null) return super.onCreateView(inflater,container,savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_gps, container, false);
-        locationView = rootView.findViewById( R.id.locationView );
-        imgLocationOff = rootView.findViewById( R.id.imgLocationOff );
+        locationView = rootView.findViewById(R.id.locationView);
+        imgLocationOff = rootView.findViewById(R.id.imgLocationOff);
 
         //Duct Tape
-        imgLocationOff.setVisibility( View.INVISIBLE );
+        imgLocationOff.setVisibility(View.INVISIBLE);
 
         setupGPS();
 
@@ -78,7 +78,7 @@ public class GPSFragment extends Fragment implements LocationListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(IGPSActivity.GPS_LOG_TOKEN,"Goodbye");
+        Log.d(IGPSFragment.GPS_LOG_TOKEN,"Goodbye");
     }
 
     @Override
@@ -120,8 +120,8 @@ public class GPSFragment extends Fragment implements LocationListener {
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION,
                     Manifest.permission.INTERNET
-            }, IGPSActivity.MY_PERMISSION_ACCESS_LOCATION);
-            Log.d(IGPSActivity.GPS_LOG_TOKEN,"Requesting permissions");
+            }, IGPSFragment.MY_PERMISSION_ACCESS_LOCATION);
+            Log.d(IGPSFragment.GPS_LOG_TOKEN,"Requesting permissions");
             return;
         } else {
             // Permission already granted explicitly
@@ -129,7 +129,7 @@ public class GPSFragment extends Fragment implements LocationListener {
         }
 
         String providerName = locationManager.getBestProvider(criteria, true);
-        Log.d(IGPSActivity.GPS_LOG_TOKEN,"provider="+ providerName);
+        Log.d(IGPSFragment.GPS_LOG_TOKEN,"provider="+ providerName);
     }
 
     ////////////////////////////////////////////////////////////////////////
@@ -139,19 +139,19 @@ public class GPSFragment extends Fragment implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         if (currentLocation==null) {
-            Log.d(IGPSActivity.GPS_LOG_TOKEN,"first location change");
-            igpsActivity.focus(true);
+            Log.d(IGPSFragment.GPS_LOG_TOKEN,"first location change");
+            igpsFragment.focus(true);
         }
 
         currentLocation = location;
-        igpsActivity.focus(false); // recentrer
+        //igpsFragment.focus(false); // recentrer
 
-        locationView.setText(String.format("%s %s",currentLocation.getLatitude(), currentLocation.getLongitude()));
+        locationView.setText(String.format("%s - %s", currentLocation.getLatitude(), currentLocation.getLongitude()));
 
         if (location != null) {
             currentLocation = location;
             //currentLocationTextView.setText(location.getLatitude() + " - " + location.getLongitude());
-            Log.d(IGPSActivity.GPS_LOG_TOKEN,"Position updated");
+            Log.d(IGPSFragment.GPS_LOG_TOKEN,"Position updated");
             //updateMap();
         }
         else {
@@ -164,17 +164,17 @@ public class GPSFragment extends Fragment implements LocationListener {
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-        Log.d(IGPSActivity.GPS_LOG_TOKEN, "status: "+status);
+        Log.d(IGPSFragment.GPS_LOG_TOKEN, "status: "+status);
     }
 
     @Override
     public void onProviderEnabled(String provider) {
-        Log.d(IGPSActivity.GPS_LOG_TOKEN, "location on");
+        Log.d(IGPSFragment.GPS_LOG_TOKEN, "location on");
     }
 
     @Override
     public void onProviderDisabled(String provider) {
-        Log.d(IGPSActivity.GPS_LOG_TOKEN, "location off");
+        Log.d(IGPSFragment.GPS_LOG_TOKEN, "location off");
         promptLocationSettingOff();
     }
 
@@ -185,14 +185,14 @@ public class GPSFragment extends Fragment implements LocationListener {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == IGPSActivity.MY_PERMISSION_ACCESS_LOCATION) {
+        if(requestCode == IGPSFragment.MY_PERMISSION_ACCESS_LOCATION) {
             onLocationPermissionResult(grantResults);
         }
     }
 
     private void onLocationPermissionResult(int[] grantResults) {
         if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.d(IGPSActivity.GPS_LOG_TOKEN,"Permissions granted");
+            Log.d(IGPSFragment.GPS_LOG_TOKEN,"Permissions granted");
 
             if (getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                     && getActivity().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -200,7 +200,7 @@ public class GPSFragment extends Fragment implements LocationListener {
                 locationManager.requestLocationUpdates(provider, MINIMUM_TIME, MINIMUM_DISTANCE, this);
             }
         } else {
-            Log.d(IGPSActivity.GPS_LOG_TOKEN,"Permissions denied");
+            Log.d(IGPSFragment.GPS_LOG_TOKEN,"Permissions denied");
             //currentLocationTextView.setText("Unknown\n(Permission denied)");
             Toast.makeText(getContext(),"Location access required\n for position", Toast.LENGTH_SHORT).show();
         }

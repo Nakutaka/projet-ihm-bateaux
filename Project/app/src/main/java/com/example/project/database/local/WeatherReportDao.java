@@ -1,4 +1,4 @@
-package com.example.project.data.localdb;
+package com.example.project.database.local;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -7,11 +7,11 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
 
-import com.example.project.data.model.weather.local.incident.BasicIncident;
-import com.example.project.data.model.weather.local.incident.MeasuredIncident;
-import com.example.project.data.model.weather.local.incident.MinIncident;
-import com.example.project.data.model.weather.Report;
-import com.example.project.data.model.weather.WeatherReport;
+import com.example.project.model.weather.local.incident.BasicIncident;
+import com.example.project.model.weather.local.incident.MeasuredIncident;
+import com.example.project.model.weather.local.incident.MinIncident;
+import com.example.project.model.weather.Report;
+import com.example.project.model.weather.WeatherReport;
 
 import java.util.List;
 

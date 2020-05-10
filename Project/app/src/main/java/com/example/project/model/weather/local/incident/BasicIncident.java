@@ -1,4 +1,4 @@
-package com.example.project.data.model.weather.local.incident;
+package com.example.project.model.weather.local.incident;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -6,8 +6,8 @@ import android.os.Parcelable;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 
-import com.example.project.data.model.weather.local.Incident;
-import com.example.project.data.model.weather.local.Info;
+import com.example.project.model.weather.local.Incident;
+import com.example.project.model.weather.local.Info;
 
 @Entity
 public class BasicIncident extends Incident implements Parcelable {

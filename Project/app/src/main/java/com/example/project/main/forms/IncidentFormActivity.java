@@ -7,7 +7,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.project.R;
-import com.example.project.data.model.Incident;
+import com.example.project.model.weather.local.Incident;
 import com.example.project.main.factory.IncidentFactory_classic;
 import com.example.project.types.ITypeIncident;
 import com.example.project.types.ITypeParam;

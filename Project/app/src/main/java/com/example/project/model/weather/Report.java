@@ -1,4 +1,4 @@
-package com.example.project.data.model.weather;
+package com.example.project.model.weather;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
@@ -37,6 +37,7 @@ public class Report {
     @PrimaryKey
     public String id;
     public String device;
+    public boolean registered;
     public double latitude;
     public double longitude;
     public long time;
@@ -45,9 +46,10 @@ public class Report {
     private Date date;*/
 
     //for Room db only
-    public Report(String id, String device, double latitude, double longitude, long time) {
+    public Report(String id, String device, boolean registered, double latitude, double longitude, long time) {
         this.id = id;
         this.device = device;
+        this.registered = registered;
         this.latitude = latitude;
         this.longitude = longitude;
         this.time = time;
@@ -55,9 +57,10 @@ public class Report {
     }
 
     @Ignore
-    public Report(String device, double latitude, double longitude) {
+    public Report(String device, boolean registered, double latitude, double longitude) {
         this.id = makeId();
         this.device = device;
+        this.registered = registered;
         this.latitude = latitude;
         this.longitude = longitude;
         //this.date = date;
@@ -66,6 +69,7 @@ public class Report {
 
     @Ignore
     public Report(double latitude, double longitude) {
+        this.registered = false;
         this.latitude = latitude;
         this.longitude = longitude;
     }
