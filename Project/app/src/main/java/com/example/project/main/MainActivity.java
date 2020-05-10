@@ -2,6 +2,7 @@ package com.example.project.main;
 
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -34,6 +35,7 @@ import com.example.project.model.weather.local.incident.MinIncident;
 import com.example.project.model.weather.remote.RemoteIncident;
 import com.example.project.model.weather.remote.RemoteWeatherReport;
 import com.example.project.types.ITypeIncident;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
 import org.osmdroid.config.Configuration;
@@ -126,7 +128,11 @@ public class MainActivity extends AppCompatActivity {
 
         service = RetrofitInstance.getInstance().create(WebService.class);
 
-        retrieveReports();
+        retrieveReports(false);
+
+        findViewById(R.id.fab_sync).setOnClickListener((v -> {
+            retrieveReports(true);
+        }));
     }
 
     void pushOneReport(WeatherReport weatherReport) {
@@ -148,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<RemoteWeatherReport> call, Response<RemoteWeatherReport> response) {
                 Toast.makeText(MainActivity.this, "Report sent!", Toast.LENGTH_SHORT).show();
-                retrieveReports();//not pretty but for now voila...
+                retrieveReports(false);//not pretty but for now voila...
             }
 
             @Override
@@ -158,41 +164,52 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    void retrieveReports() {
+    void retrieveReports(boolean manualSync) {
         Call<List<RemoteWeatherReport>> call = service.getAllReports();
         call.enqueue(new Callback<List<RemoteWeatherReport>>() {
             @Override
             public void onResponse(Call<List<RemoteWeatherReport>> call, Response<List<RemoteWeatherReport>> response) {
                 //db
+                if (manualSync)
+                    Toast.makeText(MainActivity.this, "Sync...", Toast.LENGTH_SHORT).show();
                 List<RemoteWeatherReport> reports = response.body();
-                if(reports == null) return;
+                if (reports == null) return;
                 reports.forEach(r -> {
                     Report report = r.getReport();
-                    if(report == null) return;
+                    if (report == null) return;
                     List<MinIncident> minList = new ArrayList<>();
                     List<BasicIncident> basicList = new ArrayList<>();
                     List<MeasuredIncident> measuredList = new ArrayList<>();
                     IncidentFactory_classic factory = new IncidentFactory_classic();
                     r.getIncidents().forEach(i -> {
-                       Incident newOne = factory.getIncident(i.getTypeIncident(), i.getTypeInfo(), i.getValue(), i.getUnit(), i.getComment());
-                        switch(i.getTypeIncident()) {
-                            case ITypeIncident.INCIDENT_MIN: minList.add((MinIncident)newOne); break;
-                            case ITypeIncident.INCIDENT_BASIC: basicList.add((BasicIncident)newOne); break;
-                            case ITypeIncident.INCIDENT_MEASURED: measuredList.add((MeasuredIncident)newOne); break;
+                        Incident newOne = factory.getIncident(i.getTypeIncident(), i.getTypeInfo(), i.getValue(), i.getUnit(), i.getComment());
+                        switch (i.getTypeIncident()) {
+                            case ITypeIncident.INCIDENT_MIN:
+                                minList.add((MinIncident) newOne);
+                                break;
+                            case ITypeIncident.INCIDENT_BASIC:
+                                basicList.add((BasicIncident) newOne);
+                                break;
+                            case ITypeIncident.INCIDENT_MEASURED:
+                                measuredList.add((MeasuredIncident) newOne);
+                                break;
                         }
                     });
                     WeatherReport weatherReport = new WeatherReport(report, minList, basicList, measuredList);
                     mWeatherReportViewModel.insert(weatherReport);
                 });
-                Toast.makeText(MainActivity.this, "Data retrieved!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, "Data retrieved!", Toast.LENGTH_SHORT).show();
+                ((FloatingActionButton) findViewById(R.id.fab_sync)).setImageResource(R.drawable.ic_sync_black_24dp);
+                ((FloatingActionButton) findViewById(R.id.fab_sync)).setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.black, null)));
             }
 
             @Override
             public void onFailure(Call<List<RemoteWeatherReport>> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "No connection...sorry try later!", Toast.LENGTH_SHORT).show();
+                ((FloatingActionButton) findViewById(R.id.fab_sync)).setImageResource(R.drawable.ic_sync_problem_black_24dp);
+                ((FloatingActionButton) findViewById(R.id.fab_sync)).setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.red, null)));
+                if (manualSync) Toast.makeText(MainActivity.this, "No connection!...", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     @Override

@@ -22,6 +22,8 @@
 
     <color name="white">#fff</color>
 
+    <color name="black">#000</color>
+
     <color name="red">#ff5555</color>
     <color name="lightBlue">#2cf</color>
     <color name="icyBlue">#6ff</color>
