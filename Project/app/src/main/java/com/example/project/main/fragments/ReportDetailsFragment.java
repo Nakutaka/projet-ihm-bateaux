@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,10 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.project.R;
+import com.example.project.data.model.Date;
 import com.example.project.data.model.WeatherReport;
 import com.example.project.main.MainActivity;
 import com.example.project.main.ReportAdapter;
 import com.google.gson.Gson;
+
+import java.util.Calendar;
 
 public class ReportDetailsFragment extends Fragment {
     private Gson gson = new Gson();
@@ -40,12 +44,32 @@ public class ReportDetailsFragment extends Fragment {
     }
 
     private void addDetails(WeatherReport report, View view) {
-        ReportAdapter reportAdapter = new ReportAdapter(report.getIncidentList());
+        TextView text = view.findViewById(R.id.txt_date_report);
+        text.setText(String.format("Posted %s ago.", getDateField(report.getReport().getDate())));
+        ReportAdapter reportAdapter = new ReportAdapter(report.getIncidentList(), getContext());
         RecyclerView rvReport = view.findViewById(R.id.rv_report);
         rvReport.setAdapter(reportAdapter);
         rvReport.setLayoutManager(new LinearLayoutManager(getContext()));
 
     }
+
+    private String getDateField(Date date) {
+        Date today = new Date(Calendar.getInstance());
+        String result;
+        if (today.day == date.day && today.month == date.month) {
+            int hour = (today.hour - date.hour);
+            result = hour + " " + (hour > 1 ? "hours" : "hour");
+            if (hour == 0) {
+                int min = (today.min - date.min);
+                result = min + " " + (min > 1 ? "minutes" : "minute");
+            }
+        } else {
+            int day = (today.day - date.day);
+            result = day + " " + (day > 1 ? "days" : "day");
+        }
+        return result;
+    }
+
 
 
 }

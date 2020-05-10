@@ -56,4 +56,6 @@ public class WeatherReport {
         //minIncident missing
         return incidents;
     }
+
+
 }

@@ -7,6 +7,18 @@
     android:background="#B9000000"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/txt_date_report"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#B9000000"
+        android:fontFamily="@font/baloo"
+        android:maxLines="1"
+        android:padding="5sp"
+        android:textAlignment="textEnd"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_report"
         android:layout_width="match_parent"
@@ -23,7 +35,7 @@
         android:text="@string/close_details"
         android:textColor="@color/white"
         android:textSize="20sp"
-        android:visibility="visible"
+        android:layout_marginHorizontal="20sp"
         app:backgroundTint="@color/blue"
         app:strokeColor="#FFFFFF"
         app:strokeWidth="5sp" />
