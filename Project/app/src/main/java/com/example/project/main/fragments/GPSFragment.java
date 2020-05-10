@@ -10,6 +10,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -90,8 +91,8 @@ public class GPSFragment extends Fragment implements LocationListener {
     @Override
     public void onResume() {
         super.onResume();
-        imgLocationOff.setVisibility( (locationManager.isProviderEnabled(provider)) ? View.INVISIBLE : View.VISIBLE);
-        setupGPS();
+        updateLocationIcon();
+        if (!anyDialogDisplayed()) setupGPS();
     }
 
     public Location getCurrentLocation() {
@@ -178,6 +179,10 @@ public class GPSFragment extends Fragment implements LocationListener {
         promptLocationSettingOff();
     }
 
+    private void updateLocationIcon() {
+        imgLocationOff.setVisibility( (locationManager.isProviderEnabled(provider)) ? View.INVISIBLE : View.VISIBLE);
+    }
+
     ////////////////////////////////////////////////////////////////////
 
     /*************************GPS permissions & setup***************************/
@@ -202,7 +207,12 @@ public class GPSFragment extends Fragment implements LocationListener {
         } else {
             Log.d(IGPSFragment.GPS_LOG_TOKEN,"Permissions denied");
             //currentLocationTextView.setText("Unknown\n(Permission denied)");
-            Toast.makeText(getContext(),"Location access required\n for position", Toast.LENGTH_SHORT).show();
+            if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                Toast.makeText(getContext(),"Location access required for position", Toast.LENGTH_SHORT).show();
+            } else {
+                // Option 'Don't ask again' has been checked before
+                promptGPSrequired();
+            }
         }
     }
 
@@ -212,39 +222,100 @@ public class GPSFragment extends Fragment implements LocationListener {
 
     /********************* User redirection ****************************/
 
-    private void sendUserToLocationSettings() {
+    private void sendUserToLocationSettings(String msg) {
         // Send user to GPS settings
-        Toast.makeText(getContext(), "Please enable location", Toast.LENGTH_SHORT).show();
+        if (msg!=null) Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
         startActivity(intent);
     }
 
-    /*********************Prompts a dialog to go to location settings****************************/
+    private void redirectToAppSettings(String msg) {
+        //redirect user to app Settings
+        if (msg!=null) Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        intent.setData(Uri.parse("package:" + getActivity().getPackageName()));
+        startActivity(intent);
+    }
+
+    /********************* Dialogs ****************************/
+
+    private boolean locationPromptAlreadyDisplayed = false;
+    private boolean gpsPromptAlreadyDisplayed = false;
+
+    private boolean anyDialogDisplayed() { return locationPromptAlreadyDisplayed || gpsPromptAlreadyDisplayed; }
 
     private void promptLocationSettingOff() {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.getContext());//MainActivity.this);
-        // set title
-        alertDialogBuilder.setTitle("Please enable location");
-        // set dialog message
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.getContext());
         alertDialogBuilder
+                .setTitle("Please enable location")
                 .setMessage("This application needs location to retrieve your position")
                 .setCancelable(false)
                 .setPositiveButton("SETTINGS", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss(); // Close dialog
-                        sendUserToLocationSettings();
+                        sendUserToLocationSettings("Please enable location");
                     }
                 })
                 .setNegativeButton("CANCEL",new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Toast.makeText(getContext(), "Proposition rejected", Toast.LENGTH_SHORT).show();
+                        updateLocationIcon();
                         dialog.cancel();
                     }
                 });
         // create alert dialog
         AlertDialog alertDialog = alertDialogBuilder.create();
+
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                locationPromptAlreadyDisplayed = true;
+            }
+        });
+
+        alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                locationPromptAlreadyDisplayed = false;
+            }
+        });
+
         // show it
-        alertDialog.show();
+        if (!locationPromptAlreadyDisplayed) alertDialog.show();
+    }
+
+    private void promptGPSrequired() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.getContext());
+        alertDialogBuilder
+                .setTitle("Location permission needed")
+                .setMessage("This application won't be able to operate normally unless it has the location permission")
+                .setCancelable(false)
+                .setPositiveButton("SETTINGS", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss(); // Close dialog
+                        redirectToAppSettings("Please give this app Location permission");                    }
+                });
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                gpsPromptAlreadyDisplayed = true;
+            }
+        });
+
+        alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                gpsPromptAlreadyDisplayed = false;
+            }
+        });
+
+        // show it
+        if (!gpsPromptAlreadyDisplayed) alertDialog.show();
     }
     ///////////////////////////////////////////////////////////////////////////////
 
