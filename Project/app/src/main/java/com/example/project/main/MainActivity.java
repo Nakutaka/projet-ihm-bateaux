@@ -19,16 +19,22 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.project.R;
 import com.example.project.control.WeatherReportViewModel;
-import com.example.project.data.model.Date;
-import com.example.project.data.model.Report;
-import com.example.project.data.model.WeatherReport;
-import com.example.project.data.model.incident.BasicIncident;
-import com.example.project.data.model.incident.MeasuredIncident;
-import com.example.project.data.model.incident.MinIncident;
+import com.example.project.database.remote.RetrofitInstance;
+import com.example.project.database.remote.WebService;
+import com.example.project.model.unused.Date;
+import com.example.project.model.weather.Report;
+import com.example.project.model.weather.WeatherReport;
+import com.example.project.model.weather.local.Incident;
+import com.example.project.model.weather.local.incident.BasicIncident;
+import com.example.project.model.weather.local.incident.MeasuredIncident;
+import com.example.project.model.weather.local.incident.MinIncident;
 import com.example.project.main.factory.IncidentFactory_classic;
 import com.example.project.main.forms.ReportFormActivity;
 import com.example.project.main.fragments.MapFragment;
 import com.example.project.main.fragments.ReportDetailsFragment;
+import com.example.project.model.weather.remote.RemoteIncident;
+import com.example.project.model.weather.remote.RemoteWeatherReport;
+import com.example.project.types.ITypeIncident;
 import com.google.gson.Gson;
 
 import org.osmdroid.config.Configuration;
@@ -41,21 +47,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MainActivity extends AppCompatActivity {
 
     public static final int NEW_REPORT_ACTIVITY_REQUEST_CODE = 1;
     public static final String EXTRA_REPORT = "com.example.project.main.activities.REPORT";
-    //public static final String EXTRA_INCIDENT_LIST = "com.example.project.main.activities.INCIDENT_LIST";
     public static final String EXTRA_INCIDENT_MIN_LIST = "com.example.project.main.activities.INCIDENT_MIN_LIST";
     public static final String EXTRA_INCIDENT_BASIC_LIST = "com.example.project.main.activities.INCIDENT_BASIC_LIST";
     public static final String EXTRA_INCIDENT_MEASURED_LIST = "com.example.project.main.activities.INCIDENT_MEASURED_LIST";
     public long start;
     private Gson gson = new Gson();
+
     private int itemIndex;
     private MapFragment mapFragment;
     private TextView tappedLocation;
     private FrameLayout reportDetails;//TODO
+    ReportDetailsFragment detailsFragment;
     private WeatherReportViewModel mWeatherReportViewModel;
+    private WebService service;
     private FragmentManager fm;
 
     @Override
@@ -101,9 +113,9 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(intent, NEW_REPORT_ACTIVITY_REQUEST_CODE);
         });
 
-        findViewById(R.id.fab_erase).setOnClickListener(v -> {
+        /*findViewById(R.id.fab_erase).setOnClickListener(v -> {
             mWeatherReportViewModel.clearWeatherReports();
-        });
+        });*/
 
         findViewById(R.id.fab_recenter).setOnClickListener(v -> {
             mapFragment.recenterButtonAction();
@@ -111,6 +123,76 @@ public class MainActivity extends AppCompatActivity {
 
         tappedLocation = findViewById(R.id.tapped_location);
         reportDetails = findViewById(R.id.frame_layout_report_details);
+
+        service = RetrofitInstance.getInstance().create(WebService.class);
+
+        retrieveReports();
+    }
+
+    void pushOneReport(WeatherReport weatherReport) {
+        Report report = weatherReport.getReport();
+        List<RemoteIncident> incidents = new ArrayList<>();
+        weatherReport.getMinIncidentList().forEach(i -> {
+            incidents.add(new RemoteIncident(ITypeIncident.INCIDENT_MIN, i.getNum()+10, null, null, i.getComment()));
+        });
+        weatherReport.getBasicIncidentList().forEach(i -> {
+            incidents.add(new RemoteIncident(ITypeIncident.INCIDENT_BASIC, i.getNum()+10, i.getLevel(), null, i.getComment()));
+        });
+        weatherReport.getMeasuredIncidentList().forEach(i -> {
+            incidents.add(new RemoteIncident(ITypeIncident.INCIDENT_MEASURED, i.getNum()+10, i.getValue(), i.getUnit(), i.getComment()));
+        });
+        RemoteWeatherReport toSend = new RemoteWeatherReport(report, incidents);
+        Call<RemoteWeatherReport> call = service.postReport(toSend);
+        call.enqueue(new Callback<RemoteWeatherReport>() {
+
+            @Override
+            public void onResponse(Call<RemoteWeatherReport> call, Response<RemoteWeatherReport> response) {
+                Toast.makeText(MainActivity.this, "Report sent!", Toast.LENGTH_SHORT).show();
+                retrieveReports();//not pretty but for now voila...
+            }
+
+            @Override
+            public void onFailure(Call<RemoteWeatherReport> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "Report not sent...", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    void retrieveReports() {
+        Call<List<RemoteWeatherReport>> call = service.getAllReports();
+        call.enqueue(new Callback<List<RemoteWeatherReport>>() {
+            @Override
+            public void onResponse(Call<List<RemoteWeatherReport>> call, Response<List<RemoteWeatherReport>> response) {
+                //db
+                List<RemoteWeatherReport> reports = response.body();
+                if(reports == null) return;
+                reports.forEach(r -> {
+                    Report report = r.getReport();
+                    if(report == null) return;
+                    List<MinIncident> minList = new ArrayList<>();
+                    List<BasicIncident> basicList = new ArrayList<>();
+                    List<MeasuredIncident> measuredList = new ArrayList<>();
+                    IncidentFactory_classic factory = new IncidentFactory_classic();
+                    r.getIncidents().forEach(i -> {
+                       Incident newOne = factory.getIncident(i.getTypeIncident(), i.getTypeInfo(), i.getValue(), i.getUnit(), i.getComment());
+                        switch(i.getTypeIncident()) {
+                            case ITypeIncident.INCIDENT_MIN: minList.add((MinIncident)newOne); break;
+                            case ITypeIncident.INCIDENT_BASIC: basicList.add((BasicIncident)newOne); break;
+                            case ITypeIncident.INCIDENT_MEASURED: measuredList.add((MeasuredIncident)newOne); break;
+                        }
+                    });
+                    WeatherReport weatherReport = new WeatherReport(report, minList, basicList, measuredList);
+                    mWeatherReportViewModel.insert(weatherReport);
+                });
+                Toast.makeText(MainActivity.this, "Data retrieved!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<List<RemoteWeatherReport>> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "No connection...sorry try later!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     @Override
@@ -135,7 +217,9 @@ public class MainActivity extends AppCompatActivity {
                 if(minList!=null && basicList!=null && measuredList!=null &&
                         (!minList.isEmpty() || !basicList.isEmpty() || !measuredList.isEmpty())) {
                     WeatherReport weatherReport = new WeatherReport(report, minList, basicList, measuredList);
-                    mWeatherReportViewModel.insert(weatherReport);
+                    pushOneReport(weatherReport);
+                    //then --> linked with db, but for now only one or the other
+                    //mWeatherReportViewModel.insert(weatherReport);
                     Toast.makeText(
                             getApplicationContext(),
                             "Report added!",
@@ -157,8 +241,10 @@ public class MainActivity extends AppCompatActivity {
         List<OverlayItem> reportItems = new ArrayList<>();
         Map<OverlayItem, WeatherReport> overlayItemWeatherReportMap = new HashMap<>();
         reports.forEach(r -> {
-            Date d = r.getReport().getDate();
-            String time = d.getFullHour();
+            //Date d = r.getReport().getDate();
+            long time = r.getReport().getTime();
+            //String time = d.getFullHour();
+            String txtTime = ""+time;
             AtomicReference<String> typeCom = new AtomicReference<>("");
             r.getMinIncidentList().forEach(i -> typeCom.updateAndGet(v -> v + "\n" + i.getNum()
                     + ": " + i.getInfo().getName() + " - " + i.getInfo().getIcon()
@@ -179,28 +265,27 @@ public class MainActivity extends AppCompatActivity {
             overlayItemWeatherReportMap.put(item, r);
         });
 
-        Intent intent = new Intent(this,MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        int size = reports.size();
+        if(size > 0) {
 
-        int x = reports.size();
-        Date d = reports.get(x-1).getReport().getDate();
-        String t = d.getFullHour();
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
-        NotificationCompat.Builder builder= new NotificationCompat.Builder(this,"chanel1")
-                .setSmallIcon(R.drawable.ic_notifications)
-                .setContentTitle("New notification")
-                .setContentText("Report :"+t)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
+            WeatherReport lastOne = reports.get(size-1);
+            Report report = lastOne.getReport();
+            String txtTime = "" + report.getTime();
+            NotificationCompat.Builder builder= new NotificationCompat.Builder(this,"chanel1")
+                    .setSmallIcon(R.drawable.ic_notifications)
+                    .setContentTitle("New notification")
+                    .setContentText("Report :" + txtTime)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true);
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-
-
-
-
-        notificationManager.notify(100,builder.build());
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+            notificationManager.notify(100, builder.build());
+        }
 
         //link to trigger Fragment ReportDetailsFragment
         ReportItemizedOverlay reportOverlayItems = new ReportItemizedOverlay(

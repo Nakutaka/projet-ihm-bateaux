@@ -29,7 +29,7 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.TilesOverlay;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
-public class MapFragment extends Fragment implements IGPSActivity {
+public class MapFragment extends Fragment implements IGPSFragment {
 
     private GPSFragment gpsFragment;
 
@@ -65,11 +65,12 @@ public class MapFragment extends Fragment implements IGPSActivity {
         gpsFragment = new GPSFragment( this );
 
         FragmentTransaction gpsTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-        gpsTransaction.replace( R.id.gpsLocation, gpsFragment );
+        gpsTransaction.replace(R.id.gpsLocation, gpsFragment);
         gpsTransaction.commit();
 
         setupMap();
-        recenter();
+        focus(true);
+        //recenter(true);
         return rootView;
     }
 
@@ -133,11 +134,7 @@ public class MapFragment extends Fragment implements IGPSActivity {
     }
 
     public void focus(boolean resetZoom) {
-        recenter();
-        if (resetZoom) mapController.setZoom(zoom);
-    }
-
-    private void recenter() {
+        //recenter(resetZoom);
         Location lastLocation = gpsFragment.getCurrentLocation();
 
         if (lastLocation != null) {
@@ -145,14 +142,34 @@ public class MapFragment extends Fragment implements IGPSActivity {
                     lastLocation.getLongitude()));
             // Resetting zoom should be donne when pressing recenter button only
             //mapController.setZoom(zoom);
+            if (resetZoom) mapController.setZoom(zoom);
         }
         else {
             Toast.makeText(
                     this.getContext(),
-                    "Location is still loading..",
+                    "Location is still loading...",
                     Toast.LENGTH_SHORT).show();
         }
     }
+/*
+    private void recenter(boolean resetZoom) {
+        Location lastLocation = gpsFragment.getCurrentLocation();
+
+        if (lastLocation != null) {
+            mapController.animateTo(new GeoPoint(lastLocation.getLatitude(),
+                    lastLocation.getLongitude()));
+            // Resetting zoom should be donne when pressing recenter button only
+            //mapController.setZoom(zoom);
+            if (resetZoom) mapController.setZoom(zoom);
+        }
+        else {
+            Toast.makeText(
+                    this.getContext(),
+                    "Location is still loading...",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+*/
 
     public void updateMap(ReportItemizedOverlay newOverlayItems) {
         map.getOverlays().remove(mOverlay);

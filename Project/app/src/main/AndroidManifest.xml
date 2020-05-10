@@ -14,7 +14,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        >
         <activity android:name=".main.TwitterActivity" />
         <activity
             android:name=".main.SettingsActivity"
@@ -30,8 +31,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".main.forms.ReportFormActivity" />
-        <activity android:name=".main.forms.IncidentFormActivity" />
+        <activity android:name=".main.forms.ReportFormActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity android:name=".main.forms.IncidentFormActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <receiver
             android:name=".main.receiver.TwitterReceiver"
             android:exported="false">

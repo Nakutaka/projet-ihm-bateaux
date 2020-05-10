@@ -7,7 +7,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.project.R;
-import com.example.project.data.model.Incident;
+import com.example.project.model.weather.local.Incident;
 import com.example.project.main.factory.IncidentFactory_classic;
 import com.example.project.types.ITypeIncident;
 import com.example.project.types.ITypeParam;
@@ -24,6 +24,7 @@ import com.example.project.main.fragments.incidents.WindFragment;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 public class IncidentFormActivity extends AppCompatActivity implements ITypeIncident {
@@ -38,16 +39,19 @@ public class IncidentFormActivity extends AppCompatActivity implements ITypeInci
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_incident_form);
 
+        Toolbar mytoolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(mytoolbar);
+
         Intent intent = getIntent();
         globalType = intent.getIntExtra(ITypeParam.REPORT_ACTIVITY_GLOBAL_TYPE, 0);
         type = intent.getIntExtra(ITypeParam.REPORT_ACTIVITY_INCIDENT_TYPE, 0);
         icon = intent.getIntExtra(ITypeParam.REPORT_ACTIVITY_ICON, 0);
+        String title = intent.getStringExtra(ITypeParam.REPORT_ACTIVITY_TITLE);
+
+        getSupportActionBar().setTitle(title);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         displayFragment(globalType, type);
-
-        findViewById(R.id.button_back).setOnClickListener(view -> {
-            finish();
-        });
 
         findViewById(R.id.button_save).setOnClickListener(view -> {
             Intent result = new Intent();
@@ -81,6 +85,12 @@ public class IncidentFormActivity extends AppCompatActivity implements ITypeInci
             }
             finish();
         });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 
     private void toastyIncident(String type, int id, String com) {

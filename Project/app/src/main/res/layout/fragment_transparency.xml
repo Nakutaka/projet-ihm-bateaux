@@ -9,23 +9,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:id="@+id/title_transparency"
-        android:textSize="@dimen/title_size"
-        android:text="@string/title_transparency"/>
-
-    <LinearLayout
-        app:layout_constraintTop_toBottomOf="@id/title_transparency"
-        android:layout_width="match_parent"
-        android:layout_height="5px"
-        android:background="#555"/>
-
-    <TextView
-        app:layout_constraintTop_toBottomOf="@id/title_transparency"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/layout_picker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAlignment="center"
@@ -34,20 +18,24 @@
         android:layout_marginTop="15sp"
         android:text="Specify measure:"/>
 
+    <LinearLayout
+        android:id="@+id/layout_picker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/des_transparency"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="100sp"
+        android:gravity="center">
+
     <NumberPicker
         android:id="@+id/number_picker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:scaleX="1"
         android:scaleY="1"
-        android:solidColor="@color/alphaTransparent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/des_transparency"
-        android:layout_marginBottom="100sp" />
+        android:solidColor="@color/alphaTransparent"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -58,5 +46,7 @@
         app:layout_constraintBottom_toBottomOf="@id/number_picker"
         android:textSize="30sp"
         android:text="m"/>
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

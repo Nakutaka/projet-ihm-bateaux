@@ -22,7 +22,6 @@ public class FogFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_basic_incident, container,false);
         int icon = R.drawable.ic_fog;
-        ((TextView)rootView.findViewById(R.id.incident_name)).setText(R.string.title_fog);
         ((ImageView)rootView.findViewById(R.id.img_level1_1)).setImageResource(icon);
         ((ImageView)rootView.findViewById(R.id.img_level2_1)).setImageResource(icon);
         ((ImageView)rootView.findViewById(R.id.img_level2_2)).setImageResource(icon);

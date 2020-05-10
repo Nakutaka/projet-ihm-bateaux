@@ -8,7 +8,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.project.R;
-import com.example.project.data.model.SettingsModel;
+import com.example.project.model.SettingsModel;
 import com.google.gson.Gson;
 import com.twitter.sdk.android.core.TwitterSession;
 

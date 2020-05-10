@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".main.forms.ReportFormActivity">
 
-    <ImageButton
-        android:layout_gravity="start"
-        android:id="@+id/button_back"
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.Toolbar
+        android:theme="@style/MyToolBar"
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/transparent"
-        android:layout_marginStart="@dimen/big_padding"
-        android:src="@drawable/ic_back"
-        android:contentDescription="@string/txt_back"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@color/purple"
+        app:titleTextAppearance="@style/MyToolBar.Title"/>
 
     <FrameLayout
         android:id="@+id/frame_layout_incident"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/my_toolbar"
         app:layout_constraintBottom_toTopOf="@id/linear_buttons"
-        app:layout_constraintTop_toBottomOf="@id/button_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
     </FrameLayout>

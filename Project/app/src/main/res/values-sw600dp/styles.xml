@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="MyToolBarTablet" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="homeAsUpIndicator">@drawable/ic_back</item>
+        <item name="drawableSize">40dp</item>
+        <item name="title">Default Title</item>
+        <item name="titleTextColor">@color/white</item>
+        <item name="elevation">4dp</item>
+    </style>
+
+    <style name="MyToolBar.TitleTablet" parent="MyToolBar.Title">
+        <item name="android:textSize">40sp</item>
+    </style>
+
     <!-- ACTIVITY_MAIN (carte) -->
     <style name="MyFloatingButtonTablet" parent="MyFloatingButton">
         <item name="android:scaleX">1.5</item>
