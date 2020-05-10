@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
                 Fragment reportDetails = getSupportFragmentManager().findFragmentById(R.id.frame_layout_details);
                 if (reportDetails == null) {
                     hideMapElements(View.VISIBLE);
+                    unHideFloatingButtons();
                 }
             }
         });
@@ -293,6 +294,7 @@ public class MainActivity extends AppCompatActivity {
                     public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
                         hideMapElements(View.GONE);
                         displayFragment(prepareDetailsFragment(overlayItemWeatherReportMap.get(item)));
+                        hideFloatingButtons();
                         return true;
                     }
 
@@ -304,6 +306,18 @@ public class MainActivity extends AppCompatActivity {
         //ugly green box -- not anymore
         reportOverlayItems.setFocusItemsOnTap(true);
         mapFragment.updateMap(reportOverlayItems);
+    }
+
+    private void hideFloatingButtons(){
+        findViewById(R.id.fab_add).setVisibility(View.INVISIBLE);
+        findViewById(R.id.fab_recenter).setVisibility(View.INVISIBLE);
+        findViewById(R.id.img_btn_settings).setVisibility(View.INVISIBLE);
+    }
+
+    private void unHideFloatingButtons(){
+        findViewById(R.id.fab_add).setVisibility(View.VISIBLE);
+        findViewById(R.id.fab_recenter).setVisibility(View.VISIBLE);
+        findViewById(R.id.img_btn_settings).setVisibility(View.VISIBLE);
     }
 
 
