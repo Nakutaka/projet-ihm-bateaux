@@ -94,4 +94,16 @@
 
     <!--    -->
 
+    <!-- FRAGMENT BASIC INCIDENT -->
+    <style name="MyFloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="backgroundTint">@color/blue</item>
+        <item name="android:scaleX">1.6</item>
+        <item name="android:scaleY">1.6</item>
+        <item name="tint">@color/white</item>
+        <item name="elevation">0dp</item>
+        <item name="pressedTranslationZ">0dp</item>
+        <item name="borderWidth">0dp</item>
+        <item name="android:shadowColor">@color/transparent</item>
+    </style>
+
 </resources>

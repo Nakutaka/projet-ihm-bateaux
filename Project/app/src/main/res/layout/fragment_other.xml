@@ -7,7 +7,6 @@
     android:layout_marginTop="10sp"
     android:layout_marginBottom="10sp">
 
-   <!--
     <TextView
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/fab_level_one"
@@ -18,23 +17,17 @@
         android:textAlignment="center"
         android:id="@+id/des_basic"
         android:textSize="30sp"
-        android:text="Specify scale:" />-->
+        android:text="Specify scale:"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_level_one"
+        style="@style/MyFloatingActionButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/fab_level_two"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:backgroundTint="@color/alphaGrey"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTintMode="src_over"
-        android:scaleX="1.6"
-        android:scaleY="1.6"
-        android:tint="@color/white"
-        app:elevation="0dp"
-        app:pressedTranslationZ="0dp" />
+        android:layout_height="wrap_content"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -60,18 +53,13 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_level_two"
+        style="@style/MyFloatingActionButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:backgroundTint="@color/alphaGrey"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scaleX="1.6"
-        android:scaleY="1.6"
-        android:tint="@color/white"
-        app:elevation="0dp"
-        app:pressedTranslationZ="0dp" />
+        android:layout_height="wrap_content"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -97,18 +85,13 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_level_three"
+        style="@style/MyFloatingActionButton"
         app:layout_constraintStart_toEndOf="@id/fab_level_two"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:backgroundTint="@color/alphaGrey"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scaleX="1.6"
-        android:scaleY="1.6"
-        android:tint="@color/white"
-        app:elevation="0dp"
-        app:pressedTranslationZ="0dp" />
+        android:layout_height="wrap_content"/>
 
     <TextView
         android:layout_width="wrap_content"
