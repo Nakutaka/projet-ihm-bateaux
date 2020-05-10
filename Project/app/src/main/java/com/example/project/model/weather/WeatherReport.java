@@ -3,6 +3,7 @@ package com.example.project.model.weather;
 import androidx.room.Embedded;
 import androidx.room.Relation;
 
+import com.example.project.model.weather.local.Incident;
 import com.example.project.model.weather.local.incident.BasicIncident;
 import com.example.project.model.weather.local.incident.MeasuredIncident;
 import com.example.project.model.weather.local.incident.MinIncident;

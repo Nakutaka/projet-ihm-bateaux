@@ -21,17 +21,16 @@ import com.example.project.R;
 import com.example.project.control.WeatherReportViewModel;
 import com.example.project.database.remote.RetrofitInstance;
 import com.example.project.database.remote.WebService;
-import com.example.project.model.unused.Date;
+import com.example.project.main.factory.IncidentFactory_classic;
+import com.example.project.main.forms.ReportFormActivity;
+import com.example.project.main.fragments.MapFragment;
+import com.example.project.main.fragments.ReportDetailsFragment;
 import com.example.project.model.weather.Report;
 import com.example.project.model.weather.WeatherReport;
 import com.example.project.model.weather.local.Incident;
 import com.example.project.model.weather.local.incident.BasicIncident;
 import com.example.project.model.weather.local.incident.MeasuredIncident;
 import com.example.project.model.weather.local.incident.MinIncident;
-import com.example.project.main.factory.IncidentFactory_classic;
-import com.example.project.main.forms.ReportFormActivity;
-import com.example.project.main.fragments.MapFragment;
-import com.example.project.main.fragments.ReportDetailsFragment;
 import com.example.project.model.weather.remote.RemoteIncident;
 import com.example.project.model.weather.remote.RemoteWeatherReport;
 import com.example.project.types.ITypeIncident;
@@ -311,7 +310,6 @@ public class MainActivity extends AppCompatActivity {
     private void hideMapElements(int visibility) {
         findViewById(R.id.gpsLocation).setVisibility(visibility);
         findViewById(R.id.tapped_location).setVisibility(visibility);
-        findViewById(R.id.fab_erase).setVisibility(visibility);
         findViewById(R.id.img_btn_settings).setVisibility(visibility);
     }
 

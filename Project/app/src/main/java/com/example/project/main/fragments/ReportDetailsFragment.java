@@ -13,10 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.project.R;
-import com.example.project.data.model.Date;
-import com.example.project.data.model.WeatherReport;
 import com.example.project.main.MainActivity;
 import com.example.project.main.ReportAdapter;
+import com.example.project.model.unused.Date;
+import com.example.project.model.weather.WeatherReport;
 import com.google.gson.Gson;
 
 import java.util.Calendar;
@@ -45,7 +45,8 @@ public class ReportDetailsFragment extends Fragment {
 
     private void addDetails(WeatherReport report, View view) {
         TextView text = view.findViewById(R.id.txt_date_report);
-        text.setText(String.format("Posted %s ago.", getDateField(report.getReport().getDate())));
+        Date date = new Date(Calendar.getInstance()); // todo -> expected date in reports ...
+        text.setText(String.format("Posted %s ago.", getDateField(date)));
         ReportAdapter reportAdapter = new ReportAdapter(report.getIncidentList(), getContext());
         RecyclerView rvReport = view.findViewById(R.id.rv_report);
         rvReport.setAdapter(reportAdapter);

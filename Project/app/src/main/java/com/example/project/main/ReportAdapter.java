@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.project.R;
-import com.example.project.data.model.Incident;
+import com.example.project.model.weather.local.Incident;
 
 import java.util.List;
 
