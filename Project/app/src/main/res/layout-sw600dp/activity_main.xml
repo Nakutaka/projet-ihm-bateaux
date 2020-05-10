@@ -50,13 +50,6 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         style="@style/MyFloatingButtonTablet"
-        android:id="@+id/fab_erase"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tapped_location"
-        android:src="@drawable/ic_delete_black_24dp"/>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        style="@style/MyFloatingButtonTablet"
         android:id="@+id/img_btn_settings"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tapped_location"

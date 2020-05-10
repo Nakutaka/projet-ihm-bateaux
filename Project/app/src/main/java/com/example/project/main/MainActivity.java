@@ -93,9 +93,9 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(intent, NEW_REPORT_ACTIVITY_REQUEST_CODE);
         });
 
-        findViewById(R.id.fab_erase).setOnClickListener(v -> {
+        /*findViewById(R.id.fab_erase).setOnClickListener(v -> {
             mWeatherReportViewModel.clearWeatherReports();
-        });
+        });*/
 
         findViewById(R.id.fab_recenter).setOnClickListener(v -> {
             mapFragment.recenterButtonAction();
