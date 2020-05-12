@@ -329,12 +329,14 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.fab_add).setVisibility(View.INVISIBLE);
         findViewById(R.id.fab_recenter).setVisibility(View.INVISIBLE);
         findViewById(R.id.img_btn_settings).setVisibility(View.INVISIBLE);
+        findViewById(R.id.fab_sync).setVisibility(View.INVISIBLE);
     }
 
     private void unHideFloatingButtons(){
         findViewById(R.id.fab_add).setVisibility(View.VISIBLE);
         findViewById(R.id.fab_recenter).setVisibility(View.VISIBLE);
         findViewById(R.id.img_btn_settings).setVisibility(View.VISIBLE);
+        findViewById(R.id.fab_sync).setVisibility(View.VISIBLE);
     }
 
 
