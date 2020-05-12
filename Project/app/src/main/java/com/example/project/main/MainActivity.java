@@ -1,15 +1,22 @@
 package com.example.project.main;
 
+import android.Manifest;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
+import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
@@ -65,6 +72,11 @@ public class MainActivity extends AppCompatActivity {
     private FragmentManager fm;
     private List<WeatherReport> reportsNewlyRetrievedFromDB;
     private List<WeatherReport> reportsNotSentYet;
+    /*private final String android_id = "device";/*Settings.Secure.getString(MainActivity.this.getContentResolver(),
+            Settings.Secure.ANDROID_ID);//better than nothing*/
+    private String deviceId;
+    //String device_unique_id;
+    private static final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,6 +84,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         reportsNewlyRetrievedFromDB = new ArrayList<>();
         reportsNotSentYet = new ArrayList<>();
+
+        loadDeviceId();
+
         fm = getSupportFragmentManager();
         fm.addOnBackStackChangedListener(() -> {
             //to handle when the detail fragment is closed
@@ -139,6 +154,43 @@ public class MainActivity extends AppCompatActivity {
             }
         }, delay);//*/
     }
+
+    public void loadDeviceId() {
+        // Check if the READ_PHONE_STATE permission is already available.
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE},
+                        MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
+        } else {
+
+            TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+            //IMEI = mngr.getDeviceId();
+            deviceId = Settings.Secure.getString(this.getContentResolver(),
+                    Settings.Secure.ANDROID_ID);
+            Toast.makeText(this, "device id: " + deviceId, Toast.LENGTH_SHORT).show();
+            // READ_PHONE_STATE permission is already been granted.
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        if (requestCode == MY_PERMISSIONS_REQUEST_READ_PHONE_STATE) {
+
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+//                Toast.makeText(this,"Alredy DONE",Toast.LENGTH_SHORT).show();
+                TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+                //IMEI = mngr.getDeviceId();
+                deviceId = Settings.Secure.getString(this.getContentResolver(),Settings.Secure.ANDROID_ID);
+                Toast.makeText(this, "device id: " + deviceId, Toast.LENGTH_SHORT).show();
+                //textView.setText(device_unique_id+"----"+mngr.getDeviceId());
+
+            } else {
+                Toast.makeText(this,"too bad...",Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 
     void pushLocalReports() {
         /*mWeatherReportViewModel.getWeatherReports().getValue().forEach(r -> {
@@ -232,7 +284,7 @@ public class MainActivity extends AppCompatActivity {
                     WeatherReport weatherReport = new WeatherReport(report, minList, basicList, measuredList);
                     weatherReport.getReport().setRegistered();
                     boolean already = alreadyInDB(report.getId());
-                    if(!report.getDevice().equals("my-device") && !already) {
+                    if(!report.getDevice().equals(deviceId) && !already) {
                         reportsNewlyRetrievedFromDB.add(weatherReport);
                     }
                     //if(alreadyInDB(report.getId())) mWeatherReportViewModel.deleteOldWeatherReport(weatherReport);
@@ -283,7 +335,7 @@ public class MainActivity extends AppCompatActivity {
                 lat = 43.5;
                 lon = 6.9;
             }
-            Report report = new IncidentFactory_classic().getReport(lat, lon);//data.getParcelableExtra(EXTRA_REPORT);
+            Report report = new IncidentFactory_classic().getReport(deviceId, lat, lon);//data.getParcelableExtra(EXTRA_REPORT);
             if(report != null) {
                 List<MinIncident> minList = data.getParcelableArrayListExtra(EXTRA_INCIDENT_MIN_LIST);
                 List<BasicIncident> basicList= data.getParcelableArrayListExtra(EXTRA_INCIDENT_BASIC_LIST);

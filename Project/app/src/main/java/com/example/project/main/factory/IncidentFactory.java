@@ -23,7 +23,7 @@ public abstract class IncidentFactory {
     static final int OTHER = ITypeIncident.OTHER;
 
     static final int nb = 10;
-    public abstract Report getReport(double latitude, double longitude);
+    public abstract Report getReport(String deviceId, double latitude, double longitude);
     public abstract Incident getIncident(int typeIncident, int typeInformation, String value, String unit, String comment);
     protected abstract Incident buildIncident(int typeIncident, int typeInformation, String value, String unit, String comment) throws Throwable;
     protected abstract Info buildInformation(int typeIncident, int typeInformation) throws Throwable;

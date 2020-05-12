@@ -1,5 +1,7 @@
 package com.example.project.main.factory;
 
+import android.telephony.TelephonyManager;
+
 import com.example.project.model.weather.local.incident.BasicIncident;
 import com.example.project.model.weather.local.info.Cloud;
 import com.example.project.model.weather.local.info.Current;
@@ -20,9 +22,9 @@ import com.example.project.model.weather.local.info.Wind;
 public class IncidentFactory_classic extends IncidentFactory {
 
     @Override
-    public Report getReport(double latitude, double longitude) {
-        return new Report("my-device", false, latitude, longitude);//temporary for now
-    }//TODO my-device --> UUID coupled with SSAID or else
+    public Report getReport(String deviceId, double latitude, double longitude) {
+        return new Report(deviceId, false, latitude, longitude);//temporary for now
+    }
 
     @Override
     public Incident getIncident(int typeIncident, int typeInformation, String value, String unit, String comment) {
