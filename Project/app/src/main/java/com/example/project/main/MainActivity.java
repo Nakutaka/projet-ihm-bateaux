@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
 
         mWeatherReportViewModel = new ViewModelProvider(this).get(WeatherReportViewModel.class);
         // Update the cached copy of the reports in the map overlays (method reference style)
-        mWeatherReportViewModel.getWeatherReports().observe(this, this::setReports);
+        mWeatherReportViewModel.getWeatherReports().observe(this, reports -> setReports(reports, true));
 
         findViewById(R.id.img_btn_settings).setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
         });*/
         reportsNotSentYet.forEach(r -> {
             pushOneReport(r, false);
-            setReports(mWeatherReportViewModel.getWeatherReports().getValue());//in case
+            //setReports(mWeatherReportViewModel.getWeatherReports().getValue(), false);//in case
         });
     }
 
@@ -242,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
                 reportsNotSentYet.add(weatherReport);
                 List<WeatherReport> tmp = new ArrayList<>(reportsNotSentYet);
                 tmp.addAll(mWeatherReportViewModel.getWeatherReports().getValue());
-                setReports(tmp);
+                setReports(tmp, false);
             }
         });
     }
@@ -292,7 +292,7 @@ public class MainActivity extends AppCompatActivity {
                 });
                 mWeatherReportViewModel.deleteOldWeatherReports(toInsertInDb);//clean db from != reports before injecting
                 toInsertInDb.forEach(n -> mWeatherReportViewModel.insert(n));
-                setReports(mWeatherReportViewModel.getWeatherReports().getValue());
+                //setReports(mWeatherReportViewModel.getWeatherReports().getValue(), false);
                 //Toast.makeText(MainActivity.this, "Data retrieved!", Toast.LENGTH_SHORT).show();
                 /*((FloatingActionButton) findViewById(R.id.fab_sync)).setImageResource(R.drawable.ic_sync_black_24dp);
                 ((FloatingActionButton) findViewById(R.id.fab_sync)).setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.black, null)));
@@ -352,7 +352,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void setReports(List<WeatherReport> reports) {
+    public void setReports(List<WeatherReport> reports, boolean displayNotifs) {
         List<OverlayItem> reportItems = new ArrayList<>();
         Map<OverlayItem, WeatherReport> overlayItemWeatherReportMap = new HashMap<>();
         reports.forEach(r -> {
@@ -367,25 +367,37 @@ public class MainActivity extends AppCompatActivity {
             reportItems.add(item);
             overlayItemWeatherReportMap.put(item, r);
         });
-        int nb = reportsNewlyRetrievedFromDB.size();
-        if(nb!=0) {
-            Intent intent = new Intent(MainActivity.this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
+        reportsNotSentYet.forEach(r -> {
+            long time = r.getReport().getTime();
+            String txtTime = ""+time;
+            OverlayItem item = new OverlayItem("report", "incidents inside fragment",
+                    new GeoPoint(r.getReport().getLatitude(), r.getReport().getLongitude()));
+            Drawable location_pin = getDrawable(R.drawable.ic_location_on_not_registered_36dp);
+            item.setMarker(location_pin);
+            reportItems.add(item);
+            overlayItemWeatherReportMap.put(item, r);
+        });
+        if(displayNotifs) {
+            int nb = reportsNewlyRetrievedFromDB.size();
+            if(nb!=0) {
+                Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
 
-            String contentTitle = nb + " new report" + (nb==1? "" : "s") + "!";
-            String contentText = "since last sync";
-            NotificationCompat.Builder builder= new NotificationCompat.Builder(MainActivity.this,"chanel1")
-                    .setSmallIcon(R.drawable.ic_directions_boat_black_24dp)
-                    .setContentTitle(contentTitle)
-                    .setContentText(contentText)
-                    .setPriority(NotificationCompat.PRIORITY_HIGH)
-                    .setContentIntent(pendingIntent)
-                    .setAutoCancel(true);
+                String contentTitle = nb + " new report" + (nb==1? "" : "s") + "!";
+                String contentText = "since last sync";
+                NotificationCompat.Builder builder= new NotificationCompat.Builder(MainActivity.this,"chanel1")
+                        .setSmallIcon(R.drawable.ic_directions_boat_black_24dp)
+                        .setContentTitle(contentTitle)
+                        .setContentText(contentText)
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setContentIntent(pendingIntent)
+                        .setAutoCancel(true);
 
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(MainActivity.this);
-            notificationManager.notify(100, builder.build());
-            reportsNewlyRetrievedFromDB.clear();// = new ArrayList<>();//clear
+                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(MainActivity.this);
+                notificationManager.notify(100, builder.build());
+                reportsNewlyRetrievedFromDB.clear();// = new ArrayList<>();//clear
+            }
         }
 
         ReportItemizedOverlay reportOverlayItems = new ReportItemizedOverlay(
