@@ -238,11 +238,15 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<RemoteWeatherReport> call, Throwable t) {
-                if(justClicked) Toast.makeText(MainActivity.this, "No connection... report will be sent later", Toast.LENGTH_SHORT).show();
-                reportsNotSentYet.add(weatherReport);
-                List<WeatherReport> tmp = new ArrayList<>(reportsNotSentYet);
-                tmp.addAll(mWeatherReportViewModel.getWeatherReports().getValue());
-                setReports(tmp, false);
+                if(justClicked) {
+                    Toast.makeText(MainActivity.this, "No connection... report will be sent later", Toast.LENGTH_SHORT).show();
+                    reportsNotSentYet.add(weatherReport);
+                }
+                else {
+                    List<WeatherReport> tmp = new ArrayList<>(reportsNotSentYet);
+                    tmp.addAll(mWeatherReportViewModel.getWeatherReports().getValue());
+                    setReports(tmp, false);
+                }
             }
         });
     }
