@@ -33,15 +33,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!--
-    <FrameLayout
-        android:id="@+id/frame_layout_report_details"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"/>-->
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         style="@style/MyFloatingButtonTablet"
         android:id="@+id/img_btn_settings"
