@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
         retrieveReports();
 
         Handler handler = new Handler();
-        int delay = 2*1000; //milliseconds
+        int delay = 5*1000; //milliseconds
         //every 60secs here
         //every 10min because --> asynchronous app
         handler.postDelayed(new Runnable() {
