@@ -50,17 +50,11 @@
         android:visibility="invisible"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        style="@style/MyFloatingButton"
-        android:scaleX="1.5"
-        android:scaleY="1.5"
+        style="@style/MyFloatingButtonTablet"
         android:id="@+id/fab_sync"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tapped_location"
-        android:src="@drawable/ic_sync_black_24dp"
-        android:tint="@android:color/black"
-        android:backgroundTint= "@color/alphaTransparent"
-        android:elevation="0dp"
-        app:elevation="0dp"/>
+        android:src="@drawable/ic_sync_black_24dp"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         style="@style/MyFloatingButtonTablet"
