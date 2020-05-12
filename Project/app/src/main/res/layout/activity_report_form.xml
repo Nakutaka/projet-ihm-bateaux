@@ -37,14 +37,14 @@
 
     <LinearLayout
         android:id="@+id/bottom_buttons_report"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="bottom|center_horizontal"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
-
+<!--
         <Button
             style="@style/MyButtons"
             android:id="@+id/button_comment"
@@ -53,17 +53,17 @@
             android:layout_weight="1"
             android:backgroundTint="@android:color/tertiary_text_dark"
             android:drawableStart="@drawable/ic_comment"
-            android:text="@string/button_comment"/>
+            android:text="@string/button_comment"/>-->
 
         <Button
             style="@style/MyButtons"
             android:id="@+id/button_send"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="20dp"
+            android:paddingStart="30sp"
+            android:paddingEnd="30sp"
             android:layout_weight="1"
             android:backgroundTint="@color/cherry"
             android:drawableEnd="@drawable/ic_next"
-            android:text="@string/button_send"/>
+            android:text="Next"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -27,7 +27,7 @@
         android:layout_height="match_parent"
         android:gravity="bottom|center_horizontal"
         android:orientation="horizontal">
-
+<!--
         <Button
             style="@style/MyButtonsTablet"
             android:id="@+id/button_comment"
@@ -36,7 +36,7 @@
             android:backgroundTint="@android:color/tertiary_text_dark"
             android:drawableStart="@drawable/ic_comment"
             android:text="@string/button_comment"
-            android:layout_weight="1"/>
+            android:layout_weight="1"/>-->
 
         <Button
             style="@style/MyButtonsTablet"
@@ -45,7 +45,7 @@
             android:layout_marginEnd="10dp"
             android:backgroundTint="@color/cherry"
             android:drawableEnd="@drawable/ic_next"
-            android:text="@string/button_send"
+            android:text="Next"
             android:layout_weight="1"/>
     </LinearLayout>
 

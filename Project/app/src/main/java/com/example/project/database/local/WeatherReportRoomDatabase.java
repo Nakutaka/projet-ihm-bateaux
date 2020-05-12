@@ -48,7 +48,7 @@ public abstract class WeatherReportRoomDatabase extends RoomDatabase {
         public void onCreate(@NonNull SupportSQLiteDatabase db) {//onCreate//onOpen... re-init at each start
             super.onCreate(db);
             //populate();
-            clean();
+            //clean();
         };
     };
 

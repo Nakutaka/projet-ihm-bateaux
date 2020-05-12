@@ -59,7 +59,7 @@ public class ReportFormActivity extends AppCompatActivity implements IButtonClic
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout_report,
                 reportFormFragment).commit();
 
-
+/*
         Intent intent = new Intent(this,MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
@@ -73,7 +73,7 @@ public class ReportFormActivity extends AppCompatActivity implements IButtonClic
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);*/
 
 
         findViewById(R.id.button_send).setOnClickListener(view -> {
@@ -82,7 +82,7 @@ public class ReportFormActivity extends AppCompatActivity implements IButtonClic
             //+ GPS chosen coordinates
 
 
-            notificationManager.notify(100,builder.build());
+            //notificationManager.notify(100,builder.build());
 
             Intent result = new Intent();
             result.putParcelableArrayListExtra(MainActivity.EXTRA_INCIDENT_MIN_LIST,

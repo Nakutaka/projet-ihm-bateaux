@@ -2,13 +2,11 @@ package com.example.project.main;
 
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,7 +33,6 @@ import com.example.project.model.weather.local.incident.MinIncident;
 import com.example.project.model.weather.remote.RemoteIncident;
 import com.example.project.model.weather.remote.RemoteWeatherReport;
 import com.example.project.types.ITypeIncident;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
 import org.osmdroid.config.Configuration;
@@ -46,7 +43,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -59,38 +56,34 @@ public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_INCIDENT_MIN_LIST = "com.example.project.main.activities.INCIDENT_MIN_LIST";
     public static final String EXTRA_INCIDENT_BASIC_LIST = "com.example.project.main.activities.INCIDENT_BASIC_LIST";
     public static final String EXTRA_INCIDENT_MEASURED_LIST = "com.example.project.main.activities.INCIDENT_MEASURED_LIST";
-    public long start;
     private Gson gson = new Gson();
 
-    private int itemIndex;
     private MapFragment mapFragment;
-    private TextView tappedLocation;
-    private FrameLayout reportDetails;//TODO
     ReportDetailsFragment detailsFragment;
     private WeatherReportViewModel mWeatherReportViewModel;
     private WebService service;
     private FragmentManager fm;
+    private List<WeatherReport> reportsNewlyRetrievedFromDB;
+    private List<WeatherReport> reportsNotSentYet;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        reportsNewlyRetrievedFromDB = new ArrayList<>();
+        reportsNotSentYet = new ArrayList<>();
         fm = getSupportFragmentManager();
-        fm.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-            @Override
-            public void onBackStackChanged() {
-                //to handle when the detail fragment is closed
-                Fragment reportDetails = getSupportFragmentManager().findFragmentById(R.id.frame_layout_details);
-                if (reportDetails == null) {
-                    hideMapElements(View.VISIBLE);
-                    unHideFloatingButtons();
-                }
+        fm.addOnBackStackChangedListener(() -> {
+            //to handle when the detail fragment is closed
+            detailsFragment = (ReportDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.frame_layout_details);
+            if (detailsFragment == null) {
+                hideMapElements(View.VISIBLE);
+                unHideFloatingButtons();
             }
         });
         Configuration.getInstance().load(getApplicationContext(),
                 PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
 
-        itemIndex = -1;
         mapFragment = (MapFragment) fm.findFragmentById(R.id.frame_layout_map);
         if (mapFragment==null){
             mapFragment = new MapFragment();
@@ -99,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
                     addToBackStack(null).
                     commit();
         }
-
 
         mWeatherReportViewModel = new ViewModelProvider(this).get(WeatherReportViewModel.class);
         // Update the cached copy of the reports in the map overlays (method reference style)
@@ -115,27 +107,53 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(intent, NEW_REPORT_ACTIVITY_REQUEST_CODE);
         });
 
-        /*findViewById(R.id.fab_erase).setOnClickListener(v -> {
-            mWeatherReportViewModel.clearWeatherReports();
-        });*/
-
         findViewById(R.id.fab_recenter).setOnClickListener(v -> {
             mapFragment.recenterButtonAction();
         });
+        //TODO --> switch comment/uncomment after init (clean db)
+        //TODO --> comment here
+        //mWeatherReportViewModel.clearAllTables();
 
-        tappedLocation = findViewById(R.id.tapped_location);
-        reportDetails = findViewById(R.id.frame_layout_report_details);
-
+        //TODO --> uncomment here
+        ///*
         service = RetrofitInstance.getInstance().create(WebService.class);
+        retrieveReports();
 
-        retrieveReports(false);
+        Handler handler = new Handler();
+        int delay = 2*1000; //milliseconds
+        //every 60secs here
+        //every 10min because --> asynchronous app
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                handler.postDelayed(this, delay);
+                retrieveReports();
+            }
+        }, delay);
 
-        findViewById(R.id.fab_sync).setOnClickListener((v -> {
-            retrieveReports(true);
-        }));
+        Handler handler2 = new Handler();
+        int delay2 = 10*1000; //milliseconds
+        handler2.postDelayed(new Runnable() {
+            public void run() {
+                handler2.postDelayed(this, delay2);
+                pushLocalReports();
+            }
+        }, delay);//*/
     }
 
-    void pushOneReport(WeatherReport weatherReport) {
+    void pushLocalReports() {
+        /*mWeatherReportViewModel.getWeatherReports().getValue().forEach(r -> {
+            if(!r.getReport().getRegistered()) {
+                pushOneReport(r, false);
+                setReports(mWeatherReportViewModel.getWeatherReports().getValue());//in case
+            }
+        });*/
+        reportsNotSentYet.forEach(r -> {
+            pushOneReport(r, false);
+            setReports(mWeatherReportViewModel.getWeatherReports().getValue());//in case
+        });
+    }
+
+    void pushOneReport(WeatherReport weatherReport, boolean justClicked) {
         Report report = weatherReport.getReport();
         List<RemoteIncident> incidents = new ArrayList<>();
         weatherReport.getMinIncidentList().forEach(i -> {
@@ -153,30 +171,46 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call<RemoteWeatherReport> call, Response<RemoteWeatherReport> response) {
+                if(!justClicked) {
+                    int sizeB = reportsNotSentYet.size();
+                    reportsNotSentYet.remove(weatherReport);
+                    /*Toast.makeText(MainActivity.this, "notSentSize = " + sizeB + " - after: " +
+                            reportsNotSentYet.size(), Toast.LENGTH_SHORT).show();*/
+                }
                 Toast.makeText(MainActivity.this, "Report sent!", Toast.LENGTH_SHORT).show();
-                retrieveReports(false);//not pretty but for now voila...
+                //mWeatherReportViewModel.deleteOldWeatherReport(weatherReport);//rm
+                //weatherReport.getReport().setRegistered();//set
+                //mWeatherReportViewModel.insert(weatherReport);//reinsert --> registered this time!
+                //retrieveReports();
             }
 
             @Override
             public void onFailure(Call<RemoteWeatherReport> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "Report not sent...", Toast.LENGTH_SHORT).show();
+                if(justClicked) Toast.makeText(MainActivity.this, "No connection... report will be sent later", Toast.LENGTH_SHORT).show();
+                reportsNotSentYet.add(weatherReport);
+                List<WeatherReport> tmp = new ArrayList<>(reportsNotSentYet);
+                tmp.addAll(mWeatherReportViewModel.getWeatherReports().getValue());
+                setReports(tmp);
             }
         });
     }
 
-    void retrieveReports(boolean manualSync) {
+    void retrieveReports() {
         Call<List<RemoteWeatherReport>> call = service.getAllReports();
         call.enqueue(new Callback<List<RemoteWeatherReport>>() {
             @Override
             public void onResponse(Call<List<RemoteWeatherReport>> call, Response<List<RemoteWeatherReport>> response) {
-                //db
-                if (manualSync)
+                /*if (manualSync)
                     Toast.makeText(MainActivity.this, "Sync...", Toast.LENGTH_SHORT).show();
+                */
+                //Toast.makeText(MainActivity.this, "Sync...", Toast.LENGTH_SHORT).show();
                 List<RemoteWeatherReport> reports = response.body();
                 if (reports == null) return;
+                List<WeatherReport> toInsertInDb = new ArrayList<>();
                 reports.forEach(r -> {
                     Report report = r.getReport();
-                    if (report == null) return;
+                    if (report == null || report.getId() == null) return;
+                    report.setRegistered();
                     List<MinIncident> minList = new ArrayList<>();
                     List<BasicIncident> basicList = new ArrayList<>();
                     List<MeasuredIncident> measuredList = new ArrayList<>();
@@ -196,20 +230,43 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                     WeatherReport weatherReport = new WeatherReport(report, minList, basicList, measuredList);
-                    mWeatherReportViewModel.insert(weatherReport);
+                    weatherReport.getReport().setRegistered();
+                    boolean already = alreadyInDB(report.getId());
+                    if(!report.getDevice().equals("my-device") && !already) {
+                        reportsNewlyRetrievedFromDB.add(weatherReport);
+                    }
+                    //if(alreadyInDB(report.getId())) mWeatherReportViewModel.deleteOldWeatherReport(weatherReport);
+                    toInsertInDb.add(weatherReport);
                 });
+                mWeatherReportViewModel.deleteOldWeatherReports(toInsertInDb);//clean db from != reports before injecting
+                toInsertInDb.forEach(n -> mWeatherReportViewModel.insert(n));
+                setReports(mWeatherReportViewModel.getWeatherReports().getValue());
                 //Toast.makeText(MainActivity.this, "Data retrieved!", Toast.LENGTH_SHORT).show();
-                ((FloatingActionButton) findViewById(R.id.fab_sync)).setImageResource(R.drawable.ic_sync_black_24dp);
+                /*((FloatingActionButton) findViewById(R.id.fab_sync)).setImageResource(R.drawable.ic_sync_black_24dp);
                 ((FloatingActionButton) findViewById(R.id.fab_sync)).setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.black, null)));
+            */
             }
 
             @Override
             public void onFailure(Call<List<RemoteWeatherReport>> call, Throwable t) {
-                ((FloatingActionButton) findViewById(R.id.fab_sync)).setImageResource(R.drawable.ic_sync_problem_black_24dp);
+                /*((FloatingActionButton) findViewById(R.id.fab_sync)).setImageResource(R.drawable.ic_sync_problem_black_24dp);
                 ((FloatingActionButton) findViewById(R.id.fab_sync)).setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.red, null)));
-                if (manualSync) Toast.makeText(MainActivity.this, "No connection!...", Toast.LENGTH_SHORT).show();
+                */
+                //if (manualSync) Toast.makeText(MainActivity.this, "No connection!...", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    boolean alreadyInDB(String id) {
+        AtomicBoolean res = new AtomicBoolean(false);
+        mWeatherReportViewModel.getWeatherReports().getValue().forEach(r -> {
+            //Toast.makeText(this, "foreach", Toast.LENGTH_SHORT).show();
+            if(r.getReport().getId().compareTo(id) == 0) {
+                //Toast.makeText(this, "alreadyInDb", Toast.LENGTH_SHORT).show();
+                res.set(true);
+            }
+        });
+        return res.get();
     }
 
     @Override
@@ -234,82 +291,57 @@ public class MainActivity extends AppCompatActivity {
                 if(minList!=null && basicList!=null && measuredList!=null &&
                         (!minList.isEmpty() || !basicList.isEmpty() || !measuredList.isEmpty())) {
                     WeatherReport weatherReport = new WeatherReport(report, minList, basicList, measuredList);
-                    pushOneReport(weatherReport);
-                    //then --> linked with db, but for now only one or the other
-                    //mWeatherReportViewModel.insert(weatherReport);
-                    Toast.makeText(
-                            getApplicationContext(),
-                            "Report added!",
-                            Toast.LENGTH_SHORT).show();
-                    return;
+                    //not int db because bug...
+                    // --> so if no success then added to tmp list and continuously sent to server until OK
+                    //mWeatherReportViewModel.insert(weatherReport);//db first
+                    pushOneReport(weatherReport, true);//then server
                 }
             }
         }
-        Toast.makeText(
-                getApplicationContext(),
-                "No report",
-                Toast.LENGTH_SHORT).show();
-        //setReports triggered automatically (observe)
     }
 
-    //TODO clean (use ReportWithIncidents instead of ReportWithIncidentsDB)
-    //TODO + continue (trigger Fragment instead of ugly green box)
     public void setReports(List<WeatherReport> reports) {
         List<OverlayItem> reportItems = new ArrayList<>();
         Map<OverlayItem, WeatherReport> overlayItemWeatherReportMap = new HashMap<>();
         reports.forEach(r -> {
-            //Date d = r.getReport().getDate();
             long time = r.getReport().getTime();
-            //String time = d.getFullHour();
             String txtTime = ""+time;
-            AtomicReference<String> typeCom = new AtomicReference<>("");
-            r.getMinIncidentList().forEach(i -> typeCom.updateAndGet(v -> v + "\n" + i.getNum()
-                    + ": " + i.getInfo().getName() + " - " + i.getInfo().getIcon()
-                    + " - " + i.getComment()));
-            r.getBasicIncidentList().forEach(i -> typeCom.updateAndGet(v -> v + "\n" + i.getNum()
-                    + ": " + i.getInfo().getName() + " - " + i.getInfo().getIcon()
-                    + " - " + i.getLevel() + " - " + i.getComment()));
-            r.getMeasuredIncidentList().forEach(i -> typeCom.updateAndGet(v -> v + "\n" + i.getNum()
-                    + ": " + i.getInfo().getName() + " - " + i.getInfo().getIcon()
-                    + " - " + i.getValue() + i.getUnit() + " - " + i.getComment()));
-            OverlayItem item = new OverlayItem("Report: " + time + " - " + r.getMinIncidentList().size() +
-                    r.getBasicIncidentList().size() + r.getMeasuredIncidentList().size()
-                    + "incident(s)", "" + typeCom,
+            OverlayItem item = new OverlayItem("report", "incidents inside fragment",
                     new GeoPoint(r.getReport().getLatitude(), r.getReport().getLongitude()));
-            Drawable drawable = getDrawable(R.drawable.ic_place_black_36dp);
-            item.setMarker(drawable);
+            Drawable location_pin;
+            if(!r.getReport().getRegistered()) location_pin = getDrawable(R.drawable.ic_location_on_not_registered_36dp);
+            else location_pin = getDrawable(R.drawable.ic_location_on_registered_36dp);
+            item.setMarker(location_pin);
             reportItems.add(item);
             overlayItemWeatherReportMap.put(item, r);
         });
-
-        int size = reports.size();
-        if(size > 0) {
-
-            Intent intent = new Intent(this, MainActivity.class);
+        int nb = reportsNewlyRetrievedFromDB.size();
+        if(nb!=0) {
+            Intent intent = new Intent(MainActivity.this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+            PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
 
-            WeatherReport lastOne = reports.get(size-1);
-            Report report = lastOne.getReport();
-            String txtTime = "" + report.getTime();
-            NotificationCompat.Builder builder= new NotificationCompat.Builder(this,"chanel1")
-                    .setSmallIcon(R.drawable.ic_notifications)
-                    .setContentTitle("New notification")
-                    .setContentText("Report :" + txtTime)
+            String contentTitle = nb + " new report" + (nb==1? "" : "s") + "!";
+            String contentText = "since last sync";
+            NotificationCompat.Builder builder= new NotificationCompat.Builder(MainActivity.this,"chanel1")
+                    .setSmallIcon(R.drawable.ic_directions_boat_black_24dp)
+                    .setContentTitle(contentTitle)
+                    .setContentText(contentText)
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .setContentIntent(pendingIntent)
                     .setAutoCancel(true);
 
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(MainActivity.this);
             notificationManager.notify(100, builder.build());
+            reportsNewlyRetrievedFromDB.clear();// = new ArrayList<>();//clear
         }
 
-        //link to trigger Fragment ReportDetailsFragment
         ReportItemizedOverlay reportOverlayItems = new ReportItemizedOverlay(
                 reportItems, getDrawable(R.drawable.direction_arrow), new ReportItemizedOverlay.OnItemGestureListener<OverlayItem>() {
                     @Override
                     public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
                         hideMapElements(View.GONE);
+                        //link to fragment
                         displayFragment(prepareDetailsFragment(overlayItemWeatherReportMap.get(item)));
                         hideFloatingButtons();
                         return true;
@@ -317,11 +349,9 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public boolean onItemLongPress(final int index, final OverlayItem item) {
-                        return false;//true??
+                        return true;//true??
                     }
         }, getApplicationContext());
-        //ugly green box -- not anymore
-        reportOverlayItems.setFocusItemsOnTap(true);
         mapFragment.updateMap(reportOverlayItems);
     }
 
@@ -340,7 +370,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void hideMapElements(int visibility) {
         findViewById(R.id.gpsLocation).setVisibility(visibility);
-        findViewById(R.id.tapped_location).setVisibility(visibility);
         findViewById(R.id.img_btn_settings).setVisibility(visibility);
     }
 

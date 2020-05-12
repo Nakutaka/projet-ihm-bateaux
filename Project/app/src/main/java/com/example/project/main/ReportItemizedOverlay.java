@@ -19,7 +19,6 @@ public class ReportItemizedOverlay extends ItemizedIconOverlay {
         super.setDrawFocusedItem(b);
     }
 
-
     @Override
     protected boolean onTap(int index) {
         // TODO Auto-generated method stub

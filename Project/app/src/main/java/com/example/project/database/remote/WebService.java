@@ -14,14 +14,16 @@ public interface WebService {
 
     final static String boxPath = "/box_e997ba1f18a999988402";
 
-    @GET(boxPath+"/reports")
+    final static String collectionPath = "/new";//"/reports";
+
+    @GET(boxPath + collectionPath)
     Call<List<RemoteWeatherReport>> getAllReports();
 
     @Headers("content-type: application/json")
-    @POST(boxPath+"/reports")
+    @POST(boxPath + collectionPath)
     Call<RemoteWeatherReport> postReport(@Body RemoteWeatherReport report);
 
     @Headers("content-type: application/json")
-    @POST(boxPath+"/reports")
+    @POST(boxPath + collectionPath)
     Call<List<RemoteWeatherReport>> postUsers(@Body List<RemoteWeatherReport> reports);
 }

@@ -46,6 +46,9 @@ public interface WeatherReportDao {
    @Query("DELETE FROM Report")
    void deleteAllReports();
 
+   @Query("DELETE FROM Report WHERE id = :id")
+   void deleteReport(String id);
+
    /*::::::::::::::::::::::::::::::::::::::::incidents::::::::::::::::::::::::::::::::::::::::*/
 
    @Insert(onConflict = OnConflictStrategy.IGNORE)

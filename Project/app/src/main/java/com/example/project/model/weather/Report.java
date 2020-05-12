@@ -90,6 +90,8 @@ public class Report {
         return device;
     }
 
+    public boolean getRegistered() { return registered; }
+
     public double getLatitude() {
         return latitude;
     }
@@ -120,6 +122,10 @@ public class Report {
 
     public void setTime(long time) {
         this.time = time;
+    }
+
+    public void setRegistered() {
+        registered = true;
     }
 
     /*public Date getDate() {

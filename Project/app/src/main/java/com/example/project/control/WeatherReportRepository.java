@@ -6,7 +6,11 @@ import androidx.lifecycle.LiveData;
 
 import com.example.project.database.local.WeatherReportDao;
 import com.example.project.database.local.WeatherReportRoomDatabase;
+import com.example.project.model.weather.Report;
 import com.example.project.model.weather.WeatherReport;
+import com.example.project.model.weather.local.incident.BasicIncident;
+import com.example.project.model.weather.local.incident.MeasuredIncident;
+import com.example.project.model.weather.local.incident.MinIncident;
 
 import java.util.List;
 
@@ -15,12 +19,13 @@ class WeatherReportRepository {
     private WeatherReportDao mWeatherReportDao;
     private LiveData<List<WeatherReport>> mAllReports;
     private LiveData<List<WeatherReport>> mLastReports;
+    private WeatherReportRoomDatabase db;
 
     private Application app;
 
     WeatherReportRepository(Application application) {
         app = application;
-        WeatherReportRoomDatabase db = WeatherReportRoomDatabase.getDatabase(application);
+        db = WeatherReportRoomDatabase.getDatabase(application);
         mWeatherReportDao = db.weatherReportDao();
         mAllReports = mWeatherReportDao.getAllReportsWithIncidents();
         mLastReports = mWeatherReportDao.getTenLastReportsWithIncidents();
@@ -59,5 +64,23 @@ class WeatherReportRepository {
             mWeatherReportDao.deleteAllReports();
         });
         //WeatherReportRoomDatabase.populate();//repopulate
+    }
+
+    public void clearAllTables() {
+        WeatherReportRoomDatabase.databaseWriteExecutor.execute(() -> {
+            db.clearAllTables();
+        });
+    }
+
+    public void deleteWeatherReports(List<WeatherReport> reports) {
+        for (WeatherReport report : reports) {
+            Report r = report.getReport();
+            WeatherReportRoomDatabase.databaseWriteExecutor.execute(() -> {
+                mWeatherReportDao.deleteReport(r.getId());
+                mWeatherReportDao.deleteAllMinIncidents(r.getId());
+                mWeatherReportDao.deleteAllBasicIncidents(r.getId());
+                mWeatherReportDao.deleteAllMeasuredIncidents(r.getId());
+            });
+        }
     }
 }
