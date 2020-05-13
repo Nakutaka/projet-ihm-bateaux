@@ -24,6 +24,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.project.R;
+import com.example.project.control.SettingsViewModel;
 import com.example.project.control.WeatherReportViewModel;
 import com.example.project.database.remote.RetrofitInstance;
 import com.example.project.database.remote.WebService;
@@ -31,6 +32,7 @@ import com.example.project.main.factory.IncidentFactory_classic;
 import com.example.project.main.forms.ReportFormActivity;
 import com.example.project.main.fragments.MapFragment;
 import com.example.project.main.fragments.ReportDetailsFragment;
+import com.example.project.model.unused.Date;
 import com.example.project.model.weather.Report;
 import com.example.project.model.weather.WeatherReport;
 import com.example.project.model.weather.local.Incident;
@@ -47,6 +49,7 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.OverlayItem;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_INCIDENT_BASIC_LIST = "com.example.project.main.activities.INCIDENT_BASIC_LIST";
     public static final String EXTRA_INCIDENT_MEASURED_LIST = "com.example.project.main.activities.INCIDENT_MEASURED_LIST";
     private Gson gson = new Gson();
-
+    private SettingsViewModel svm;
     private MapFragment mapFragment;
     ReportDetailsFragment detailsFragment;
     private WeatherReportViewModel mWeatherReportViewModel;
@@ -75,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
     /*private final String android_id = "device";/*Settings.Secure.getString(MainActivity.this.getContentResolver(),
             Settings.Secure.ANDROID_ID);//better than nothing*/
     private String deviceId;
+    private boolean displayNotifs;
     //String device_unique_id;
     private static final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 0;
 
@@ -82,6 +86,11 @@ public class MainActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        svm = new SettingsViewModel(getApplication());
+        svm.getSettingsModelMutableLiveData().observe(this, newSettings -> {
+            displayCoordinates(newSettings.isDisplayCoordinatesOn());
+            displayNotifs = newSettings.isIncidentNotificationOn();
+        });
         reportsNewlyRetrievedFromDB = new ArrayList<>();
         reportsNotSentYet = new ArrayList<>();
 
@@ -108,9 +117,10 @@ public class MainActivity extends AppCompatActivity {
                     commit();
         }
 
+
         mWeatherReportViewModel = new ViewModelProvider(this).get(WeatherReportViewModel.class);
         // Update the cached copy of the reports in the map overlays (method reference style)
-        mWeatherReportViewModel.getWeatherReports().observe(this, reports -> setReports(reports, true));
+        mWeatherReportViewModel.getWeatherReports().observe(this, reports -> setReports(reports, displayNotifs));
 
         findViewById(R.id.img_btn_settings).setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
@@ -156,12 +166,18 @@ public class MainActivity extends AppCompatActivity {
         }, delay);//*/
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        svm.updateData();
+    }
+
     public void loadDeviceId() {
         // Check if the READ_PHONE_STATE permission is already available.
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
                 != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE},
-                        MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE},
+                    MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
         } else {
 
             TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
@@ -174,6 +190,7 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == MY_PERMISSIONS_REQUEST_READ_PHONE_STATE) {
 
@@ -380,6 +397,40 @@ public class MainActivity extends AppCompatActivity {
             reportItems.add(item);
             overlayItemWeatherReportMap.put(item, r);
         });
+
+
+        int size = reports.size();
+
+
+        if(size > 0) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(reports.get(size - 1).getReport().getTime());
+            Date date = new Date(calendar);
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+
+
+            WeatherReport lastOne = reports.get(size-1);
+            Report report = lastOne.getReport();
+            NotificationCompat.Builder builder= new NotificationCompat.Builder(this,"chanel1")
+                    .setSmallIcon(R.drawable.ic_directions_boat_black_24dp)
+                    .setContentTitle("Last report")
+                    .setContentText("Report :" +date.getFullHour())
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true)
+                    .setStyle(new NotificationCompat.BigTextStyle()
+                    .bigText("Report :" +date.getFullHour()
+                            +"\nlatitude :"+report.getLatitude()
+                            +"\nlongitude :"+report.getLongitude()));
+
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+            if (displayNotifs)
+                notificationManager.notify(100, builder.build());
+        }
+
         if(displayNotifs) {
             int nb = reportsNewlyRetrievedFromDB.size();
             if(nb!=0) {
@@ -405,19 +456,19 @@ public class MainActivity extends AppCompatActivity {
 
         ReportItemizedOverlay reportOverlayItems = new ReportItemizedOverlay(
                 reportItems, getDrawable(R.drawable.direction_arrow), new ReportItemizedOverlay.OnItemGestureListener<OverlayItem>() {
-                    @Override
-                    public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
-                        hideMapElements(View.GONE);
-                        //link to fragment
-                        displayFragment(prepareDetailsFragment(overlayItemWeatherReportMap.get(item)));
-                        hideFloatingButtons();
-                        return true;
-                    }
+            @Override
+            public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
+                hideMapElements(View.GONE);
+                //link to fragment
+                displayFragment(prepareDetailsFragment(overlayItemWeatherReportMap.get(item)));
+                hideFloatingButtons();
+                return true;
+            }
 
-                    @Override
-                    public boolean onItemLongPress(final int index, final OverlayItem item) {
-                        return true;//true??
-                    }
+            @Override
+            public boolean onItemLongPress(final int index, final OverlayItem item) {
+                return true;//true??
+            }
         }, getApplicationContext());
         mapFragment.updateMap(reportOverlayItems);
     }
@@ -455,5 +506,13 @@ public class MainActivity extends AppCompatActivity {
         fragment.setArguments(bundle);
         return fragment;
     }
+
+    private void displayCoordinates(boolean value) {
+        if (value) {
+            findViewById(R.id.gpsLocation).setVisibility(View.VISIBLE);
+        } else
+            findViewById(R.id.gpsLocation).setVisibility(View.INVISIBLE);
+    }
+
 
 }
