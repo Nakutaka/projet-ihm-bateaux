@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
     /*private final String android_id = "device";/*Settings.Secure.getString(MainActivity.this.getContentResolver(),
             Settings.Secure.ANDROID_ID);//better than nothing*/
     private String deviceId;
+    private boolean displayNotifs;
     //String device_unique_id;
     private static final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 0;
 
@@ -88,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         svm = new SettingsViewModel(getApplication());
         svm.getSettingsModelMutableLiveData().observe(this, newSettings -> {
             displayCoordinates(newSettings.isDisplayCoordinatesOn());
+            displayNotifs = newSettings.isIncidentNotificationOn();
         });
         reportsNewlyRetrievedFromDB = new ArrayList<>();
         reportsNotSentYet = new ArrayList<>();
@@ -118,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
         mWeatherReportViewModel = new ViewModelProvider(this).get(WeatherReportViewModel.class);
         // Update the cached copy of the reports in the map overlays (method reference style)
-        mWeatherReportViewModel.getWeatherReports().observe(this, reports -> setReports(reports, true));
+        mWeatherReportViewModel.getWeatherReports().observe(this, reports -> setReports(reports, displayNotifs));
 
         findViewById(R.id.img_btn_settings).setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
@@ -427,7 +429,8 @@ public class MainActivity extends AppCompatActivity {
                             +"\nlongitude :"+report.getLongitude()));
 
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-            notificationManager.notify(100, builder.build());
+            if (displayNotifs)
+                notificationManager.notify(100, builder.build());
         }
 
         if(displayNotifs) {
