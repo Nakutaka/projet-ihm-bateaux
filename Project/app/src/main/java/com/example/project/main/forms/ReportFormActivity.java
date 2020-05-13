@@ -3,6 +3,7 @@ package com.example.project.main.forms;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -59,8 +60,8 @@ public class ReportFormActivity extends AppCompatActivity implements IButtonClic
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout_report,
                 reportFormFragment).commit();
 
-/*
-        Intent intent = new Intent(this,MainActivity.class);
+
+        /*Intent intent = new Intent(this,MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 

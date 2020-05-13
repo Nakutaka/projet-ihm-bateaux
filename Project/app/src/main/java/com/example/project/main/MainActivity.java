@@ -32,6 +32,7 @@ import com.example.project.main.factory.IncidentFactory_classic;
 import com.example.project.main.forms.ReportFormActivity;
 import com.example.project.main.fragments.MapFragment;
 import com.example.project.main.fragments.ReportDetailsFragment;
+import com.example.project.model.unused.Date;
 import com.example.project.model.weather.Report;
 import com.example.project.model.weather.WeatherReport;
 import com.example.project.model.weather.local.Incident;
@@ -48,6 +49,7 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.OverlayItem;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -393,6 +395,41 @@ public class MainActivity extends AppCompatActivity {
             reportItems.add(item);
             overlayItemWeatherReportMap.put(item, r);
         });
+
+
+
+        int size = reports.size();
+
+        Calendar calendar= Calendar.getInstance();
+        calendar.setTimeInMillis(reports.get(size-1).getReport().getTime());
+        Date date = new Date(calendar);
+
+        if(size > 0) {
+
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+
+
+            WeatherReport lastOne = reports.get(size-1);
+            Report report = lastOne.getReport();
+            NotificationCompat.Builder builder= new NotificationCompat.Builder(this,"chanel1")
+                    .setSmallIcon(R.drawable.ic_directions_boat_black_24dp)
+                    .setContentTitle("Last report")
+                    .setContentText("Report :" +date.getFullHour())
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true)
+                    .setStyle(new NotificationCompat.BigTextStyle()
+                    .bigText("Report :" +date.getFullHour()
+                            +"\nlatitude :"+report.getLatitude()
+                            +"\nlongitude :"+report.getLongitude()));
+
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+            notificationManager.notify(100, builder.build());
+        }
+
         if(displayNotifs) {
             int nb = reportsNewlyRetrievedFromDB.size();
             if(nb!=0) {
