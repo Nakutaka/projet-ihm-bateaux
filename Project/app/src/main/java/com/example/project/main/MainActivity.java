@@ -189,6 +189,7 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == MY_PERMISSIONS_REQUEST_READ_PHONE_STATE) {
 
