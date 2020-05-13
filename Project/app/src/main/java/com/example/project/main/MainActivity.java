@@ -399,15 +399,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
         int size = reports.size();
 
-        Calendar calendar= Calendar.getInstance();
-        calendar.setTimeInMillis(reports.get(size-1).getReport().getTime());
-        Date date = new Date(calendar);
 
         if(size > 0) {
-
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(reports.get(size - 1).getReport().getTime());
+            Date date = new Date(calendar);
             Intent intent = new Intent(this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
