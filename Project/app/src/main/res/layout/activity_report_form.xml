@@ -1,69 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".main.MainActivity">
-<!--<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">-->
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent">
 
     <androidx.appcompat.widget.Toolbar
-        app:titleTextAppearance="@style/MyToolBar.Title"
-        app:title="Incident Report"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:id="@+id/my_toolbar"
         android:theme="@style/MyToolBar"
+        app:titleTextAppearance="@style/MyToolBar.Title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/purple" />
+        android:background="@color/purple"
+        app:title="Incident Report"/>
 
     <FrameLayout
         android:id="@+id/frame_layout_report"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/my_toolbar"
-        app:layout_constraintBottom_toTopOf="@id/bottom_buttons_report"/>
+        android:layout_marginTop="@dimen/big_padding" />
+
 
     <LinearLayout
-        android:id="@+id/bottom_buttons_report"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:gravity="bottom|center_horizontal"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
-<!--
-        <Button
-            style="@style/MyButtons"
-            android:id="@+id/button_comment"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="10dp"
-            android:layout_weight="1"
-            android:backgroundTint="@android:color/tertiary_text_dark"
-            android:drawableStart="@drawable/ic_comment"
-            android:text="@string/button_comment"/>-->
+        android:orientation="horizontal">
+        <!--
+                <Button
+                    style="@style/MyButtonsTablet"
+                    android:id="@+id/button_comment"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="10dp"
+                    android:backgroundTint="@android:color/tertiary_text_dark"
+                    android:drawableStart="@drawable/ic_comment"
+                    android:text="@string/button_comment"
+                    android:layout_weight="1"/>-->
 
         <Button
             style="@style/MyButtons"
             android:id="@+id/button_send"
-            android:paddingStart="30sp"
-            android:paddingEnd="30sp"
-            android:layout_weight="1"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="10dp"
             android:backgroundTint="@color/cherry"
             android:drawableEnd="@drawable/ic_next"
-            android:text="Next"/>
+            android:text="Next"
+            android:layout_weight="1"/>
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

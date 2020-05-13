@@ -12,7 +12,7 @@ import retrofit2.http.POST;
 
 public interface WebService {
 
-    final static String boxPath = "/box_e997ba1f18a999988402";
+    final static String boxPath = "/box_e997ba1f18a999988402?limit=100";
 
     final static String collectionPath = "/new";//"/reports";
 

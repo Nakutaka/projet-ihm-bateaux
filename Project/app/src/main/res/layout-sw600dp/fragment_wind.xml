@@ -28,6 +28,7 @@
             android:layout_marginStart="50sp"/>
 
         <NumberPicker
+            style="@style/MyNumberPickerTheme"
             android:id="@+id/number_picker_wind"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
