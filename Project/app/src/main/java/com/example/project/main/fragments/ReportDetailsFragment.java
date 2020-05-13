@@ -107,7 +107,8 @@ public class ReportDetailsFragment extends Fragment {
         }
         for (MeasuredIncident m : wp.getMeasuredIncidentList()) {
             sb.append(m.getInfo().getName()).append(" ").append(m.getComment());
-            sb.append("value").append(m.getValue()).append(" ").append(m.getUnit());
+            if (!m.getValue().equals("value") && !m.getUnit().equals("unit"))
+                sb.append("value").append(m.getValue()).append(" ").append(m.getUnit());
             sb.append("\n");
         }
         return new Tweet(sb.toString(), "SeaReports", "Polytech");
