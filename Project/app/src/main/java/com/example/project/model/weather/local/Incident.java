@@ -70,4 +70,6 @@ public abstract class Incident implements Parcelable {
     public String getValue() {
         return value;
     }
+
+    public abstract String getOtherInfo();
 }

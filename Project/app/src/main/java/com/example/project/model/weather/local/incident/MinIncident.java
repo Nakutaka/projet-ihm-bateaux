@@ -58,4 +58,9 @@ public class MinIncident extends Incident implements Parcelable {
     public String getComment() {
         return comment;
     }
+
+    @Override
+    public String getOtherInfo() {
+        return null;
+    }
 }

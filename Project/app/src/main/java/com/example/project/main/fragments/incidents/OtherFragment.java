@@ -10,15 +10,46 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.project.R;
+import com.example.project.types.ITypeIncident;
 
 public class OtherFragment extends Fragment {
 
+    private IIncidentActivityFragment mCallback;
     public OtherFragment() {}
+    public OtherFragment(IIncidentActivityFragment activity){
+        mCallback = activity;
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_other,container,false);
+        rootView.findViewById(R.id.fab_level_one).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                update(ITypeIncident.LEVEL_ONE);
+            }
+        });
+
+        rootView.findViewById(R.id.fab_level_two).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                update(ITypeIncident.LEVEL_TWO);
+            }
+        });
+
+        rootView.findViewById(R.id.fab_level_three).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                update(ITypeIncident.LEVEL_THREE);
+            }
+        });
         return rootView;
+
+
+    }
+
+    private void update(String type){
+        mCallback.onIncidentUpdated(type, null);
     }
 }

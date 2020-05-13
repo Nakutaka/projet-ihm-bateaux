@@ -66,6 +66,11 @@ public class BasicIncident extends Incident implements Parcelable {
         return level;
     }
 
+    @Override
+    public String getOtherInfo() {
+        return getLevel();
+    }
+
     public String getComment() {
         return comment;
     }

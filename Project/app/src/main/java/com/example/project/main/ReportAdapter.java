@@ -44,14 +44,16 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ViewHolder
         else tv_name.setVisibility(View.GONE);
 
         TextView tv_value = viewHolder.tv_value;
-        if (incident.getValue() != null)
-            tv_value.setText(String.format("Information:  %s", incident.getValue()));
+        if (incident.getOtherInfo() != null)
+            tv_value.setText(String.format("Information:  %s", incident.getOtherInfo()));
         else tv_value.setVisibility(View.GONE);
 
         TextView tv_comment = viewHolder.tv_commentIncident;
         if (incident.getComment() != null)
             tv_comment.setText(String.format("Comment: %s", incident.getComment()));
         else tv_comment.setVisibility(View.GONE);
+
+
 
         ImageView iv_icon = viewHolder.iv_icon;
         if (incident.getInfo().getIcon() != null) {

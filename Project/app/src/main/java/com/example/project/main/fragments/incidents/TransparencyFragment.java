@@ -15,9 +15,12 @@ import com.example.project.R;
 
 public class TransparencyFragment extends Fragment {
 
-    private int value;
+    private IIncidentActivityFragment mCallback;
 
     public TransparencyFragment() {}
+    public TransparencyFragment(IIncidentActivityFragment activity){
+        mCallback = activity;
+    }
 
     @Nullable
     @Override
@@ -27,13 +30,17 @@ public class TransparencyFragment extends Fragment {
         NumberPicker np = rootView.findViewById(R.id.number_picker);
         np.setMinValue(0);
         np.setMaxValue(30);
-        np.setOnValueChangedListener(onValueChangeListener);
+        np.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker numberPicker, int i, int i1) {
+                update(Integer.toString(np.getValue()),"m");
+            }
+        });
 
         return rootView;
-}
+    }
 
-    private NumberPicker.OnValueChangeListener onValueChangeListener = (numberPicker, i, i1) -> {
-        value = numberPicker.getValue();
-        //Toast.makeText(getContext(), "Number: " + value, Toast.LENGTH_SHORT).show();
-    };
+    private void update(String value, String unit){
+        mCallback.onIncidentUpdated(value, unit);
+    }
 }

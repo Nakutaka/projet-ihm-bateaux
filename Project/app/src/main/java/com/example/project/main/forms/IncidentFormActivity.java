@@ -7,6 +7,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.project.R;
+import com.example.project.main.fragments.incidents.IIncidentActivityFragment;
 import com.example.project.model.weather.local.Incident;
 import com.example.project.main.factory.IncidentFactory_classic;
 import com.example.project.types.ITypeIncident;
@@ -22,17 +23,21 @@ import com.example.project.main.fragments.incidents.TemperatureFragment;
 import com.example.project.main.fragments.incidents.TransparencyFragment;
 import com.example.project.main.fragments.incidents.WindFragment;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
-public class IncidentFormActivity extends AppCompatActivity implements ITypeIncident {
+public class IncidentFormActivity extends AppCompatActivity implements ITypeIncident, IIncidentActivityFragment {
 
     private int globalType;
     private int type;
     private int icon;
     private String comment;
+
+    private String data;
+    private String unit;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,6 +57,11 @@ public class IncidentFormActivity extends AppCompatActivity implements ITypeInci
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         displayFragment(globalType, type);
+
+        if (savedInstanceState!=null){
+            data = savedInstanceState.getString("VALUE");
+            unit = savedInstanceState.getString("UNIT");
+        }
 
         findViewById(R.id.button_save).setOnClickListener(view -> {
             Intent result = new Intent();
@@ -102,10 +112,13 @@ public class IncidentFormActivity extends AppCompatActivity implements ITypeInci
     //TODO value
     Incident newIncident() {
         IncidentFactory_classic factory = new IncidentFactory_classic();
-        return factory.getIncident(globalType, type, "value", "unit", comment);
+        if (data==null) return null;
+        return factory.getIncident(globalType, type, data, unit, comment);
     }
 
     void displayFragment(int globalType, int type) {
+        // Prevent recreation
+        //if (getSupportFragmentManager().findFragmentById(R.id.frame_layout_incident)!=null)return;
         //globalType
         //--> lambda:       buttons
         //--> scientific:   specific interface
@@ -127,23 +140,38 @@ public class IncidentFormActivity extends AppCompatActivity implements ITypeInci
             }
         }*/
         switch(type) {
-            case TEMPERATURE: displayIncidentFragment(new TemperatureFragment()); break;
-            case RAIN: displayIncidentFragment(new RainFragment()); break;
-            case HAIL: displayIncidentFragment(new HailFragment()); break;
-            case FOG: displayIncidentFragment(new FogFragment()); break;
-            case CLOUD: displayIncidentFragment(new CloudFragment()); break;
-            case STORM: displayIncidentFragment(new StormFragment()); break;
-            case WIND: displayIncidentFragment(new WindFragment()); break;
-            case CURRENT: displayIncidentFragment(new CurrentFragment()); break;
-            case TRANSPARENCY: displayIncidentFragment(new TransparencyFragment()); break;
-            default: displayIncidentFragment(new OtherFragment());//INCIDENT_OTHER
+            case TEMPERATURE: displayIncidentFragment(new TemperatureFragment(this)); break;
+            case RAIN: displayIncidentFragment(new RainFragment(this)); break;
+            case HAIL: displayIncidentFragment(new HailFragment(this)); break;
+            case FOG: displayIncidentFragment(new FogFragment(this)); break;
+            case CLOUD: displayIncidentFragment(new CloudFragment(this)); break;
+            case STORM: displayIncidentFragment(new StormFragment(this)); break;
+            case WIND: displayIncidentFragment(new WindFragment(this)); break;
+            case CURRENT: displayIncidentFragment(new CurrentFragment(this)); break;
+            case TRANSPARENCY: displayIncidentFragment(new TransparencyFragment(this)); break;
+            default: displayIncidentFragment(new OtherFragment(this));//INCIDENT_OTHER
         }
     }
 
     void displayIncidentFragment(Fragment incidentFragment) {
-        /*Bundle args = new Bundle();
-        incidentFragment.setArguments(args);*/
+        Bundle args = new Bundle();
+        incidentFragment.setArguments(args);
+
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout_incident,
                 incidentFragment).commit();
+    }
+
+    @Override
+    public void onIncidentUpdated(String data, String unit) {
+
+        if(data!=null)this.data = data;
+        if(unit!=null)this.unit = unit;
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("VALUE",data);
+        outState.putString("UNIT",unit);
     }
 }

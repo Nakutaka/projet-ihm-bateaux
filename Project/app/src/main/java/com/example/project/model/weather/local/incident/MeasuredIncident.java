@@ -70,6 +70,11 @@ public class MeasuredIncident extends Incident implements Parcelable {
         return value;
     }
 
+    @Override
+    public String getOtherInfo() {
+        return getValue()+" "+getUnit();
+    }
+
     public String getUnit() {
         return unit;
     }

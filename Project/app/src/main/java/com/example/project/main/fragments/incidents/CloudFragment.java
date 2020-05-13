@@ -5,18 +5,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.project.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.example.project.types.ITypeIncident;
 
-public class CloudFragment extends Fragment {
+public class CloudFragment extends Fragment{
 
+    private IIncidentActivityFragment mCallback;
     public CloudFragment() {}
+    public CloudFragment(IIncidentActivityFragment activity){
+        mCallback = activity;
+    }
 
     @Nullable
     @Override
@@ -29,6 +32,33 @@ public class CloudFragment extends Fragment {
         ((ImageView)rootView.findViewById(R.id.img_level3_1)).setImageResource(icon);
         ((ImageView)rootView.findViewById(R.id.img_level3_2)).setImageResource(icon);
         ((ImageView)rootView.findViewById(R.id.img_level3_3)).setImageResource(icon);
+
+        rootView.findViewById(R.id.fab_level_one).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                update(ITypeIncident.LEVEL_ONE);
+            }
+        });
+
+        rootView.findViewById(R.id.fab_level_two).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                update(ITypeIncident.LEVEL_TWO);
+            }
+        });
+
+        rootView.findViewById(R.id.fab_level_three).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                update(ITypeIncident.LEVEL_THREE);
+            }
+        });
         return rootView;
+
+
+    }
+
+    private void update(String type){
+        mCallback.onIncidentUpdated(type, null);
     }
 }

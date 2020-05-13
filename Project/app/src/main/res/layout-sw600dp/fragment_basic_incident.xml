@@ -19,7 +19,7 @@
     <androidx.cardview.widget.CardView
         style="@style/MyCardView"
         android:backgroundTint="@color/blue"
-        android:id="@+id/card1">
+        android:id="@+id/fab_level_one">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -47,7 +47,7 @@
 
     <androidx.cardview.widget.CardView
         style="@style/MyCardView"
-        android:id="@+id/card2"
+        android:id="@+id/fab_level_two"
         android:backgroundTint="@color/blue"
         android:layout_marginTop="60dp">
 
@@ -86,6 +86,7 @@
 
     <androidx.cardview.widget.CardView
         style="@style/MyCardView"
+        android:id="@+id/fab_level_three"
         android:backgroundTint="@color/blue"
         android:layout_marginTop="60dp">
 
