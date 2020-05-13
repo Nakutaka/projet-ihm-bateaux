@@ -124,4 +124,8 @@ public class SettingsViewModel extends AndroidViewModel {
     public void sendBugReport(String bugReport) {
         //TODO
     }
+
+    public void updateData() {
+        initSettings();
+    }
 }

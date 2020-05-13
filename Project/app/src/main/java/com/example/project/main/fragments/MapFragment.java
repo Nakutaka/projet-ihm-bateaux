@@ -38,11 +38,9 @@ public class MapFragment extends Fragment implements IGPSFragment {
     private MapView map;
     private final OnlineTileSourceBase seaMarks = TileSourceFactory.OPEN_SEAMAP;
     //private FrameLayout reportDetails;
-    ReportItemizedOverlay mOverlay;
-    IMapController mapController;
-    boolean onScroll = false;
-
-    /**********User Settings (default value for the time being)*********/
+    private ReportItemizedOverlay mOverlay;
+    private IMapController mapController;
+    private boolean onScroll = false;
     private double zoom = 15.5;
 
 

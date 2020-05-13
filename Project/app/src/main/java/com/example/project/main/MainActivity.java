@@ -24,6 +24,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.project.R;
+import com.example.project.control.SettingsViewModel;
 import com.example.project.control.WeatherReportViewModel;
 import com.example.project.database.remote.RetrofitInstance;
 import com.example.project.database.remote.WebService;
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_INCIDENT_BASIC_LIST = "com.example.project.main.activities.INCIDENT_BASIC_LIST";
     public static final String EXTRA_INCIDENT_MEASURED_LIST = "com.example.project.main.activities.INCIDENT_MEASURED_LIST";
     private Gson gson = new Gson();
-
+    private SettingsViewModel svm;
     private MapFragment mapFragment;
     ReportDetailsFragment detailsFragment;
     private WeatherReportViewModel mWeatherReportViewModel;
@@ -82,6 +83,10 @@ public class MainActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        svm = new SettingsViewModel(getApplication());
+        svm.getSettingsModelMutableLiveData().observe(this, newSettings -> {
+            displayCoordinates(newSettings.isDisplayCoordinatesOn());
+        });
         reportsNewlyRetrievedFromDB = new ArrayList<>();
         reportsNotSentYet = new ArrayList<>();
 
@@ -107,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
                     addToBackStack(null).
                     commit();
         }
+
 
         mWeatherReportViewModel = new ViewModelProvider(this).get(WeatherReportViewModel.class);
         // Update the cached copy of the reports in the map overlays (method reference style)
@@ -155,12 +161,18 @@ public class MainActivity extends AppCompatActivity {
         }, delay);//*/
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        svm.updateData();
+    }
+
     public void loadDeviceId() {
         // Check if the READ_PHONE_STATE permission is already available.
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
                 != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE},
-                        MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE},
+                    MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
         } else {
 
             TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
@@ -406,19 +418,19 @@ public class MainActivity extends AppCompatActivity {
 
         ReportItemizedOverlay reportOverlayItems = new ReportItemizedOverlay(
                 reportItems, getDrawable(R.drawable.direction_arrow), new ReportItemizedOverlay.OnItemGestureListener<OverlayItem>() {
-                    @Override
-                    public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
-                        hideMapElements(View.GONE);
-                        //link to fragment
-                        displayFragment(prepareDetailsFragment(overlayItemWeatherReportMap.get(item)));
-                        hideFloatingButtons();
-                        return true;
-                    }
+            @Override
+            public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
+                hideMapElements(View.GONE);
+                //link to fragment
+                displayFragment(prepareDetailsFragment(overlayItemWeatherReportMap.get(item)));
+                hideFloatingButtons();
+                return true;
+            }
 
-                    @Override
-                    public boolean onItemLongPress(final int index, final OverlayItem item) {
-                        return true;//true??
-                    }
+            @Override
+            public boolean onItemLongPress(final int index, final OverlayItem item) {
+                return true;//true??
+            }
         }, getApplicationContext());
         mapFragment.updateMap(reportOverlayItems);
     }
@@ -456,5 +468,13 @@ public class MainActivity extends AppCompatActivity {
         fragment.setArguments(bundle);
         return fragment;
     }
+
+    private void displayCoordinates(boolean value) {
+        if (value) {
+            findViewById(R.id.gpsLocation).setVisibility(View.VISIBLE);
+        } else
+            findViewById(R.id.gpsLocation).setVisibility(View.INVISIBLE);
+    }
+
 
 }
