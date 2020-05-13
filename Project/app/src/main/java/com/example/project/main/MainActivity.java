@@ -508,12 +508,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void displayCoordinates(boolean value) {
-       /* if (value) {
-         //   findViewById(R.id.gpsLocation).setVisibility(View.VISIBLE);
+        if (value) {
+            findViewById(R.id.gpsLocation).setVisibility(View.VISIBLE);
         } else
             findViewById(R.id.gpsLocation).setVisibility(View.INVISIBLE);
-
-        */
     }
 
 
