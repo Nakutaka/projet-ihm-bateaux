@@ -16,8 +16,8 @@ import androidx.preference.SwitchPreference;
 
 import com.example.project.R;
 import com.example.project.control.SettingsViewModel;
-import com.example.project.model.Tweet;
 import com.example.project.main.TwitterActivity;
+import com.example.project.model.Tweet;
 import com.google.gson.Gson;
 
 import java.util.Objects;
@@ -32,7 +32,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences, rootKey);
-        viewModel = new SettingsViewModel(Objects.requireNonNull(getActivity()).getApplication());
+        viewModel = new SettingsViewModel(requireActivity().getApplication());
         EditTextPreference editTextBug = findPreference(getString(R.string.key_bug));
         SwitchPreference spTwitter = findPreference(getString(R.string.key_twitter));
         ListPreference lpArea = findPreference(getString(R.string.key_area));
@@ -55,7 +55,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 startActivityForResult(intent, REQUEST_CONNECT_TWITTER);
             }
             else {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
                 builder.setPositiveButton(R.string.button_confirm, (dialog, id) -> {
                     viewModel.setTwitterAccount(null);
                     Toast.makeText(getContext(), getString(R.string.account_disconnected), Toast.LENGTH_SHORT).show();
@@ -149,7 +149,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     }
 
     private void appendProgressCircle(int state){
-        Objects.requireNonNull(getActivity()).findViewById(R.id.loadingPanel).setVisibility(state);
+        requireActivity().findViewById(R.id.loadingPanel).setVisibility(state);
     }
 
 }
