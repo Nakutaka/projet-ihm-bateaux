@@ -135,8 +135,9 @@ public class MainActivity extends AppCompatActivity {
         retrieveReports();
 
         Handler handler = new Handler();
-        int delay = 5*1000; //milliseconds
-        //every 60secs here
+        int delay = 1000; //milliseconds
+        //every second for demo
+        //every 60sec here
         //every 10min because --> asynchronous app
         handler.postDelayed(new Runnable() {
             public void run() {
@@ -146,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
         }, delay);
 
         Handler handler2 = new Handler();
-        int delay2 = 10*1000; //milliseconds
+        int delay2 = 1000; //milliseconds --> 10sec at first
         handler2.postDelayed(new Runnable() {
             public void run() {
                 handler2.postDelayed(this, delay2);
@@ -167,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
             //IMEI = mngr.getDeviceId();
             deviceId = Settings.Secure.getString(this.getContentResolver(),
                     Settings.Secure.ANDROID_ID);
-            Toast.makeText(this, "device id: " + deviceId, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "device id: " + deviceId, Toast.LENGTH_SHORT).show();
             // READ_PHONE_STATE permission is already been granted.
         }
     }
@@ -239,14 +240,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<RemoteWeatherReport> call, Throwable t) {
                 if(justClicked) {
-                    Toast.makeText(MainActivity.this, "No connection... report will be sent later", Toast.LENGTH_SHORT).show();
                     reportsNotSentYet.add(weatherReport);
+                    Toast.makeText(MainActivity.this, "No connection... report will be sent later", Toast.LENGTH_SHORT).show();
                 }
-                else {
-                    List<WeatherReport> tmp = new ArrayList<>(reportsNotSentYet);
-                    tmp.addAll(mWeatherReportViewModel.getWeatherReports().getValue());
-                    setReports(tmp, false);
-                }
+                List<WeatherReport> tmp = new ArrayList<>(reportsNotSentYet);
+                tmp.addAll(mWeatherReportViewModel.getWeatherReports().getValue());
+                setReports(tmp, false);
             }
         });
     }
