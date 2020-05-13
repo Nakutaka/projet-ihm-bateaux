@@ -111,7 +111,7 @@ public class ReportDetailsFragment extends Fragment {
                 sb.append("value").append(m.getValue()).append(" ").append(m.getUnit());
             sb.append("\n");
         }
-        return new Tweet(sb.toString(), "SeaReports", "Polytech");
+        return new Tweet(sb.toString(), "#SeaReports", "#Polytech");
     }
 
     private void appendProgressCircle(int state) {
