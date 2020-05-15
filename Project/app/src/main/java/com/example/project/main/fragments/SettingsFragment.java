@@ -17,7 +17,6 @@ import androidx.preference.SwitchPreference;
 import com.example.project.R;
 import com.example.project.control.SettingsViewModel;
 import com.example.project.main.TwitterActivity;
-import com.example.project.model.Tweet;
 import com.google.gson.Gson;
 
 import java.util.Objects;
@@ -63,10 +62,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 });
 
                 builder.setNegativeButton(R.string.button_cancel, (dialog, id) -> {
-                    //TWEET TEST
-                    Tweet tw = new Tweet("This is a test", "#SeaReports", "#Polytech");
                     spTwitter.setChecked(true);
-                    startActivity(TwitterActivity.tweetIntentBuilder(intent, gson.toJson(tw), viewModel.getTwitterToken()));
                 });
 
                 builder.setTitle(R.string.title_twitter_log_out);

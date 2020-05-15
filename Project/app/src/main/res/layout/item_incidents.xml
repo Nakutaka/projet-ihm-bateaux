@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#B9000000"
+    android:alpha="0.95"
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
@@ -75,6 +76,7 @@
 
     <View
         android:layout_width="match_parent"
+        android:alpha="0.90"
         android:layout_height="2dp"
         android:background="@android:color/darker_gray" />
 </LinearLayout>

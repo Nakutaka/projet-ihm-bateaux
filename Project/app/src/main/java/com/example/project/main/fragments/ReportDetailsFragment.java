@@ -27,6 +27,7 @@ import com.example.project.model.weather.local.incident.MeasuredIncident;
 import com.example.project.model.weather.local.incident.MinIncident;
 import com.google.gson.Gson;
 
+import java.text.DecimalFormat;
 import java.util.Calendar;
 
 public class ReportDetailsFragment extends Fragment {
@@ -68,7 +69,9 @@ public class ReportDetailsFragment extends Fragment {
 
     private void addDetails(WeatherReport report, View view, Date date) {
         TextView text = view.findViewById(R.id.txt_date_report);
+        DecimalFormat df = new DecimalFormat("0.000");
         text.setText(String.format("Posted %s ago.", getDateField(date)));
+        text.append("\nLat: " + df.format(report.getReport().getLatitude()) + " - Long: " + df.format(report.getReport().getLongitude()));
         ReportAdapter reportAdapter = new ReportAdapter(report.getIncidentList(), getContext());
         RecyclerView rvReport = view.findViewById(R.id.rv_report);
         rvReport.setAdapter(reportAdapter);
@@ -96,7 +99,8 @@ public class ReportDetailsFragment extends Fragment {
 
     private Tweet prepareTweet(WeatherReport wp, Date date) {
         StringBuilder sb = new StringBuilder();
-        sb.append("Report posted on ").append(date.getDateOnly()).append("\n");
+        DecimalFormat df = new DecimalFormat("0.000");
+        sb.append("Report posted on ").append(date.getDateOnly()).append("\n").append("Lat: ").append(df.format(wp.getReport().getLatitude())).append("-Long: ").append(df.format(wp.getReport().getLongitude())).append("\n");
         for (MinIncident i : wp.getMinIncidentList()) {
             sb.append(i.getInfo().getName()).append(" ").append(i.getComment());
             sb.append("\n");
@@ -106,9 +110,9 @@ public class ReportDetailsFragment extends Fragment {
             sb.append("\n");
         }
         for (MeasuredIncident m : wp.getMeasuredIncidentList()) {
-            sb.append(m.getInfo().getName()).append(" ").append(m.getComment());
+            sb.append(m.getInfo().getName()).append(" ").append(m.getComment()).append(" ");
             if (!m.getValue().equals("value") && !m.getUnit().equals("unit"))
-                sb.append("value").append(m.getValue()).append(" ").append(m.getUnit());
+                sb.append(m.getValue()).append(" ").append(m.getUnit());
             sb.append("\n");
         }
         return new Tweet(sb.toString(), "#SeaReports", "#Polytech");
