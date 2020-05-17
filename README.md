@@ -11,7 +11,7 @@
 DONE -  \* Créer une notification utile avec temps d'affichage
 	justification: pour que l'application donne du feedback
 	
-- ** Notifier et organiser les notifications d’une période donnée de façon utile
+DONE - ** Notifier et organiser les notifications d’une période donnée de façon utile
 	justification: pour avoir les (5? dernières) infos des dernières 2h (par exemple)
 
 ### Angèle Badia
@@ -22,7 +22,7 @@ ALMOST -  \*** Afficher les incidents dynamiquement à partir d'un Web Service e
 DONE -  \* Gérer l'orientation paysage/portait de l'appareil dans les différentes vues, principalement lorsqu’elle apporte un plus à l’application.
 	justification: permet la continuité avec les autres applications avec carte/GPS --> google maps, Waze... pour conserver les habitudes des utilisateurs
 
-- ** Faire une application compatible avec une affichage différent pour tablette et smartphone
+DONE - ** Faire une application compatible avec une affichage différent pour tablette et smartphone
 	justification: pour les personnes qui prennent leur tablette en mer, avantage écran plus grand, plus de visibilité
 
 ### Armand Fargeon
